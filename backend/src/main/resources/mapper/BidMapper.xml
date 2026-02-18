@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.procurement.mapper.BidMapper">
+
+    <resultMap id="BidResultMap" type="com.example.procurement.entity.Bid">
+        <id property="bidId" column="bid_id"/>
+        <result property="title" column="title"/>
+        <result property="procurementRequestId" column="procurement_request_id"/>
+        <result property="budget" column="budget"/>
+        <result property="deadline" column="deadline"/>
+        <result property="description" column="description"/>
+        <result property="notificationMethods" column="notification_methods"/>
+        <result property="emailSubject" column="email_subject"/>
+        <result property="emailBody" column="email_body"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createUserId" column="create_user_id"/>
+        <result property="createUserName" column="create_user_name"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateUserId" column="update_user_id"/>
+        <result property="updateUserName" column="update_user_name"/>
+        <result property="supplierCount" column="supplierCount"/>
+        <result property="evaluationCode" column="evaluation_code"/>
+    </resultMap>
+
+    <insert id="insertBid" useGeneratedKeys="true" keyProperty="bidId">
+        INSERT INTO bid (
+            title, procurement_request_id, budget, deadline, description,
+            notification_methods, email_subject, email_body, status,
+            create_time, create_user_id, create_user_name,
+            update_time, update_user_id, update_user_name
+        ) VALUES (
+            #{title}, #{procurementRequestId}, #{budget}, #{deadline}, #{description},
+            #{notificationMethods}, #{emailSubject}, #{emailBody}, #{status},
+            NOW(), #{createUserId}, #{createUserName},
+            NOW(), #{updateUserId}, #{updateUserName}
+        )
+    </insert>
+
+    <update id="updateBid">
+        UPDATE bid
+        SET title = #{title},
+            procurement_request_id = #{procurementRequestId},
+            budget = #{budget},
+            deadline = #{deadline},
+            description = #{description},
+            notification_methods = #{notificationMethods},
+            email_subject = #{emailSubject},
+            email_body = #{emailBody},
+            status = #{status},
+            update_time = NOW(),
+            update_user_id = #{updateUserId},
+            update_user_name = #{updateUserName}
+        WHERE bid_id = #{bidId}
+    </update>
+
+    <select id="getBidById" resultMap="BidResultMap">
+        SELECT * FROM bid WHERE bid_id = #{bidId}
+    </select>
+
+    <insert id="insertBidSupplier">
+        INSERT INTO bid_supplier (
+            bid_id, supplier_id, is_selected, create_time
+        ) VALUES (
+            #{bidId}, #{supplierId}, #{isSelected}, NOW()
+        )
+    </insert>
+
+    <delete id="deleteBidSuppliers">
+        DELETE FROM bid_supplier WHERE bid_id = #{bidId}
+    </delete>
+
+    <select id="getBidSuppliers" resultType="com.example.procurement.entity.BidSupplier">
+        SELECT bs.*, s.supplier_name as supplierName, s.email as supplierEmail
+        FROM bid_supplier bs
+        LEFT JOIN supplier s ON bs.supplier_id = s.supplier_id
+        WHERE bs.bid_id = #{bidId}
+    </select>
+
+    <insert id="insertBidAttachment">
+        INSERT INTO bid_attachment (
+            bid_id, file_name, file_url, file_size, file_type, create_time
+        ) VALUES (
+            #{bidId}, #{fileName}, #{fileUrl}, #{fileSize}, #{fileType}, NOW()
+        )
+    </insert>
+
+    <delete id="deleteBidAttachments">
+        DELETE FROM bid_attachment WHERE bid_id = #{bidId}
+    </delete>
+
+    <select id="getBidAttachments" resultType="com.example.procurement.entity.BidAttachment">
+        SELECT * FROM bid_attachment WHERE bid_id = #{bidId}
+    </select>
+    
+    <select id="getBidList" resultMap="BidResultMap">
+        SELECT b.*, pr.title as procurementRequestName,
+        (SELECT COUNT(*) FROM bid_supplier bs WHERE bs.bid_id = b.bid_id) as supplierCount,
+        ep.project_code as evaluation_code
+        FROM bid b
+        LEFT JOIN procurement_request pr ON b.procurement_request_id = pr.procurement_request_id
+        LEFT JOIN evaluation_project ep ON b.bid_id = ep.bid_id
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (b.title LIKE CONCAT('%', #{keyword}, '%') OR pr.title LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+            <if test="status != null and status != ''">
+                AND b.status = #{status}
+            </if>
+        </where>
+        ORDER BY b.create_time DESC
+    </select>
+
+    <select id="findByProcurementRequestId" resultMap="BidResultMap">
+        SELECT * FROM bid WHERE procurement_request_id = #{procurementRequestId}
+    </select>
+
+</mapper>

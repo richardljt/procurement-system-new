@@ -1,0 +1,59 @@
+import React from 'react';
+import { Card, Typography, Descriptions, Alert } from 'antd';
+import { InfoCircleOutlined } from '@ant-design/icons';
+
+const { Text, Title } = Typography;
+
+export const NotificationPreviewSection: React.FC = () => {
+  return (
+    <div style={{ marginBottom: 24 }}>
+      <div style={{ marginBottom: 16 }}>
+        <Text strong style={{ fontSize: 16 }}>通知预览</Text>
+        <Text type="secondary" style={{ marginLeft: 8, fontSize: 14 }}>
+          系统将自动向选定的专家发送以下通知
+        </Text>
+      </div>
+
+      <Alert
+        title="通知发送提示"
+        description="会议创建成功后，系统将通过邮件和企业微信自动通知所有参会人员。"
+        type="info"
+        showIcon
+        style={{ marginBottom: 16 }}
+      />
+
+      <Card 
+        size="small" 
+        title="会议邀请通知" 
+        style={{ background: '#f9f9f9' }}
+        styles={{ header: { background: '#fff' } }}
+      >
+        <div style={{ padding: '8px 0' }}>
+          <Text strong>标题：</Text> 
+          <Text>【邀请】关于参加 XX项目 采购需求评审会的通知</Text>
+        </div>
+        <div style={{ padding: '8px 0' }}>
+          <Text strong>致：</Text> 
+          <Text>评审专家</Text>
+        </div>
+        <div style={{ padding: '16px 0', borderTop: '1px solid #f0f0f0', borderBottom: '1px solid #f0f0f0', margin: '12px 0' }}>
+          <p>尊敬的专家：</p>
+          <p>您好！诚挚邀请您参加本次采购需求评审会议。请您在收到通知后尽快确认是否参加。</p>
+          <br />
+          <Descriptions column={1} size="small">
+            <Descriptions.Item label="会议主题">XX项目采购需求评审</Descriptions.Item>
+            <Descriptions.Item label="候选时间">
+              1. 2024-02-01 14:00<br/>
+              2. 2024-02-02 09:30<br/>
+              3. 2024-02-02 14:00
+            </Descriptions.Item>
+            <Descriptions.Item label="会议地点">第一会议室 / 线上会议</Descriptions.Item>
+          </Descriptions>
+        </div>
+        <div style={{ textAlign: 'right', color: '#999', fontSize: 12 }}>
+          采购管理系统自动发送
+        </div>
+      </Card>
+    </div>
+  );
+};

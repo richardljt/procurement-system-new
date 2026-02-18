@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Procurement Request</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <style>::-webkit-scrollbar { display: none;}</style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-sans">
+
+<header id="header" class="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center space-x-6">
+        <div class="flex items-center">
+            <div class="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center">
+                <i class="fa-solid fa-cart-shopping text-white text-sm"></i>
+            </div>
+            <span class="ml-3 text-lg font-semibold text-gray-800">采购管理系统</span>
+        </div>
+        <nav class="flex items-center space-x-1 ml-8">
+            <a href="#" class="px-4 py-2 text-sm text-blue-600 bg-blue-50 rounded-md font-medium">采购申请</a>
+            <a href="#" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">供应商管理</a>
+            <a href="#" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">统计报表</a>
+        </nav>
+    </div>
+    <div class="flex items-center space-x-4">
+        <button class="p-2 text-gray-600 hover:bg-gray-100 rounded-md">
+            <i class="fa-regular fa-bell text-lg"></i>
+        </button>
+        <button class="p-2 text-gray-600 hover:bg-gray-100 rounded-md">
+            <i class="fa-solid fa-gear text-lg"></i>
+        </button>
+        <div class="flex items-center space-x-2 pl-4 border-l border-gray-200">
+            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" class="w-9 h-9 rounded-full object-cover" alt="User Avatar">
+            <span class="text-sm font-medium text-gray-700">张明</span>
+        </div>
+    </div>
+</header>
+
+<div class="flex">
+    <aside id="sidebar" class="w-72 bg-white border-r border-gray-200 h-[calc(100vh-73px)] overflow-y-auto">
+        <div class="p-6">
+            <div class="mb-6">
+                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">待办任务</h3>
+                <ul class="space-y-1">
+                    <li>
+                        <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                            <i class="fa-regular fa-clock w-5 text-gray-400"></i>
+                            <span class="ml-3">待我处理</span>
+                            <span class="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">3</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                            <i class="fa-regular fa-eye w-5 text-gray-400"></i>
+                            <span class="ml-3">抄送我的</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                            <i class="fa-solid fa-star w-5 text-gray-400"></i>
+                            <span class="ml-3">我的收藏</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">采购申请管理</h3>
+                <ul class="space-y-1">
+                    <li>
+                        <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                            <i class="fa-regular fa-file-lines w-5 text-gray-400"></i>
+                            <span class="ml-3">我的申请</span>
+                            <span class="ml-auto text-xs text-gray-500">12</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center px-3 py-2 text-sm text-blue-600 bg-blue-50 rounded-md font-medium">
+                            <i class="fa-solid fa-plus w-5"></i>
+                            <span class="ml-3">新建申请</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                            <i class="fa-solid fa-clock-rotate-left w-5 text-gray-400"></i>
+                            <span class="ml-3">历史申请</span>
+                            <span class="ml-auto text-xs text-gray-500">43</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">集采办管理</h3>
+                <ul class="space-y-1">
+                    <li>
+                        <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                            <i class="fa-solid fa-users-gear w-5 text-gray-400"></i>
+                            <span class="ml-3">需求评审会管理</span>
+                            <span class="ml-auto text-xs text-gray-500">8</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                            <i class="fa-solid fa-gavel w-5 text-gray-400"></i>
+                            <span class="ml-3">评标评审会管理</span>
+                            <span class="ml-auto text-xs text-gray-500">6</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                            <i class="fa-solid fa-users w-5 text-gray-400"></i>
+                            <span class="ml-3">专家库管理</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">合同管理</h3>
+                <ul class="space-y-1">
+                    <li>
+                        <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                            <i class="fa-solid fa-file-contract w-5 text-gray-400"></i>
+                            <span class="ml-3">合同归档管理</span>
+                            <span class="ml-auto text-xs text-gray-500">5</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                            <i class="fa-solid fa-folder-open w-5 text-gray-400"></i>
+                            <span class="ml-3">合同档案库</span>
+                            <span class="ml-auto text-xs text-gray-500">156</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div>
+                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">快捷筛选</h3>
+                <ul class="space-y-1">
+                    <li>
+                        <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                            <i class="fa-solid fa-filter w-5 text-gray-400"></i>
+                            <span class="ml-3">紧急采购</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                            <i class="fa-regular fa-calendar-xmark w-5 text-gray-400"></i>
+                            <span class="ml-3">即将超期</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                            <i class="fa-solid fa-chart-line w-5 text-gray-400"></i>
+                            <span class="ml-3">统计报表</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </aside>
+
+    <main id="main-content" class="flex-1 overflow-y-auto">
+        <div class="p-8">
+            <div class="mb-8">
+                <div class="flex items-center justify-between mb-2">
+                    <div>
+                        <h1 class="text-2xl font-semibold text-gray-800 mb-1">新建采购申请</h1>
+                        <p class="text-sm text-gray-500">请填写完整的采购申请信息，提交后将进入审批流程</p>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <button class="px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                            <i class="fa-solid fa-save mr-2"></i>保存草稿
+                        </button>
+                        <button class="px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                            <i class="fa-solid fa-times mr-2"></i>取消
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="form-section" class="space-y-6">
+                <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <div class="flex items-center mb-6">
+                        <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fa-solid fa-info-circle text-blue-600"></i>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-800">基本信息</h2>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">申请部门 <span class="text-red-500">*</span></label>
+                            <select class="w-full px-4 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option>技术研发部</option>
+                                <option>市场营销部</option>
+                                <option>财务部</option>
+                                <option>人力资源部</option>
+                                <option>行政部</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">申请人 <span class="text-red-500">*</span></label>
+                            <input type="text" value="张明" readonly class="w-full px-4 py-2.5 border border-gray-300 rounded-md text-sm bg-gray-50 text-gray-600">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">采购类型 <span class="text-red-500">*</span></label>
+                            <select class="w-full px-4 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option>请选择采购类型</option>
+                                <option>固定资产采购</option>
+                                <option>办公用品采购</option>
+                                <option>服务采购</option>
+                                <option>工程采购</option>
+                                <option>其他</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">紧急程度 <span class="text-red-500">*</span></label>
+                            <select class="w-full px-4 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option>中等</option>
+                                <option>紧急</option>
+                                <option>一般</option>
+                            </select>
+                        </div>
+                        <div class="col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">交付地址 <span class="text-red-500">*</span></label>
+                            <input type="text" placeholder="请输入交付地址" class="w-full px-4 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="background-section" class="bg-white rounded-lg border border-gray-200 p-6">
+                    <div class="flex items-center mb-6">
+                        <div class="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fa-solid fa-file-lines text-purple-600"></i>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-800">采购背景和说明</h2>
+                        <span class="ml-2 text-red-500">*</span>
+                    </div>
+                    
+                    <div class="mb-2">
+                        <div id="editor" class="bg-white border border-gray-300 rounded-md" style="height: 280px;"></div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">
+                        <i class="fa-solid fa-lightbulb mr-1"></i>
+                        提示：请详细说明采购需求的背景、目的、必要性及预期效果
+                    </p>
+                </div>
+
+                <div id="pre-application-section" class="bg-white rounded-lg border border-gray-200 p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center">
+                            <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                                <i class="fa-solid fa-link text-green-600"></i>
+                            </div>
+                            <h2 class="text-lg font-semibold text-gray-800">关联事前申请</h2>
+                        </div>
+                        <button class="px-4 py-2 text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 font-medium">
+                            <i class="fa-solid fa-plus mr-2"></i>选择事前申请
+                        </button>
+                    </div>
+
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex-1">
+                                <div class="flex items-center mb-2">
+                                    <span class="text-sm font-semibold text-gray-800">事前申请单号：</span>
+                                    <span class="text-sm text-blue-600 font-medium ml-2">PRE-2024-00089</span>
+                                    <span class="ml-3 px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full font-medium">已批准</span>
+                                </div>
+                                <div class="flex items-center text-xs text-gray-600 mb-2">
+                                    <span>申请日期：2024-01-05</span>
+                                    <span class="mx-2">|</span>
+                                    <span>批准日期：2024-01-06</span>
+                                </div>
+                                <p class="text-sm text-gray-700">因团队扩编需求，申请采购办公设备及配套设施</p>
+                            </div>
+                            <button class="text-gray-400 hover:text-red-500">
+                                <i class="fa-solid fa-times"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="border-t border-blue-200 pt-3">
+                            <h3 class="text-sm font-semibold text-gray-700 mb-3">费用明细</h3>
+                            <div class="bg-white rounded-lg border border-blue-200 overflow-hidden">
+                                <table class="w-full">
+                                    <thead class="bg-blue-50 border-b border-blue-200">
+                                        <tr>
+                                            <th class="px-4 py-2 text-left text-xs font-semibold text-gray-600">费用项目</th>
+                                            <th class="px-4 py-2 text-center text-xs font-semibold text-gray-600">预算金额</th>
+                                            <th class="px-4 py-2 text-center text-xs font-semibold text-gray-600">已使用</th>
+                                            <th class="px-4 py-2 text-right text-xs font-semibold text-gray-600">剩余金额</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200">
+                                        <tr>
+                                            <td class="px-4 py-2 text-sm text-gray-700">办公设备采购</td>
+                                            <td class="px-4 py-2 text-sm text-gray-700 text-center">¥100,000.00</td>
+                                            <td class="px-4 py-2 text-sm text-gray-700 text-center">¥15,000.00</td>
+                                            <td class="px-4 py-2 text-sm font-medium text-green-600 text-right">¥85,000.00</td>
+                                        </tr>
+                                        <tr class="bg-blue-50 font-semibold">
+                                            <td class="px-4 py-2 text-sm text-gray-800">总金额</td>
+                                            <td class="px-4 py-2 text-sm text-gray-800 text-center">¥100,000.00</td>
+                                            <td class="px-4 py-2 text-sm text-gray-800 text-center">¥15,000.00</td>
+                                            <td class="px-4 py-2 text-base text-blue-600 text-right">¥85,000.00</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                        <div class="flex items-start">
+                            <i class="fa-solid fa-info-circle text-blue-500 mt-0.5 mr-2"></i>
+                            <p class="text-xs text-gray-600">关联事前申请后，本次采购金额将从事前申请的预算中扣除。请确保采购金额不超过剩余预算。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="amount-section" class="bg-white rounded-lg border border-gray-200 p-6">
+                    <div class="flex items-center mb-6">
+                        <div class="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fa-solid fa-dollar-sign text-orange-600"></i>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-800">采购金额</h2>
+                        <span class="ml-2 text-red-500">*</span>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">币种</label>
+                            <select id="currency-select" class="w-full px-4 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <option value="CNY">人民币 (CNY)</option>
+                                <option value="USD">美元 (USD)</option>
+                                <option value="EUR">欧元 (EUR)</option>
+                                <option value="JPY">日元 (JPY)</option>
+                                <option value="HKD">港币 (HKD)</option>
+                            </select>
+                        </div>
+                        <div class="col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">采购金额</label>
+                            <div class="relative">
+                                <span id="currency-symbol" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 text-sm">¥</span>
+                                <input type="text" id="amount-input" placeholder="0.00" class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-gray-700">事前申请剩余预算：</span>
+                            <span class="text-lg font-semibold text-blue-600">¥85,000.00</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium text-gray-700">本次申请金额：</span>
+                            <span id="current-amount" class="text-lg font-semibold text-gray-800">¥0.00</span>
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-blue-200 flex items-center justify-between">
+                            <span class="text-sm font-medium text-gray-700">申请后剩余预算：</span>
+                            <span id="remaining-budget" class="text-lg font-semibold text-green-600">¥85,000.00</span>
+                        </div>
+                    </div>
+
+                    <div id="budget-warning" class="mt-4 bg-red-50 border border-red-200 rounded-lg p-4 hidden">
+                        <div class="flex items-start">
+                            <i class="fa-solid fa-exclamation-triangle text-red-500 mt-0.5 mr-2"></i>
+                            <div>
+                                <p class="text-sm font-medium text-red-700 mb-1">预算超支警告</p>
+                                <p class="text-xs text-red-600">本次申请金额超出事前申请的剩余预算，请调整采购金额或选择其他事前申请。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="supplier-section" class="bg-white rounded-lg border border-gray-200 p-6">
+                    <div class="flex items-center mb-6">
+                        <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fa-solid fa-building text-indigo-600"></i>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-800">候选供应商选择</h2>
+                        <span class="ml-2 text-red-500">*</span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">供应商类型</label>
+                        <div class="flex items-center space-x-4">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="supplier-type" value="multiple" checked class="w-4 h-4 text-blue-600 focus:ring-2 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-700">多个候选供应商（竞争性采购）</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="supplier-type" value="single" class="w-4 h-4 text-blue-600 focus:ring-2 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-700">单一来源供应商</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="flex items-center justify-between mb-3">
+                            <label class="block text-sm font-medium text-gray-700">选择候选供应商</label>
+                            <button class="px-3 py-1.5 text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded-md hover:bg-blue-100 font-medium">
+                                <i class="fa-solid fa-search mr-2"></i>从供应商库选择
+                            </button>
+                        </div>
+                        
+                        <div class="space-y-3">
+                            <div class="border border-gray-300 rounded-lg p-4 hover:border-blue-400 transition-colors">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-start flex-1">
+                                        <input type="checkbox" checked class="mt-1 w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500">
+                                        <div class="ml-3 flex-1">
+                                            <div class="flex items-center mb-2">
+                                                <h3 class="text-sm font-semibold text-gray-800">联想科技有限公司</h3>
+                                                <span class="ml-2 px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded font-medium">优质供应商</span>
+                                            </div>
+                                            <div class="grid grid-cols-2 gap-2 text-xs text-gray-600 mb-2">
+                                                <div class="flex items-center">
+                                                    <i class="fa-solid fa-id-card w-4 text-gray-400 mr-1"></i>
+                                                    <span>统一社会信用代码：91110000123456789X</span>
+                                                </div>
+                                                <div class="flex items-center">
+                                                    <i class="fa-solid fa-phone w-4 text-gray-400 mr-1"></i>
+                                                    <span>联系电话：010-12345678</span>
+                                                </div>
+                                                <div class="flex items-center">
+                                                    <i class="fa-solid fa-location-dot w-4 text-gray-400 mr-1"></i>
+                                                    <span>北京市海淀区中关村大街1号</span>
+                                                </div>
+                                                <div class="flex items-center">
+                                                    <i class="fa-solid fa-star w-4 text-yellow-400 mr-1"></i>
+                                                    <span>合作评分：4.8/5.0</span>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center space-x-2">
+                                                <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">IT设备</span>
+                                                <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">办公设备</span>
+                                                <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">合作3年</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="text-gray-400 hover:text-blue-600 ml-3">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="border border-gray-300 rounded-lg p-4 hover:border-blue-400 transition-colors">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-start flex-1">
+                                        <input type="checkbox" checked class="mt-1 w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500">
+                                        <div class="ml-3 flex-1">
+                                            <div class="flex items-center mb-2">
+                                                <h3 class="text-sm font-semibold text-gray-800">戴尔(中国)有限公司</h3>
+                                                <span class="ml-2 px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded font-medium">长期合作</span>
+                                            </div>
+                                            <div class="grid grid-cols-2 gap-2 text-xs text-gray-600 mb-2">
+                                                <div class="flex items-center">
+                                                    <i class="fa-solid fa-id-card w-4 text-gray-400 mr-1"></i>
+                                                    <span>统一社会信用代码：91110000987654321A</span>
+                                                </div>
+                                                <div class="flex items-center">
+                                                    <i class="fa-solid fa-phone w-4 text-gray-400 mr-1"></i>
+                                                    <span>联系电话：010-87654321</span>
+                                                </div>
+                                                <div class="flex items-center">
+                                                    <i class="fa-solid fa-location-dot w-4 text-gray-400 mr-1"></i>
+                                                    <span>上海市浦东新区张江高科技园区</span>
+                                                </div>
+                                                <div class="flex items-center">
+                                                    <i class="fa-solid fa-star w-4 text-yellow-400 mr-1"></i>
+                                                    <span>合作评分：4.9/5.0</span>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center space-x-2">
+                                                <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">计算机设备</span>
+                                                <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">服务器</span>
+                                                <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">合作5年</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="text-gray-400 hover:text-blue-600 ml-3">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="border border-gray-300 rounded-lg p-4 hover:border-blue-400 transition-colors">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex items-start flex-1">
+                                        <input type="checkbox" checked class="mt-1 w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500">
+                                        <div class="ml-3 flex-1">
+                                            <div class="flex items-center mb-2">
+                                                <h3 class="text-sm font-semibold text-gray-800">惠普(中国)有限公司</h3>
+                                                <span class="ml-2 px-2 py-0.5 bg-purple-100 text-purple-700 text-xs rounded font-medium">战略供应商</span>
+                                            </div>
+                                            <div class="grid grid-cols-2 gap-2 text-xs text-gray-600 mb-2">
+                                                <div class="flex items-center">
+                                                    <i class="fa-solid fa-id-card w-4 text-gray-400 mr-1"></i>
+                                                    <span>统一社会信用代码：91110000456789123B</span>
+                                                </div>
+                                                <div class="flex items-center">
+                                                    <i class="fa-solid fa-phone w-4 text-gray-400 mr-1"></i>
+                                                    <span>联系电话：021-34567890</span>
+                                                </div>
+                                                <div class="flex items-center">
+                                                    <i class="fa-solid fa-location-dot w-4 text-gray-400 mr-1"></i>
+                                                    <span>深圳市南山区科技园南区</span>
+                                                </div>
+                                                <div class="flex items-center">
+                                                    <i class="fa-solid fa-star w-4 text-yellow-400 mr-1"></i>
+                                                    <span>合作评分：4.7/5.0</span>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center space-x-2">
+                                                <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">打印设备</span>
+                                                <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">电脑配件</span>
+                                                <span class="px-2 py-0.5 bg-gray-100 text-gray-600 text-xs rounded">合作4年</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="text-gray-400 hover:text-blue-600 ml-3">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="single-source-reason" class="mt-4 hidden">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">单一来源采购说明 <span class="text-red-500">*</span></label>
+                        <textarea rows="4" placeholder="请详细说明选择单一来源供应商的理由，如：独家代理、专利产品、技术唯一性等" class="w-full px-4 py-2.5 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                        <p class="text-xs text-gray-500 mt-2">
+                            <i class="fa-solid fa-info-circle mr-1"></i>
+                            单一来源采购需要提供充分的理由说明，并需要额外的审批流程
+                        </p>
+                    </div>
+
+                    <div class="mt-4 bg-gray-50 border border-gray-200 rounded-lg p-4">
+                        <div class="flex items-start">
+                            <i class="fa-solid fa-lightbulb text-yellow-500 mt-0.5 mr-2"></i>
+                            <div>
+                                <p class="text-xs font-medium text-gray-700 mb-1">选择建议</p>
+                                <p class="text-xs text-gray-600">• 多个候选供应商：系统将组织竞争性采购，仅需部门主管审批</p>
+                                <p class="text-xs text-gray-600">• 单一来源供应商：需要部门主管和直属行领导双重审批</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="approval-preview-section" class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border-2 border-blue-200 p-6">
+                    <div class="flex items-center mb-4">
+                        <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fa-solid fa-route text-white"></i>
+                        </div>
+                        <h2 class="text-lg font-semibold text-gray-800">预计审批流程</h2>
+                    </div>
+                    
+                    <div id="approval-flow-preview" class="bg-white rounded-lg border border-blue-200 p-5">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm text-gray-600">根据您的选择，预计审批流程如下：</span>
+                            <span class="px-3 py-1 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">多个候选供应商</span>
+                        </div>
+                        
+                        <div class="relative">
+                            <div class="absolute left-6 top-8 bottom-8 w-0.5 bg-gray-200"></div>
+                            
+                            <div class="relative space-y-4">
+                                <div class="flex items-start">
+                                    <div class="relative z-10 flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full border-4 border-white shadow-sm">
+                                        <i class="fa-solid fa-user text-white text-sm"></i>
+                                    </div>
+                                    <div class="ml-4 flex-1 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <h3 class="text-sm font-semibold text-gray-800">部门主管审批</h3>
+                                            <span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">必需</span>
+                                        </div>
+                                        <p class="text-xs text-gray-600 mb-2">审批人：李经理（技术研发部主管）</p>
+                                        <p class="text-xs text-gray-500">预计审批时间：1个工作日</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start">
+                                    <div class="relative z-10 flex items-center justify-center w-12 h-12 bg-green-500 rounded-full border-4 border-white shadow-sm">
+                                        <i class="fa-solid fa-check text-white text-sm"></i>
+                                    </div>
+                                    <div class="ml-4 flex-1 bg-green-50 border border-green-200 rounded-lg p-4">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <h3 class="text-sm font-semibold text-gray-800">审批完成</h3>
+                                            <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full font-medium">自动</span>
+                                        </div>
+                                        <p class="text-xs text-gray-600">审批通过后，将自动进入采购流程</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="single-source-flow" class="bg-white rounded-lg border border-orange-200 p-5 mt-4 hidden">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm text-gray-600">单一来源采购审批流程：</span>
+                            <span class="px-3 py-1 bg-orange-100 text-orange-700 text-xs rounded-full font-medium">单一来源供应商</span>
+                        </div>
+                        
+                        <div class="relative">
+                            <div class="absolute left-6 top-8 bottom-8 w-0.5 bg-gray-200"></div>
+                            
+                            <div class="relative space-y-4">
+                                <div class="flex items-start">
+                                    <div class="relative z-10 flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full border-4 border-white shadow-sm">
+                                        <i class="fa-solid fa-user text-white text-sm"></i>
+                                    </div>
+                                    <div class="ml-4 flex-1 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <h3 class="text-sm font-semibold text-gray-800">部门主管审批</h3>
+                                            <span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">必需</span>
+                                        </div>
+                                        <p class="text-xs text-gray-600 mb-2">审批人：李经理（技术研发部主管）</p>
+                                        <p class="text-xs text-gray-500">预计审批时间：1个工作日</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start">
+                                    <div class="relative z-10 flex items-center justify-center w-12 h-12 bg-purple-500 rounded-full border-4 border-white shadow-sm">
+                                        <i class="fa-solid fa-user-tie text-white text-sm"></i>
+                                    </div>
+                                    <div class="ml-4 flex-1 bg-purple-50 border border-purple-200 rounded-lg p-4">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <h3 class="text-sm font-semibold text-gray-800">直属行领导审批</h3>
+                                            <span class="px-2 py-0.5 bg-purple-100 text-purple-700 text-xs rounded-full font-medium">必需</span>
+                                        </div>
+                                        <p class="text-xs text-gray-600 mb-2">审批人：王副总裁（分管领导）</p>
+                                        <p class="text-xs text-gray-500">预计审批时间：2-3个工作日</p>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start">
+                                    <div class="relative z-10 flex items-center justify-center w-12 h-12 bg-green-500 rounded-full border-4 border-white shadow-sm">
+                                        <i class="fa-solid fa-check text-white text-sm"></i>
+                                    </div>
+                                    <div class="ml-4 flex-1 bg-green-50 border border-green-200 rounded-lg p-4">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <h3 class="text-sm font-semibold text-gray-800">审批完成</h3>
+                                            <span class="px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full font-medium">自动</span>
+                                        </div>
+                                        <p class="text-xs text-gray-600">审批通过后，将自动进入采购流程</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 bg-white border border-blue-200 rounded-lg p-4">
+                        <div class="flex items-start">
+                            <i class="fa-solid fa-info-circle text-blue-500 mt-0.5 mr-2"></i>
+                            <div>
+                                <p class="text-xs font-medium text-gray-700 mb-1">温馨提示</p>
+                                <p class="text-xs text-gray-600">• 提交后无法修改，请仔细核对信息</p>
+                                <p class="text-xs text-gray-600">• 审批人将通过系统和邮件收到通知</p>
+                                <p class="text-xs text-gray-600">• 您可以在"我的申请"中查看审批进度</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+                    <button class="px-6 py-2.5 text-sm text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 font-medium">
+                        <i class="fa-solid fa-arrow-left mr-2"></i>返回
+                    </button>
+                    <div class="flex items-center space-x-3">
+                        <button class="px-6 py-2.5 text-sm text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 font-medium">
+                            <i class="fa-solid fa-save mr-2"></i>保存草稿
+                        </button>
+                        <button id="submit-btn" class="px-6 py-2.5 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700 font-medium shadow-sm">
+                            <i class="fa-solid fa-paper-plane mr-2"></i>提交申请
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div id="approval-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg shadow-2xl w-full max-w-2xl mx-4 max-h-[90vh] overflow-y-auto">
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-4 flex items-center justify-between rounded-t-lg">
+            <div class="flex items-center">
+                <div class="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mr-3">
+                    <i class="fa-solid fa-route text-white text-lg"></i>
+                </div>
+                <h2 class="text-xl font-semibold text-white">确认审批流程</h2>
+            </div>
+            <button id="close-modal" class="text-white hover:bg-white hover:bg-opacity-20 rounded-lg p-2 transition-colors">
+                <i class="fa-solid fa-times text-xl"></i>
+            </button>
+        </div>
+        
+        <div class="p-6">
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <div class="flex items-start">
+                    <i class="fa-solid fa-info-circle text-blue-500 text-lg mt-0.5 mr-3"></i>
+                    <div>
+                        <p class="text-sm font-medium text-gray-800 mb-1">申请信息确认</p>
+                        <div class="space-y-1 text-xs text-gray-600">
+                            <p>• 申请部门：技术研发部</p>
+                            <p>• 采购金额：<span class="font-semibold text-blue-600">¥85,000.00</span></p>
+                            <p>• 候选供应商：<span id="supplier-count-modal" class="font-semibold">3家</span></p>
+                            <p>• 供应商类型：<span id="supplier-type-modal" class="font-semibold">多个候选供应商</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="text-sm font-semibold text-gray-800 mb-4">审批流程</h3>
+                
+                <div id="modal-approval-flow" class="relative">
+                    <div class="absolute left-6 top-8 bottom-8 w-0.5 bg-gray-200"></div>
+                    
+                    <div class="relative space-y-5">
+                        <div class="flex items-start">
+                            <div class="relative z-10 flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full border-4 border-white shadow-lg">
+                                <span class="text-white font-semibold">1</span>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <div class="bg-blue-50 border-2 border-blue-300 rounded-lg p-4">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h4 class="text-sm font-semibold text-gray-800">部门主管审批</h4>
+                                        <span class="px-2 py-1 bg-blue-600 text-white text-xs rounded-full font-medium">必需</span>
+                                    </div>
+                                    <div class="flex items-center mb-2">
+                                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg" class="w-7 h-7 rounded-full object-cover mr-2" alt="Approver">
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-800">李经理</p>
+                                            <p class="text-xs text-gray-500">技术研发部主管</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center text-xs text-gray-600">
+                                        <i class="fa-regular fa-clock mr-1"></i>
+                                        <span>预计审批时间：1个工作日</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="leader-approval-step" class="flex items-start hidden">
+                            <div class="relative z-10 flex items-center justify-center w-12 h-12 bg-purple-500 rounded-full border-4 border-white shadow-lg">
+                                <span class="text-white font-semibold">2</span>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <div class="bg-purple-50 border-2 border-purple-300 rounded-lg p-4">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h4 class="text-sm font-semibold text-gray-800">直属行领导审批</h4>
+                                        <span class="px-2 py-1 bg-purple-600 text-white text-xs rounded-full font-medium">必需</span>
+                                    </div>
+                                    <div class="flex items-center mb-2">
+                                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-4.jpg" class="w-7 h-7 rounded-full object-cover mr-2" alt="Approver">
+                                        <div>
+                                            <p class="text-sm font-medium text-gray-800">王副总裁</p>
+                                            <p class="text-xs text-gray-500">分管领导</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center text-xs text-gray-600 mb-2">
+                                        <i class="fa-regular fa-clock mr-1"></i>
+                                        <span>预计审批时间：2-3个工作日</span>
+                                    </div>
+                                    <div class="bg-white border border-purple-200 rounded p-2 text-xs text-purple-700">
+                                        <i class="fa-solid fa-exclamation-circle mr-1"></i>
+                                        单一来源采购需要额外的领导审批
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="relative z-10 flex items-center justify-center w-12 h-12 bg-green-500 rounded-full border-4 border-white shadow-lg">
+                                <i class="fa-solid fa-check text-white"></i>
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <div class="bg-green-50 border-2 border-green-300 rounded-lg p-4">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h4 class="text-sm font-semibold text-gray-800">审批完成</h4>
+                                        <span class="px-2 py-1 bg-green-600 text-white text-xs rounded-full font-medium">自动</span>
+                                    </div>
+                                    <p class="text-xs text-gray-600 mb-2">审批通过后，将自动进入采购流程</p>
+                                    <div class="flex items-center text-xs text-gray-500">
+                                        <i class="fa-solid fa-arrow-right mr-1"></i>
+                                        <span>后续流程：需求评审会 → 供应商投标 → 开评标会 → 合同签署</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+                <div class="flex items-start">
+                    <i class="fa-solid fa-exclamation-triangle text-yellow-600 mt-0.5 mr-3"></i>
+                    <div>
+                        <p class="text-sm font-medium text-gray-800 mb-1">重要提示</p>
+                        <ul class="space-y-1 text-xs text-gray-600">
+                            <li>• 提交后无法修改申请内容，请仔细核对</li>
+                            <li>• 审批人将通过系统消息和邮件收到通知</li>
+                            <li>• 您可以在"我的申请"中实时查看审批进度</li>
+                            <li>• 如需撤回申请，请在审批开始前操作</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end space-x-3">
+                <button id="cancel-submit" class="px-6 py-2.5 text-sm text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 font-medium">
+                    <i class="fa-solid fa-times mr-2"></i>取消
+                </button>
+                <button id="confirm-submit" class="px-6 py-2.5 text-sm text-white bg-gradient-to-r from-blue-600 to-indigo-600 rounded-md hover:from-blue-700 hover:to-indigo-700 font-medium shadow-lg">
+                    <i class="fa-solid fa-check mr-2"></i>确认提交
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+window.addEventListener('load', function() {
+    var quill = new Quill('#editor', {
+        theme: 'snow',
+        placeholder: '请详细描述采购背景、需求来源、使用目的及预期效果...',
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                [{ 'color': [] }, { 'background': [] }],
+                ['link'],
+                ['clean']
+            ]
+        }
+    });
+
+    var supplierTypeRadios = document.querySelectorAll('input[name="supplier-type"]');
+    var singleSourceReason = document.getElementById('single-source-reason');
+    var approvalFlowPreview = document.getElementById('approval-flow-preview');
+    var singleSourceFlow = document.getElementById('single-source-flow');
+
+    supplierTypeRadios.forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            if (this.value === 'single') {
+                singleSourceReason.classList.remove('hidden');
+                approvalFlowPreview.classList.add('hidden');
+                singleSourceFlow.classList.remove('hidden');
+            } else {
+                singleSourceReason.classList.add('hidden');
+                approvalFlowPreview.classList.remove('hidden');
+                singleSourceFlow.classList.add('hidden');
+            }
+        });
+    });
+
+    var currencySelect = document.getElementById('currency-select');
+    var currencySymbol = document.getElementById('currency-symbol');
+    var amountInput = document.getElementById('amount-input');
+    var currentAmount = document.getElementById('current-amount');
+    var remainingBudget = document.getElementById('remaining-budget');
+    var budgetWarning = document.getElementById('budget-warning');
+
+    var currencySymbols = {
+        'CNY': '¥',
+        'USD': '$',
+        'EUR': '€',
+        'JPY': '¥',
+        'HKD': 'HK$'
+    };
+
+    currencySelect.addEventListener('change', function() {
+        currencySymbol.textContent = currencySymbols[this.value];
+    });
+
+    amountInput.addEventListener('input', function() {
+        var amount = parseFloat(this.value) || 0;
+        var budget = 85000;
+        var remaining = budget - amount;
+        
+        currentAmount.textContent = currencySymbols[currencySelect.value] + amount.toFixed(2);
+        remainingBudget.textContent = currencySymbols[currencySelect.value] + remaining.toFixed(2);
+        
+        if (remaining < 0) {
+            remainingBudget.classList.remove('text-green-600');
+            remainingBudget.classList.add('text-red-600');
+            budgetWarning.classList.remove('hidden');
+        } else {
+            remainingBudget.classList.remove('text-red-600');
+            remainingBudget.classList.add('text-green-600');
+            budgetWarning.classList.add('hidden');
+        }
+    });
+
+    var submitBtn = document.getElementById('submit-btn');
+    var approvalModal = document.getElementById('approval-modal');
+    var closeModal = document.getElementById('close-modal');
+    var cancelSubmit = document.getElementById('cancel-submit');
+    var confirmSubmit = document.getElementById('confirm-submit');
+
+    submitBtn.addEventListener('click', function() {
+        var supplierType = document.querySelector('input[name="supplier-type"]:checked').value;
+        var supplierTypeModal = document.getElementById('supplier-type-modal');
+        var leaderApprovalStep = document.getElementById('leader-approval-step');
+        
+        if (supplierType === 'single') {
+            supplierTypeModal.textContent = '单一来源供应商';
+            leaderApprovalStep.classList.remove('hidden');
+        } else {
+            supplierTypeModal.textContent = '多个候选供应商';
+            leaderApprovalStep.classList.add('hidden');
+        }
+        
+        approvalModal.classList.remove('hidden');
+    });
+
+    closeModal.addEventListener('click', function() {
+        approvalModal.classList.add('hidden');
+    });
+
+    cancelSubmit.addEventListener('click', function() {
+        approvalModal.classList.add('hidden');
+    });
+
+    confirmSubmit.addEventListener('click', function() {
+        alert('采购申请已提交！申请单号：PR-2024-00157');
+        approvalModal.classList.add('hidden');
+    });
+
+    approvalModal.addEventListener('click', function(e) {
+        if (e.target === approvalModal) {
+            approvalModal.classList.add('hidden');
+        }
+    });
+});
+</script>
+
+</body>
+</html>

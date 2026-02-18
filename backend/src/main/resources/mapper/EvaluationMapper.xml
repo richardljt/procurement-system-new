@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.procurement.mapper.EvaluationMapper">
+
+    <select id="getProjectByCode" resultType="com.example.procurement.entity.EvaluationProject">
+        SELECT * FROM evaluation_project WHERE project_code = #{projectCode}
+    </select>
+
+    <select id="getSuppliers" resultType="com.example.procurement.entity.EvaluationSupplier">
+        SELECT * FROM evaluation_supplier WHERE evaluation_id = #{evaluationId} ORDER BY rank_position ASC
+    </select>
+
+    <select id="getExperts" resultType="com.example.procurement.entity.EvaluationExpert">
+        SELECT * FROM evaluation_expert WHERE evaluation_id = #{evaluationId}
+    </select>
+
+    <select id="getScores" resultType="com.example.procurement.entity.EvaluationScore">
+        SELECT * FROM evaluation_score WHERE evaluation_id = #{evaluationId}
+    </select>
+
+    <select id="getLogs" resultType="com.example.procurement.entity.EvaluationLog">
+        SELECT * FROM evaluation_log WHERE evaluation_id = #{evaluationId} ORDER BY timestamp DESC
+    </select>
+
+    <select id="getFeedbacks" resultType="com.example.procurement.entity.EvaluationFeedback">
+        SELECT * FROM evaluation_feedback WHERE evaluation_id = #{evaluationId} ORDER BY create_time DESC
+    </select>
+
+    <update id="updateProjectStatus">
+        UPDATE evaluation_project SET status = #{status} WHERE id = #{id}
+    </update>
+
+    <update id="updateProjectStage">
+        UPDATE evaluation_project SET current_stage = #{stage} WHERE id = #{id}
+    </update>
+
+    <insert id="insertLog" parameterType="com.example.procurement.entity.EvaluationLog" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO evaluation_log (evaluation_id, user_name, action, details, timestamp)
+        VALUES (#{evaluationId}, #{userName}, #{action}, #{details}, NOW())
+    </insert>
+
+    <insert id="insertFeedback" parameterType="com.example.procurement.entity.EvaluationFeedback" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO evaluation_feedback (evaluation_id, supplier_id, expert_name, question, status, create_time)
+        VALUES (#{evaluationId}, #{supplierId}, #{expertName}, #{question}, #{status}, NOW())
+    </insert>
+
+    <update id="updateFeedbackStatus">
+        UPDATE evaluation_feedback SET reply = #{reply}, status = #{status} WHERE id = #{id}
+    </update>
+    
+    <select id="getScoreByExpertAndSupplier" resultType="com.example.procurement.entity.EvaluationScore">
+        SELECT * FROM evaluation_score 
+        WHERE evaluation_id = #{evaluationId} AND expert_id = #{expertId} AND supplier_id = #{supplierId} AND stage = #{stage}
+    </select>
+
+    <insert id="insertScore" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO evaluation_score (evaluation_id, supplier_id, expert_id, score, details, comment, stage)
+        VALUES (#{evaluationId}, #{supplierId}, #{expertId}, #{score}, #{details}, #{comment}, #{stage})
+    </insert>
+
+    <update id="updateScore">
+        UPDATE evaluation_score SET score = #{score}, details = #{details}, comment = #{comment} 
+        WHERE id = #{id}
+    </update>
+
+    <insert id="insertProject" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO evaluation_project (project_code, title, bid_id, status, current_stage, organizer_name, start_time, create_time, update_time)
+        VALUES (#{projectCode}, #{title}, #{bidId}, #{status}, #{currentStage}, #{organizerName}, #{startTime}, NOW(), NOW())
+    </insert>
+
+    <insert id="insertSupplier" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO evaluation_supplier (evaluation_id, supplier_name, supplier_code, business_score, price_score, total_score, rank_position)
+        VALUES (#{evaluationId}, #{supplierName}, #{supplierCode}, #{businessScore}, #{priceScore}, #{totalScore}, #{rankPosition})
+    </insert>
+
+    <insert id="insertExpert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO evaluation_expert (evaluation_id, expert_name, role, avatar, is_online, has_confirmed)
+        VALUES (#{evaluationId}, #{expertName}, #{role}, #{avatar}, #{isOnline}, #{hasConfirmed})
+    </insert>
+
+    <select id="getProjectList" resultType="com.example.procurement.entity.EvaluationProject">
+        SELECT * FROM evaluation_project
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (title LIKE CONCAT('%', #{keyword}, '%') OR project_code LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+            <if test="status != null and status != '' and status != 'all'">
+                AND status = #{status}
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="getMessages" resultType="com.example.procurement.entity.EvaluationMessage">
+        SELECT * FROM evaluation_message 
+        WHERE evaluation_id = #{evaluationId} 
+        <if test="supplierId != null">
+            AND supplier_id = #{supplierId}
+        </if>
+        <if test="stage != null">
+            AND stage = #{stage}
+        </if>
+        ORDER BY create_time ASC
+    </select>
+
+    <insert id="insertMessage" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO evaluation_message (evaluation_id, supplier_id, sender_id, sender_name, sender_role, content, parent_id, attachment_name, attachment_path, stage, create_time)
+        VALUES (#{evaluationId}, #{supplierId}, #{senderId}, #{senderName}, #{senderRole}, #{content}, #{parentId}, #{attachmentName}, #{attachmentPath}, #{stage}, NOW())
+    </insert>
+
+    <delete id="deleteMessage">
+        DELETE FROM evaluation_message WHERE id = #{id}
+    </delete>
+
+    <select id="findByBidId" resultType="com.example.procurement.entity.EvaluationProject">
+        SELECT * FROM evaluation_project WHERE bid_id = #{bidId}
+    </select>
+
+</mapper>

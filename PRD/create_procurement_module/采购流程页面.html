@@ -1,0 +1,764 @@
+<!DOCTYPE html><html><head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Procurement Request Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> window.FontAwesomeConfig = { autoReplaceSvg: 'nest'};</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+    <style>::-webkit-scrollbar { display: none;}</style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-sans">
+
+<header id="header" class="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center space-x-6">
+        <div class="flex items-center">
+            <div class="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center">
+                <i class="fa-solid fa-cart-shopping text-white text-sm"></i>
+            </div>
+            <span class="ml-3 text-lg font-semibold text-gray-800">采购管理系统</span>
+        </div>
+        <nav class="flex items-center space-x-1 ml-8">
+            <a href="#" class="px-4 py-2 text-sm text-blue-600 bg-blue-50 rounded-md font-medium">采购申请</a>
+            <a href="#" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">供应商管理</a>
+            <a href="#" class="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">统计报表</a>
+        </nav>
+    </div>
+    <div class="flex items-center space-x-4">
+        <button class="p-2 text-gray-600 hover:bg-gray-100 rounded-md">
+            <i class="fa-regular fa-bell text-lg"></i>
+        </button>
+        <button class="p-2 text-gray-600 hover:bg-gray-100 rounded-md">
+            <i class="fa-solid fa-gear text-lg"></i>
+        </button>
+        <div class="flex items-center space-x-2 pl-4 border-l border-gray-200">
+            <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" class="w-9 h-9 rounded-full object-cover" alt="User Avatar">
+            <span class="text-sm font-medium text-gray-700">张明</span>
+        </div>
+    </div>
+</header>
+
+<div class="flex">
+    <aside id="sidebar" class="w-72 bg-white border-r border-gray-200 h-[calc(100vh-73px)] overflow-y-auto">
+    <div class="p-6">
+        <div class="mb-6">
+            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">待办任务</h3>
+            <ul class="space-y-1">
+                <li>
+                    <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                        <i class="fa-regular fa-clock w-5 text-gray-400"></i>
+                        <span class="ml-3">待我处理</span>
+                        <span class="ml-auto bg-red-500 text-white text-xs px-2 py-0.5 rounded-full">3</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                        <i class="fa-regular fa-eye w-5 text-gray-400"></i>
+                        <span class="ml-3">抄送我的</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                        <i class="fa-solid fa-star w-5 text-gray-400"></i>
+                        <span class="ml-3">我的收藏</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="mb-6">
+            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">采购申请管理</h3>
+            <ul class="space-y-1">
+                <li>
+                    <a href="#" class="flex items-center px-3 py-2 text-sm text-blue-600 bg-blue-50 rounded-md font-medium">
+                        <i class="fa-regular fa-file-lines w-5"></i>
+                        <span class="ml-3">我的申请</span>
+                        <span class="ml-auto text-xs text-gray-500">12</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                        <i class="fa-solid fa-plus w-5 text-gray-400"></i>
+                        <span class="ml-3">新建申请</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                        <i class="fa-solid fa-clock-rotate-left w-5 text-gray-400"></i>
+                        <span class="ml-3">历史申请</span>
+                        <span class="ml-auto text-xs text-gray-500">43</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="mb-6">
+            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">集采办管理</h3>
+            <ul class="space-y-1">
+                <li>
+                    <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                        <i class="fa-solid fa-users-gear w-5 text-gray-400"></i>
+                        <span class="ml-3">需求评审会管理</span>
+                        <span class="ml-auto text-xs text-gray-500">8</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                        <i class="fa-solid fa-gavel w-5 text-gray-400"></i>
+                        <span class="ml-3">评标评审会管理</span>
+                        <span class="ml-auto text-xs text-gray-500">6</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                        <i class="fa-solid fa-users w-5 text-gray-400"></i>
+                        <span class="ml-3">专家库管理</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="mb-6">
+            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">合同管理</h3>
+            <ul class="space-y-1">
+                <li>
+                    <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                        <i class="fa-solid fa-file-contract w-5 text-gray-400"></i>
+                        <span class="ml-3">合同归档管理</span>
+                        <span class="ml-auto text-xs text-gray-500">5</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                        <i class="fa-solid fa-folder-open w-5 text-gray-400"></i>
+                        <span class="ml-3">合同档案库</span>
+                        <span class="ml-auto text-xs text-gray-500">156</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div>
+            <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">快捷筛选</h3>
+            <ul class="space-y-1">
+                <li>
+                    <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                        <i class="fa-solid fa-filter w-5 text-gray-400"></i>
+                        <span class="ml-3">紧急采购</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                        <i class="fa-regular fa-calendar-xmark w-5 text-gray-400"></i>
+                        <span class="ml-3">即将超期</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md">
+                        <i class="fa-solid fa-chart-line w-5 text-gray-400"></i>
+                        <span class="ml-3">统计报表</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</aside>
+
+    <main id="main-content" class="flex-1 overflow-y-auto">
+        <div class="p-8">
+            <div class="mb-8">
+                <div class="flex items-center justify-between mb-2">
+                    <h1 class="text-2xl font-semibold text-gray-800">采购申请详情</h1>
+                    <div class="flex items-center space-x-3">
+                        <button class="px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                            <i class="fa-solid fa-download mr-2"></i>导出
+                        </button>
+                        <button class="px-4 py-2 text-sm text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50">
+                            <i class="fa-solid fa-print mr-2"></i>打印
+                        </button>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-500">申请单号：PR-2024-00156 | 创建时间：2024-01-08 14:30</p>
+            </div>
+
+            <div id="progress-section" class="bg-white rounded-lg border border-gray-200 p-8 mb-6">
+                <div class="mb-8">
+                    <div class="flex items-center justify-between mb-2">
+                        <h2 class="text-lg font-semibold text-gray-800">流程进度</h2>
+                        <div class="flex items-center space-x-2">
+                            <div class="flex items-center">
+                                <div class="w-2 h-2 rounded-full bg-blue-500 mr-2"></div>
+                                <span class="text-sm text-gray-600">当前阶段</span>
+                            </div>
+                            <span class="text-gray-300 mx-2">|</span>
+                            <span class="text-sm font-medium text-gray-700">预计完成：2024-02-15</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-1 mb-2">
+                        <div class="flex-1 h-2 bg-gradient-to-r from-orange-400 to-orange-400 rounded-full"></div>
+                        <div class="flex-1 h-2 bg-gradient-to-r from-orange-400 to-purple-500 rounded-full"></div>
+                        <div class="flex-1 h-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full"></div>
+                        <div class="flex-1 h-2 bg-gray-200 rounded-full"></div>
+                        <div class="flex-1 h-2 bg-gray-200 rounded-full"></div>
+                    </div>
+                    <div class="flex justify-between text-xs text-gray-500">
+                        <span>0%</span>
+                        <span>60% 已完成</span>
+                        <span>100%</span>
+                    </div>
+                </div>
+
+                <div class="relative">
+                    <div class="absolute left-6 top-8 bottom-8 w-0.5 bg-gray-200"></div>
+                    
+                    <div class="relative space-y-6">
+                        <div class="flex items-start">
+                            <div class="relative z-10 flex items-center justify-center w-12 h-12 bg-green-500 rounded-full border-4 border-white shadow-sm">
+                                <i class="fa-solid fa-check text-white"></i>
+                            </div>
+                            <div class="ml-6 flex-1 bg-green-50 border border-green-200 rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center">
+                                        <h3 class="text-base font-semibold text-gray-800">集采申请提交</h3>
+                                        <span class="ml-3 px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full font-medium">已完成</span>
+                                    </div>
+                                    <span class="text-sm text-gray-500">耗时：2小时</span>
+                                </div>
+                                <div class="flex items-center text-sm text-gray-600 mb-3">
+                                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" class="w-6 h-6 rounded-full object-cover mr-2" alt="User">
+                                    <span class="font-medium">张明</span>
+                                    <span class="mx-2 text-gray-400">·</span>
+                                    <span class="text-gray-500">2024-01-08 14:30</span>
+                                </div>
+                                <p class="text-sm text-gray-600 mb-3">申请集中采购办公设备及耗材，包括笔记本电脑5台、打印机2台等</p>
+                                <div class="bg-white rounded border border-green-200 p-3 mb-3">
+                                    <div class="flex items-start mb-2">
+                                        <span class="text-xs font-semibold text-gray-600 w-24">供应商类型：</span>
+                                        <span class="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded font-medium">候选供应商</span>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <span class="text-xs font-semibold text-gray-600 w-24">候选供应商：</span>
+                                        <div class="flex-1 text-xs text-gray-700">
+                                            <span class="inline-block mr-2">联想科技有限公司</span>
+                                            <span class="inline-block mr-2">戴尔(中国)有限公司</span>
+                                            <span class="inline-block">惠普(中国)有限公司</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button class="text-xs text-blue-600 hover:text-blue-700">
+                                        <i class="fa-regular fa-file-lines mr-1"></i>查看申请单
+                                    </button>
+                                    <span class="text-gray-300">|</span>
+                                    <button class="text-xs text-blue-600 hover:text-blue-700">
+                                        <i class="fa-regular fa-comment mr-1"></i>2条备注
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="relative z-10 flex items-center justify-center w-12 h-12 bg-green-500 rounded-full border-4 border-white shadow-sm">
+                                <i class="fa-solid fa-check text-white"></i>
+                            </div>
+                            <div class="ml-6 flex-1 bg-green-50 border border-green-200 rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center">
+                                        <h3 class="text-base font-semibold text-gray-800">需求评审会</h3>
+                                        <span class="ml-3 px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full font-medium">已完成</span>
+                                    </div>
+                                    <span class="text-sm text-gray-500">耗时：3天</span>
+                                </div>
+                                <div class="space-y-3">
+                                    <div class="bg-white rounded border border-green-200 p-3">
+                                        <div class="flex items-start mb-2">
+                                            <span class="text-xs font-semibold text-gray-600 w-28">评审会日期：</span>
+                                            <span class="text-xs text-gray-700 font-medium">2024-01-11 14:00</span>
+                                        </div>
+                                        <div class="flex items-start mb-2">
+                                            <span class="text-xs font-semibold text-gray-600 w-28">指定评审专家：</span>
+                                            <div class="flex-1">
+                                                <div class="flex items-center flex-wrap gap-2">
+                                                    <div class="flex items-center bg-purple-50 px-2 py-1 rounded">
+                                                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg" class="w-5 h-5 rounded-full object-cover mr-1.5" alt="Expert">
+                                                        <span class="text-xs text-gray-700">李技术总监</span>
+                                                    </div>
+                                                    <div class="flex items-center bg-purple-50 px-2 py-1 rounded">
+                                                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-4.jpg" class="w-5 h-5 rounded-full object-cover mr-1.5" alt="Expert">
+                                                        <span class="text-xs text-gray-700">王财务经理</span>
+                                                    </div>
+                                                    <div class="flex items-center bg-purple-50 px-2 py-1 rounded">
+                                                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-8.jpg" class="w-5 h-5 rounded-full object-cover mr-1.5" alt="Expert">
+                                                        <span class="text-xs text-gray-700">陈采购主管</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="flex items-start">
+                                            <span class="text-xs font-semibold text-gray-600 w-28">候选评审专家：</span>
+                                            <div class="flex-1">
+                                                <div class="flex items-center flex-wrap gap-2">
+                                                    <div class="flex items-center bg-gray-100 px-2 py-1 rounded">
+                                                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-9.jpg" class="w-5 h-5 rounded-full object-cover mr-1.5" alt="Expert">
+                                                        <span class="text-xs text-gray-600">赵IT专家</span>
+                                                    </div>
+                                                    <div class="flex items-center bg-gray-100 px-2 py-1 rounded">
+                                                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" class="w-5 h-5 rounded-full object-cover mr-1.5" alt="Expert">
+                                                        <span class="text-xs text-gray-600">周质量专员</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="p-3 bg-white rounded border border-green-200">
+                                        <p class="text-sm text-gray-700 mb-2"><span class="font-medium">评审结论：</span>采购需求明确，技术规格合理，预算充足。</p>
+                                        <p class="text-xs text-gray-600">一致同意进入供应商投标阶段，建议投标期限为10个工作日。</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="relative z-10 flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full border-4 border-white shadow-lg">
+                                <div class="w-3 h-3 bg-white rounded-full animate-pulse"></div>
+                            </div>
+                            <div class="ml-6 flex-1 bg-blue-50 border-2 border-blue-300 rounded-lg p-4 shadow-sm">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center">
+                                        <h3 class="text-base font-semibold text-gray-800">供应商投标</h3>
+                                        <span class="ml-3 px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full font-medium">进行中</span>
+                                    </div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="text-sm text-gray-500">已用时：5天</span>
+                                        <span class="text-gray-300">|</span>
+                                        <span class="text-sm font-medium text-orange-600">
+                                            <i class="fa-regular fa-clock mr-1"></i>距截止还剩 3天
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="flex items-center text-sm text-gray-600 mb-3">
+                                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-8.jpg" class="w-6 h-6 rounded-full object-cover mr-2" alt="User">
+                                        <span class="font-medium">陈采购</span>
+                                        <span class="mx-2 text-gray-400">·</span>
+                                        <span class="text-gray-500">采购专员</span>
+                                        <span class="mx-2 text-gray-400">·</span>
+                                        <span class="text-blue-600 font-medium">监控中</span>
+                                    </div>
+                                    <div class="bg-white rounded border border-blue-200 p-3 mb-3">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <span class="text-sm font-medium text-gray-700">投标截止时间</span>
+                                            <span class="text-sm font-semibold text-gray-800">2024-01-25 17:00</span>
+                                        </div>
+                                        <div class="w-full bg-gray-200 rounded-full h-2 mb-1">
+                                            <div class="bg-blue-500 h-2 rounded-full" style="width: 62%"></div>
+                                        </div>
+                                        <div class="flex justify-between text-xs text-gray-500">
+                                            <span>已过 62%</span>
+                                            <span>剩余 3天</span>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <div class="bg-white rounded border border-blue-200 p-3">
+                                            <div class="flex items-center justify-between mb-2">
+                                                <div class="flex items-center">
+                                                    <div class="w-8 h-8 bg-blue-100 rounded flex items-center justify-center mr-2">
+                                                        <i class="fa-solid fa-building text-blue-600 text-xs"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-sm font-medium text-gray-800">联想科技有限公司</p>
+                                                        <p class="text-xs text-gray-500">供应商编号：SUP-2024-001</p>
+                                                    </div>
+                                                </div>
+                                                <div class="flex items-center">
+                                                    <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium">
+                                                        <i class="fa-solid fa-check mr-1"></i>已投标
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center text-xs text-gray-500">
+                                                <i class="fa-regular fa-clock mr-1"></i>
+                                                <span>投标时间：2024-01-20 15:30</span>
+                                                <span class="mx-2">|</span>
+                                                <span class="text-green-600">提前5天提交</span>
+                                            </div>
+                                        </div>
+                                        <div class="bg-white rounded border border-blue-200 p-3">
+                                            <div class="flex items-center justify-between mb-2">
+                                                <div class="flex items-center">
+                                                    <div class="w-8 h-8 bg-blue-100 rounded flex items-center justify-center mr-2">
+                                                        <i class="fa-solid fa-building text-blue-600 text-xs"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-sm font-medium text-gray-800">戴尔(中国)有限公司</p>
+                                                        <p class="text-xs text-gray-500">供应商编号：SUP-2024-002</p>
+                                                    </div>
+                                                </div>
+                                                <div class="flex items-center">
+                                                    <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium">
+                                                        <i class="fa-solid fa-check mr-1"></i>已投标
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center text-xs text-gray-500">
+                                                <i class="fa-regular fa-clock mr-1"></i>
+                                                <span>投标时间：2024-01-21 10:15</span>
+                                                <span class="mx-2">|</span>
+                                                <span class="text-green-600">提前4天提交</span>
+                                            </div>
+                                        </div>
+                                        <div class="bg-white rounded border border-orange-200 p-3">
+                                            <div class="flex items-center justify-between mb-2">
+                                                <div class="flex items-center">
+                                                    <div class="w-8 h-8 bg-orange-100 rounded flex items-center justify-center mr-2">
+                                                        <i class="fa-solid fa-building text-orange-600 text-xs"></i>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-sm font-medium text-gray-800">惠普(中国)有限公司</p>
+                                                        <p class="text-xs text-gray-500">供应商编号：SUP-2024-003</p>
+                                                    </div>
+                                                </div>
+                                                <div class="flex items-center">
+                                                    <span class="px-2 py-1 bg-orange-100 text-orange-700 text-xs rounded-full font-medium">
+                                                        <i class="fa-solid fa-hourglass-half mr-1"></i>待投标
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-center text-xs text-gray-500">
+                                                <i class="fa-regular fa-clock mr-1"></i>
+                                                <span>距截止还剩：3天</span>
+                                                <span class="mx-2">|</span>
+                                                <span class="text-orange-600">尚未提交</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button class="px-3 py-1.5 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700">
+                                        <i class="fa-solid fa-bell mr-1"></i>提醒供应商
+                                    </button>
+                                    <button class="px-3 py-1.5 bg-white border border-gray-300 text-sm text-gray-700 rounded-md hover:bg-gray-50">
+                                        <i class="fa-solid fa-eye mr-1"></i>查看投标详情
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="relative z-10 flex items-center justify-center w-12 h-12 bg-gray-300 rounded-full border-4 border-white">
+                                <i class="fa-solid fa-circle text-gray-500 text-xs"></i>
+                            </div>
+                            <div class="ml-6 flex-1 bg-gray-50 border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center">
+                                        <h3 class="text-base font-semibold text-gray-800">开评标会</h3>
+                                        <span class="ml-3 px-2 py-0.5 bg-gray-200 text-gray-600 text-xs rounded-full font-medium">待处理</span>
+                                    </div>
+                                    <span class="text-sm text-gray-400">预计开始：2024-01-26</span>
+                                </div>
+                                <div class="space-y-2 mb-3">
+                                    <div class="flex items-center text-sm text-gray-500">
+                                        <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center mr-2">
+                                            <span class="text-xs font-semibold text-gray-500">1</span>
+                                        </div>
+                                        <span class="font-medium">商务评标</span>
+                                        <span class="mx-2">·</span>
+                                        <span class="text-xs">资质审查、技术方案评审</span>
+                                    </div>
+                                    <div class="flex items-center text-sm text-gray-500">
+                                        <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center mr-2">
+                                            <span class="text-xs font-semibold text-gray-500">2</span>
+                                        </div>
+                                        <span class="font-medium">价格评标</span>
+                                        <span class="mx-2">·</span>
+                                        <span class="text-xs">价格对比、综合评分</span>
+                                    </div>
+                                </div>
+                                <div class="bg-gray-100 rounded p-3">
+                                    <div class="flex items-center text-xs text-gray-500 mb-1">
+                                        <i class="fa-solid fa-users mr-1"></i>
+                                        <span>评标委员会：</span>
+                                    </div>
+                                    <p class="text-xs text-gray-600">李技术总监、王财务经理、陈采购主管、赵IT专家、周质量专员</p>
+                                </div>
+                                <div class="mt-3 p-2 bg-gray-100 rounded text-xs text-gray-500 italic">
+                                    <i class="fa-solid fa-info-circle mr-1"></i>
+                                    待投标截止后，将公布中标结果
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start">
+                            <div class="relative z-10 flex items-center justify-center w-12 h-12 bg-gray-300 rounded-full border-4 border-white">
+                                <i class="fa-solid fa-circle text-gray-500 text-xs"></i>
+                            </div>
+                            <div class="ml-6 flex-1 bg-gray-50 border border-gray-200 rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center">
+                                        <h3 class="text-base font-semibold text-gray-800">合同签署</h3>
+                                        <span class="ml-3 px-2 py-0.5 bg-gray-200 text-gray-600 text-xs rounded-full font-medium">待处理</span>
+                                    </div>
+                                    <span class="text-sm text-gray-400">预计完成：2024-02-15</span>
+                                </div>
+                                <div class="flex items-center text-sm text-gray-500 mb-3">
+                                    <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-4.jpg" class="w-6 h-6 rounded-full object-cover mr-2 opacity-50" alt="User">
+                                    <span>王合同专员</span>
+                                    <span class="mx-2">·</span>
+                                    <span>合同管理部</span>
+                                </div>
+                                <p class="text-sm text-gray-500 mb-2">待中标结果确认后，与中标供应商签订采购合同</p>
+                                <div class="bg-gray-100 rounded p-3 text-xs text-gray-600">
+                                    <div class="flex items-start mb-1">
+                                        <i class="fa-solid fa-check-circle text-gray-400 mr-2 mt-0.5"></i>
+                                        <span>合同起草与审核</span>
+                                    </div>
+                                    <div class="flex items-start mb-1">
+                                        <i class="fa-solid fa-check-circle text-gray-400 mr-2 mt-0.5"></i>
+                                        <span>双方签署确认</span>
+                                    </div>
+                                    <div class="flex items-start">
+                                        <i class="fa-solid fa-check-circle text-gray-400 mr-2 mt-0.5"></i>
+                                        <span>合同归档存档</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6 mb-6">
+                <div id="request-details" class="bg-white rounded-lg border border-gray-200 p-6">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4">申请详情</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <span class="text-sm text-gray-500 w-24 flex-shrink-0">申请部门：</span>
+                            <span class="text-sm text-gray-800 font-medium">技术研发部</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-sm text-gray-500 w-24 flex-shrink-0">申请人：</span>
+                            <span class="text-sm text-gray-800 font-medium">张明</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-sm text-gray-500 w-24 flex-shrink-0">紧急程度：</span>
+                            <span class="px-2 py-0.5 bg-orange-100 text-orange-700 text-xs rounded font-medium">中等</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-sm text-gray-500 w-24 flex-shrink-0">预算金额：</span>
+                            <span class="text-sm text-gray-800 font-medium">¥85,000.00</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-sm text-gray-500 w-24 flex-shrink-0">采购类型：</span>
+                            <span class="text-sm text-gray-800">固定资产采购</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-sm text-gray-500 w-24 flex-shrink-0">交付地址：</span>
+                            <span class="text-sm text-gray-800">北京市朝阳区科技园A座5层</span>
+                        </div>
+                        <div class="flex items-start">
+                            <span class="text-sm text-gray-500 w-24 flex-shrink-0">需求说明：</span>
+                            <span class="text-sm text-gray-800">因团队扩编，需采购新员工办公设备。要求笔记本电脑配置i7处理器、16G内存、512G固态硬盘。</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="timeline-stats" class="bg-white rounded-lg border border-gray-200 p-6">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4">流程统计</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center mr-3">
+                                    <i class="fa-solid fa-clock text-white"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">总耗时</p>
+                                    <p class="text-lg font-semibold text-gray-800">4天 6小时</p>
+                                </div>
+                            </div>
+                            <span class="text-xs text-gray-500">预计还需7天</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center mr-3">
+                                    <i class="fa-solid fa-check-double text-white"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">已完成阶段</p>
+                                    <p class="text-lg font-semibold text-gray-800">2 / 5</p>
+                                </div>
+                            </div>
+                            <span class="text-xs text-green-600 font-medium">40%</span>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center mr-3">
+                                    <i class="fa-solid fa-users text-white"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">参与人数</p>
+                                    <p class="text-lg font-semibold text-gray-800">5人</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
+                            <div class="flex items-center">
+                                <div class="w-10 h-10 bg-orange-500 rounded-lg flex items-center justify-center mr-3">
+                                    <i class="fa-regular fa-comment-dots text-white"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">沟通记录</p>
+                                    <p class="text-lg font-semibold text-gray-800">12条</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="items-section" class="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">采购清单</h2>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50 border-b border-gray-200">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">序号</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">物品名称</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">规格型号</th>
+                                <th class="px-4 py-3 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">数量</th>
+                                <th class="px-4 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">预估单价</th>
+                                <th class="px-4 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">小计</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3 text-sm text-gray-600">1</td>
+                                <td class="px-4 py-3 text-sm text-gray-800 font-medium">笔记本电脑</td>
+                                <td class="px-4 py-3 text-sm text-gray-600">ThinkPad T14 i7/16G/512G</td>
+                                <td class="px-4 py-3 text-sm text-gray-800 text-center">5</td>
+                                <td class="px-4 py-3 text-sm text-gray-800 text-right">¥8,500.00</td>
+                                <td class="px-4 py-3 text-sm text-gray-800 font-medium text-right">¥42,500.00</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3 text-sm text-gray-600">2</td>
+                                <td class="px-4 py-3 text-sm text-gray-800 font-medium">激光打印机</td>
+                                <td class="px-4 py-3 text-sm text-gray-600">HP LaserJet Pro M428</td>
+                                <td class="px-4 py-3 text-sm text-gray-800 text-center">2</td>
+                                <td class="px-4 py-3 text-sm text-gray-800 text-right">¥3,200.00</td>
+                                <td class="px-4 py-3 text-sm text-gray-800 font-medium text-right">¥6,400.00</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3 text-sm text-gray-600">3</td>
+                                <td class="px-4 py-3 text-sm text-gray-800 font-medium">显示器</td>
+                                <td class="px-4 py-3 text-sm text-gray-600">Dell 27寸 4K</td>
+                                <td class="px-4 py-3 text-sm text-gray-800 text-center">5</td>
+                                <td class="px-4 py-3 text-sm text-gray-800 text-right">¥2,800.00</td>
+                                <td class="px-4 py-3 text-sm text-gray-800 font-medium text-right">¥14,000.00</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3 text-sm text-gray-600">4</td>
+                                <td class="px-4 py-3 text-sm text-gray-800 font-medium">办公桌椅套装</td>
+                                <td class="px-4 py-3 text-sm text-gray-600">人体工学椅+升降桌</td>
+                                <td class="px-4 py-3 text-sm text-gray-800 text-center">5</td>
+                                <td class="px-4 py-3 text-sm text-gray-800 text-right">¥3,200.00</td>
+                                <td class="px-4 py-3 text-sm text-gray-800 font-medium text-right">¥16,000.00</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-3 text-sm text-gray-600">5</td>
+                                <td class="px-4 py-3 text-sm text-gray-800 font-medium">其他办公用品</td>
+                                <td class="px-4 py-3 text-sm text-gray-600">文具、收纳等</td>
+                                <td class="px-4 py-3 text-sm text-gray-800 text-center">1</td>
+                                <td class="px-4 py-3 text-sm text-gray-800 text-right">¥6,100.00</td>
+                                <td class="px-4 py-3 text-sm text-gray-800 font-medium text-right">¥6,100.00</td>
+                            </tr>
+                            <tr class="bg-gray-50 font-semibold">
+                                <td colspan="5" class="px-4 py-3 text-sm text-gray-800 text-right">合计金额：</td>
+                                <td class="px-4 py-3 text-base text-blue-600 text-right">¥85,000.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="activity-log" class="bg-white rounded-lg border border-gray-200 p-6">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">活动日志</h2>
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-8.jpg" class="w-8 h-8 rounded-full object-cover mr-3 mt-1" alt="User">
+                        <div class="flex-1">
+                            <div class="flex items-center mb-1">
+                                <span class="text-sm font-medium text-gray-800">陈采购</span>
+                                <span class="mx-2 text-gray-300">·</span>
+                                <span class="text-xs text-gray-500">2小时前</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-2">更新了采购进度：已完成商务谈判，正在准备合同签订</p>
+                            <div class="flex items-center space-x-2">
+                                <button class="text-xs text-gray-500 hover:text-blue-600">
+                                    <i class="fa-regular fa-thumbs-up mr-1"></i>赞
+                                </button>
+                                <button class="text-xs text-gray-500 hover:text-blue-600">
+                                    <i class="fa-regular fa-comment mr-1"></i>回复
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-4.jpg" class="w-8 h-8 rounded-full object-cover mr-3 mt-1" alt="User">
+                        <div class="flex-1">
+                            <div class="flex items-center mb-1">
+                                <span class="text-sm font-medium text-gray-800">王总监</span>
+                                <span class="mx-2 text-gray-300">·</span>
+                                <span class="text-xs text-gray-500">1天前</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-2">批准了部门审批，建议优先选择已合作供应商</p>
+                            <div class="px-3 py-2 bg-green-50 border border-green-200 rounded text-xs text-green-700">
+                                <i class="fa-solid fa-check mr-1"></i>审批通过
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-3.jpg" class="w-8 h-8 rounded-full object-cover mr-3 mt-1" alt="User">
+                        <div class="flex-1">
+                            <div class="flex items-center mb-1">
+                                <span class="text-sm font-medium text-gray-800">李经理</span>
+                                <span class="mx-2 text-gray-300">·</span>
+                                <span class="text-xs text-gray-500">1天前</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-2">批准了部门审批</p>
+                            <div class="px-3 py-2 bg-green-50 border border-green-200 rounded text-xs text-green-700">
+                                <i class="fa-solid fa-check mr-1"></i>审批通过
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-start">
+                        <img src="https://storage.googleapis.com/uxpilot-auth.appspot.com/avatars/avatar-2.jpg" class="w-8 h-8 rounded-full object-cover mr-3 mt-1" alt="User">
+                        <div class="flex-1">
+                            <div class="flex items-center mb-1">
+                                <span class="text-sm font-medium text-gray-800">张明</span>
+                                <span class="mx-2 text-gray-300">·</span>
+                                <span class="text-xs text-gray-500">4天前</span>
+                            </div>
+                            <p class="text-sm text-gray-600">创建了采购申请</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+
+</body></html>

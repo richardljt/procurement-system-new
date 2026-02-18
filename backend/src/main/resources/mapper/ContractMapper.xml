@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.procurement.mapper.ContractMapper">
+    <resultMap id="BaseResultMap" type="com.example.procurement.entity.Contract">
+        <id column="contract_id" property="contractId" jdbcType="BIGINT"/>
+        <result column="procurement_request_id" property="procurementRequestId" jdbcType="BIGINT"/>
+        <result column="contract_name" property="contractName" jdbcType="VARCHAR"/>
+        <result column="contract_code" property="contractCode" jdbcType="VARCHAR"/>
+        <result column="supplier_id" property="supplierId" jdbcType="BIGINT"/>
+        <result column="amount" property="amount" jdbcType="DECIMAL"/>
+        <result column="signing_date" property="signingDate" jdbcType="TIMESTAMP"/>
+        <result column="attachment_url" property="attachmentUrl" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="signer_name" property="signerName" jdbcType="VARCHAR"/>
+        <result column="signer_contact" property="signerContact" jdbcType="VARCHAR"/>
+        <result column="vendor_signer_name" property="vendorSignerName" jdbcType="VARCHAR"/>
+        <result column="vendor_signer_contact" property="vendorSignerContact" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="create_user_id" property="createUserId" jdbcType="VARCHAR"/>
+        <result column="create_user_name" property="createUserName" jdbcType="VARCHAR"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="update_user_id" property="updateUserId" jdbcType="VARCHAR"/>
+        <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.example.procurement.entity.Contract" useGeneratedKeys="true" keyProperty="contractId">
+        INSERT INTO contract (
+            procurement_request_id, contract_name, contract_code, supplier_id, amount,
+            signing_date, attachment_url, status, 
+            signer_name, signer_contact, vendor_signer_name, vendor_signer_contact,
+            create_time, create_user_id, create_user_name,
+            update_time, update_user_id, update_user_name
+        ) VALUES (
+            #{procurementRequestId}, #{contractName}, #{contractCode}, #{supplierId}, #{amount},
+            #{signingDate}, #{attachmentUrl}, #{status}, 
+            #{signerName}, #{signerContact}, #{vendorSignerName}, #{vendorSignerContact},
+            #{createTime}, #{createUserId}, #{createUserName},
+            #{updateTime}, #{updateUserId}, #{updateUserName}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.example.procurement.entity.Contract">
+        UPDATE contract
+        <set>
+            <if test="contractName != null">contract_name = #{contractName},</if>
+            <if test="contractCode != null">contract_code = #{contractCode},</if>
+            <if test="supplierId != null">supplier_id = #{supplierId},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="signingDate != null">signing_date = #{signingDate},</if>
+            <if test="attachmentUrl != null">attachment_url = #{attachmentUrl},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="signerName != null">signer_name = #{signerName},</if>
+            <if test="signerContact != null">signer_contact = #{signerContact},</if>
+            <if test="vendorSignerName != null">vendor_signer_name = #{vendorSignerName},</if>
+            <if test="vendorSignerContact != null">vendor_signer_contact = #{vendorSignerContact},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateUserId != null">update_user_id = #{updateUserId},</if>
+            <if test="updateUserName != null">update_user_name = #{updateUserName},</if>
+        </set>
+        WHERE contract_id = #{contractId}
+    </update>
+
+    <select id="findById" resultMap="BaseResultMap">
+        SELECT * FROM contract WHERE contract_id = #{contractId}
+    </select>
+
+    <select id="findByProcurementRequestId" resultMap="BaseResultMap">
+        SELECT * FROM contract WHERE procurement_request_id = #{procurementRequestId}
+    </select>
+    
+    <delete id="deleteById">
+        DELETE FROM contract WHERE contract_id = #{contractId}
+    </delete>
+</mapper>
