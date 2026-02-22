@@ -5,6 +5,7 @@
 - 使用React，组件使用Ant Design
 - 部署在nginx上运行
 - 识别代码中的外部域名的图片/css/js文件引入，如果有的话要引入到工程内，我需要在内网部署，不能访问到外网的样式文件。
+- node使用20版本
 
 ## 后端技术约束
 - 开发技术栈方面，使用springboot+mybatis+mysql，Java语言使用jdk8版本

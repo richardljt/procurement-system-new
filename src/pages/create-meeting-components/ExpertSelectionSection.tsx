@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Row, Col, Typography, Avatar, Tag, Empty, Tabs, Select } from 'antd';
-import { UserOutlined, CloseCircleFilled, SearchOutlined } from '@ant-design/icons';
+import CustomIcon from '../../components/common/CustomIcon';
 import { Expert } from '../../types/expert';
 import { getExperts } from '../../api/expert';
 
@@ -55,14 +55,14 @@ const ExpertCard: React.FC<{
           lineHeight: 1
         }}
       >
-        <CloseCircleFilled style={{ fontSize: 20 }} />
+        <CustomIcon type="CloseCircleFilled" style={{ fontSize: 20 }} />
       </div>
     )}
     
     <Avatar 
       size={64} 
       src={expert.avatar} 
-      icon={<UserOutlined />} 
+      icon={<CustomIcon type="UserOutlined" />} 
       style={{ marginBottom: 12, border: '1px solid #f0f0f0' }}
     />
     
@@ -154,7 +154,7 @@ export const ExpertSelectionSection: React.FC<ExpertSelectionSectionProps> = ({
                 }
               }}
               options={options}
-              suffixIcon={<SearchOutlined />}
+              suffixIcon={<CustomIcon type="SearchOutlined" />}
               size="large"
             />
           </div>

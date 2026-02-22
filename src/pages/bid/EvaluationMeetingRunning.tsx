@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import request from '../../utils/request';
+import { useEvaluationData } from '../../hooks/useEvaluationData';
 import { Upload, Button } from 'antd';
+import { useMessageSystem } from '../../hooks/useMessageSystem';
 import { Paperclip } from 'lucide-react';
+import { useScoring } from '../../hooks/useScoring';
 import LogSection from '../../pages/meeting/components/LogSection';
 
 // Types
@@ -93,50 +95,42 @@ interface Feedback {
 
 const EvaluationMeetingRunning: React.FC = () => {
   const { code } = useParams<{ code: string }>();
-  const [data, setData] = useState<EvaluationDetail | null>(null);
+  const { data, isLoading, isError, mutate: mutateEvaluation } = useEvaluationData(code);
   const [activeTab, setActiveTab] = useState<number | null>(null); // Supplier ID
-  const [isEditing, setIsEditing] = useState(true); // Track editing state
   
-  // Mock Current User ID (Expert) - In real app, this comes from auth context
-  // Here we assume the first expert in the list is the current user for demo purposes
   const currentExpertId = data?.experts && data.experts.length > 0 ? data.experts[0].id : 1;
-
-  // Score Form State Interface
-  interface ScoreFormState {
-    tech: { completeness: number; innovation: number; feasibility: number };
-    qual: { certificate: number; cases: number };
-    service: { content: number; response: number };
-    other: { credit: number };
-    price: { score: number };
-    comment: string;
-  }
-
-  const defaultScoreState: ScoreFormState = {
-    tech: { completeness: 0, innovation: 0, feasibility: 0 },
-    qual: { certificate: 0, cases: 0 },
-    service: { content: 0, response: 0 },
-    other: { credit: 0 },
-    price: { score: 0 },
-    comment: ''
-  };
-
-  // Current form state (displayed)
-  const [scores, setScores] = useState<ScoreFormState>(defaultScoreState);
   
-  // Cache for unsaved edits: Map<SupplierId, ScoreFormState>
-  const [scoreCache, setScoreCache] = useState<Record<number, ScoreFormState>>({});
+  const {
+    scores,
+    setScores,
+    scoreCache,
+    setScoreCache,
+    isEditing,
+    setIsEditing,
+    isSubmitting,
+    calculateTotalScore,
+    handleSubmitScore,
+    defaultScoreState,
+  } = useScoring(data, currentExpertId);
 
-  // Message System State
-  const [messages, setMessages] = useState<EvaluationMessage[]>([]);
-  const [activeReplyId, setActiveReplyId] = useState<number | null>(null);
-  const [replyContents, setReplyContents] = useState<Record<number, string>>({});
-  const [replyFiles, setReplyFiles] = useState<Record<number, any>>({});
-  const [messageInput, setMessageInput] = useState('');
-  const [messageFile, setMessageFile] = useState<any>(null);
-  
+
   const [feedbackInput, setFeedbackInput] = useState('');
 
   const [viewStage, setViewStage] = useState<'BUSINESS' | 'PRICE'>('BUSINESS');
+
+  const {
+    messages,
+    isLoading: messagesLoading,
+    activeReplyId,
+    setActiveReplyId,
+    replyContents,
+    setReplyContents,
+    messageInput,
+    setMessageInput,
+    sendMessage,
+    deleteMessage,
+  } = useMessageSystem(code, activeTab, viewStage);
+
 
   useEffect(() => {
     if (data?.currentStage) {
@@ -208,16 +202,7 @@ const EvaluationMeetingRunning: React.FC = () => {
       setActiveTab(newSupplierId);
   };
 
-  const fetchData = async () => {
-    try {
-      const res = await request.get(`/api/evaluation/${code || 'EVAL-2024-001'}`) as unknown as EvaluationDetail;
-      if (res) {
-        setData(res);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
+
 
   useEffect(() => {
     if (data && !activeTab && data.suppliers && data.suppliers.length > 0) {
@@ -251,142 +236,19 @@ const EvaluationMeetingRunning: React.FC = () => {
   // Let's rely on handleTabSwitch for manual switches. 
   // For initial load, we might need a separate effect or just init in fetchData.
 
-  // Message System Logic
-  const fetchMessages = async () => {
-    if (!activeTab) return;
-    try {
-      const res = await request.get(`/api/evaluation/${code || 'EVAL-2024-001'}/messages?supplierId=${activeTab}&stage=${viewStage}`) as unknown as EvaluationMessage[];
-      if (res && Array.isArray(res)) {
-          // Build tree structure
-          const messageMap = new Map<number, EvaluationMessage>();
-          const roots: EvaluationMessage[] = [];
-          
-          // First pass: create map and identify roots
-          res.forEach(msg => {
-              msg.children = []; // Initialize children
-              messageMap.set(msg.id, msg);
-          });
 
-          // Second pass: link children to parents
-          res.forEach(msg => {
-              if (msg.parentId) {
-                  const parent = messageMap.get(msg.parentId);
-                  if (parent) {
-                      parent.children = parent.children || [];
-                      parent.children.push(msg);
-                  } else {
-                      roots.push(msg); 
-                  }
-              } else {
-                  roots.push(msg);
-              }
-          });
-          
-          // Sort roots by time desc (newest first)
-          roots.sort((a, b) => new Date(b.createTime).getTime() - new Date(a.createTime).getTime());
-          
-          // Sort children by time asc (oldest first)
-          messageMap.forEach(msg => {
-              if (msg.children && msg.children.length > 0) {
-                  msg.children.sort((a, b) => new Date(a.createTime).getTime() - new Date(b.createTime).getTime());
-              }
-          });
 
-          setMessages(roots);
-      }
-    } catch (err) {
-      console.error("Failed to fetch messages", err);
-    }
-  };
 
-  useEffect(() => {
-    fetchData();
-    const interval = setInterval(fetchData, 5000);
-    return () => clearInterval(interval);
-  }, [code]);
 
-  useEffect(() => {
-      if (activeTab) {
-          fetchMessages();
-          const interval = setInterval(fetchMessages, 5000);
-          return () => clearInterval(interval);
-      } else {
-          setMessages([]);
-      }
-  }, [activeTab, code, viewStage]);
 
-  const handleSendMessage = async () => {
-      if (!messageInput.trim()) return;
-      if (!activeTab) {
-          alert("请选择一个供应商");
-          return;
-      }
-      
-      try {
-          await request.post(`/api/evaluation/${code || 'EVAL-2024-001'}/message/send`, {
-              content: messageInput,
-              senderName: data?.organizerName || 'Expert',
-              senderRole: 'EXPERT',
-              supplierId: activeTab,
-              attachmentName: messageFile?.name,
-              attachmentPath: messageFile ? '/mock/path/' + messageFile.name : undefined
-          });
-          setMessageInput('');
-          setMessageFile(null);
-          fetchMessages();
-      } catch (err) {
-          console.error(err);
-          alert('发送失败');
-      }
-  };
 
-  const handleReplyMessage = async (parentId: number) => {
-      const content = replyContents[parentId];
-      if (!content || !content.trim()) return;
-      if (!activeTab) {
-          alert("请选择一个供应商");
-          return;
-      }
 
-      const file = replyFiles[parentId];
-
-      try {
-          await request.post(`/api/evaluation/${code || 'EVAL-2024-001'}/message/reply`, {
-              parentId: parentId,
-              content: content,
-              senderName: data?.organizerName || 'Expert',
-              senderRole: 'EXPERT',
-              supplierId: activeTab,
-              attachmentName: file?.name,
-              attachmentPath: file ? '/mock/path/' + file.name : undefined
-          });
-          
-          setReplyContents(prev => ({...prev, [parentId]: ''}));
-          setReplyFiles(prev => ({...prev, [parentId]: null}));
-          setActiveReplyId(null);
-          fetchMessages();
-      } catch (err) {
-          console.error(err);
-          alert('回复失败');
-      }
-  };
-
-  const handleDeleteMessage = async (id: number) => {
-      if (!confirm('确定要删除这条消息吗？')) return;
-      try {
-          await request.delete(`/api/evaluation/${code || 'EVAL-2024-001'}/message/${id}`);
-          fetchMessages();
-      } catch (err) {
-          console.error(err);
-          alert('删除失败');
-      }
-  };
 
   const handleToggleStatus = async (action: 'pause' | 'resume') => {
     if (!confirm(`确定要${action === 'pause' ? '暂停' : '恢复'}评标吗？`)) return;
     try {
       await request.post(`/api/evaluation/${code || 'EVAL-2024-001'}/${action}`);
-      fetchData();
+      mutateEvaluation();
     } catch (err) {
       console.error(err);
     }
@@ -399,7 +261,7 @@ const EvaluationMeetingRunning: React.FC = () => {
 
     try {
       await request.post(`/api/evaluation/${code || 'EVAL-2024-001'}/switch-stage`);
-      await fetchData();
+      await mutateEvaluation();
       setViewStage('PRICE');
     } catch (err) {
       console.error(err);
@@ -414,61 +276,14 @@ const EvaluationMeetingRunning: React.FC = () => {
       await request.post(`/api/evaluation/${code || 'EVAL-2024-001'}/complete`);
       alert('评标已完成！');
       // Ideally redirect or show summary, for now just refresh to show completed status
-      fetchData(); 
+      mutateEvaluation(); 
     } catch (err) {
       console.error(err);
       alert('操作失败');
     }
   };
 
-  const [isSubmitting, setIsSubmitting] = useState(false); // New state to prevent duplicate submission
 
-  const calculateTotalScore = () => {
-    if (viewStage === 'PRICE') {
-        return scores.price?.score || 0;
-    }
-    const { tech, qual, service, other } = scores;
-    return (
-      tech.completeness + tech.innovation + tech.feasibility +
-      qual.certificate + qual.cases +
-      service.content + service.response +
-      other.credit
-    );
-  };
-
-  const handleSubmitScore = async () => {
-      if (!activeTab) return;
-      if (!confirm('确定要提交评分吗？提交后将计入总分且不可再修改。')) return;
-      
-      setIsSubmitting(true);
-      try {
-          const totalScore = calculateTotalScore();
-          const details = JSON.stringify(scores);
-          
-          await request.post(`/api/evaluation/${code || 'EVAL-2024-001'}/score`, {
-              supplierId: activeTab,
-              score: totalScore,
-              details: details,
-              comment: scores.comment,
-              expertId: currentExpertId
-          });
-          
-          alert('评分提交成功！');
-           // Clear cache for this tab to ensure we load the latest saved data from backend
-           setScoreCache(prev => {
-               const newCache = { ...prev };
-               delete newCache[activeTab];
-               return newCache;
-           });
-           setIsEditing(false); // Switch to read-only mode
-           fetchData(); // Refresh to see the score in the table
-      } catch (err) {
-          console.error(err);
-          alert('提交失败，请重试');
-      } finally {
-          setIsSubmitting(false);
-      }
-  };
 
   const handleSendFeedback = async () => {
       if (!feedbackInput.trim()) return;
@@ -479,7 +294,7 @@ const EvaluationMeetingRunning: React.FC = () => {
               expertName: data?.organizerName || 'Expert'
           });
           setFeedbackInput('');
-          fetchData();
+          mutateEvaluation();
       } catch(err) {
           console.error(err);
       }
@@ -726,7 +541,7 @@ const EvaluationMeetingRunning: React.FC = () => {
                                                                 回复
                                                             </button>
                                                             <button 
-                                                                onClick={() => handleDeleteMessage(msg.id)}
+                                                                onClick={() => deleteMessage(msg.id)}
                                                                 className="text-xs text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
                                                             >
                                                                 删除
@@ -758,22 +573,13 @@ const EvaluationMeetingRunning: React.FC = () => {
                                                     onKeyDown={(e) => {
                                                         if (e.key === 'Enter' && !e.shiftKey) {
                                                             e.preventDefault();
-                                                            handleReplyMessage(msg.id);
+                                                            sendMessage(replyContents[msg.id], msg.id);
                                                         }
                                                     }}
                                                 ></textarea>
                                                 <div className="flex justify-between items-center">
-                                                    <Upload 
-                                                        beforeUpload={(file) => {
-                                                            setReplyFiles(prev => ({...prev, [msg.id]: file}));
-                                                            return false;
-                                                        }}
-                                                        showUploadList={false}
-                                                    >
-                                                        <Button size="small" icon={<Paperclip className="w-3 h-3" />} type="text">
-                                                            {replyFiles[msg.id] ? replyFiles[msg.id].name : '附件'}
-                                                        </Button>
-                                                    </Upload>
+                                                    {/* Attachment button for replies can be added here */}
+                                                    <div></div>
                                                     <div className="flex space-x-2">
                                                         <button 
                                                             onClick={() => setActiveReplyId(null)}
@@ -782,7 +588,7 @@ const EvaluationMeetingRunning: React.FC = () => {
                                                             取消
                                                         </button>
                                                         <button 
-                                                            onClick={() => handleReplyMessage(msg.id)}
+                                                            onClick={() => sendMessage(replyContents[msg.id], msg.id)}
                                                             className="px-3 py-1.5 bg-blue-600 text-white rounded text-xs hover:bg-blue-700 transition-colors"
                                                         >
                                                             发送
@@ -803,7 +609,7 @@ const EvaluationMeetingRunning: React.FC = () => {
                                                                 <span className="text-xs text-gray-400">{new Date(reply.createTime).toLocaleString()}</span>
                                                             </div>
                                                             <button 
-                                                                onClick={() => handleDeleteMessage(reply.id)}
+                                                                onClick={() => deleteMessage(reply.id)}
                                                                 className="text-xs text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity"
                                                             >
                                                                 删除
@@ -828,28 +634,17 @@ const EvaluationMeetingRunning: React.FC = () => {
                         </div>
                         <div className="p-5 border-t border-gray-200">
                             <div className="flex items-center space-x-3">
-                                <Upload 
-                                    beforeUpload={(file) => {
-                                        setMessageFile(file);
-                                        return false;
-                                    }}
-                                    onRemove={() => setMessageFile(null)}
-                                    showUploadList={false}
-                                >
-                                    <Button icon={<Paperclip className="w-4 h-4" />} type="text">
-                                        {messageFile ? messageFile.name : ''}
-                                    </Button>
-                                </Upload>
+                                 {/* Simplified attachment for main message input */}
                                 <input 
                                     type="text" 
                                     placeholder="输入问题或意见..."
                                     className="flex-1 px-4 py-2.5 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" 
                                     value={messageInput}
                                     onChange={(e) => setMessageInput(e.target.value)}
-                                    onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                                    onKeyDown={(e) => e.key === 'Enter' && sendMessage(messageInput)}
                                     disabled={data?.status === 'COMPLETED'}
                                 />
-                                <button onClick={handleSendMessage} disabled={data?.status === 'COMPLETED'} className={`px-5 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors ${data?.status === 'COMPLETED' ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                                <button onClick={() => sendMessage(messageInput)} disabled={data?.status === 'COMPLETED'} className={`px-5 py-2.5 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors ${data?.status === 'COMPLETED' ? 'opacity-50 cursor-not-allowed' : ''}`}>
                                     <i className="fa-solid fa-paper-plane mr-2"></i> 发送
                                 </button>
                             </div>
@@ -947,10 +742,10 @@ const EvaluationMeetingRunning: React.FC = () => {
                             <div className="bg-blue-50 border-2 border-blue-500 rounded-lg p-4">
                                 <div className="flex items-center justify-between mb-3">
                                     <span className="text-sm font-bold text-gray-900">{viewStage === 'BUSINESS' ? '商务评标总分' : '价格评标总分'}</span>
-                                    <span className="text-2xl font-bold text-blue-600">{calculateTotalScore()}/100</span>
+                                    <span className="text-2xl font-bold text-blue-600">{calculateTotalScore(viewStage)}/100</span>
                                 </div>
                                 <div className="w-full bg-gray-200 rounded-full h-3">
-                                    <div className="bg-blue-600 h-3 rounded-full" style={{width: `${calculateTotalScore()}%`}}></div>
+                                    <div className="bg-blue-600 h-3 rounded-full" style={{width: `${calculateTotalScore(viewStage)}%`}}></div>
                                 </div>
                             </div>
 
@@ -975,7 +770,7 @@ const EvaluationMeetingRunning: React.FC = () => {
                                 </div>
                             ) : isEditing ? (
                                 <button 
-                                    onClick={handleSubmitScore} 
+                                    onClick={() => handleSubmitScore(activeTab, viewStage, code, mutateEvaluation)} 
                                     disabled={isSubmitting}
                                     className={`w-full py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors shadow-sm ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                                 >

@@ -12,11 +12,7 @@ import {
   DatePicker
 } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeftOutlined, 
-  SaveOutlined, 
-  SendOutlined 
-} from '@ant-design/icons';
+import CustomIcon from '../components/common/CustomIcon';
 import dayjs from 'dayjs';
 import { StandardDatePicker } from '../components/common/StandardDatePicker';
 import { ApplicationSelectionSection } from './create-meeting-components/ApplicationSelectionSection';
@@ -88,7 +84,7 @@ const CreateRequirementReviewMeeting: React.FC = () => {
       }}>
         <Button 
           type="text" 
-          icon={<ArrowLeftOutlined />} 
+          icon={<CustomIcon type="ArrowLeftOutlined" />} 
           onClick={() => navigate(-1)}
           style={{ marginRight: 16 }}
         />
@@ -185,11 +181,11 @@ const CreateRequirementReviewMeeting: React.FC = () => {
             textAlign: 'right',
           }}>
             <Space size="large">
-              <Button size="large" icon={<SaveOutlined />}>存草稿</Button>
+              <Button size="large" icon={<CustomIcon type="SaveOutlined" />}>存草稿</Button>
               <Button 
                 type="primary" 
                 size="large" 
-                icon={<SendOutlined />} 
+                icon={<CustomIcon type="SendOutlined" />} 
                 onClick={() => form.submit()} 
                 loading={loading}
               >

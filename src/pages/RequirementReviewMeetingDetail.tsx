@@ -11,7 +11,7 @@ import {
   Spin
 } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import CustomIcon from '../components/common/CustomIcon';
 import dayjs from 'dayjs';
 import { ApplicationSelectionSection } from './create-meeting-components/ApplicationSelectionSection';
 import { ExpertSelectionSection } from './create-meeting-components/ExpertSelectionSection';
@@ -88,7 +88,7 @@ const RequirementReviewMeetingDetail: React.FC = () => {
       }}>
         <Button 
           type="text" 
-          icon={<ArrowLeftOutlined />} 
+          icon={<CustomIcon type="ArrowLeftOutlined" />} 
           onClick={() => navigate(-1)}
           style={{ marginRight: 16 }}
         />
