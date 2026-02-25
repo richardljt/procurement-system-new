@@ -52,4 +52,19 @@ public interface ProcessMapper {
         @Result(property = "businessTitle", column = "business_title")
     })
     List<com.example.procurement.dto.TaskDTO> findPendingTasksByApproverId(String approverId);
+
+    @Select("SELECT b.bid_id as business_id, b.title as business_title, b.status as status, b.deadline as create_time, '投标' as node_name, 'BID' as business_type " +
+            "FROM bid b " +
+            "JOIN bid_supplier bs ON b.bid_id = bs.bid_id " +
+            "WHERE bs.supplier_id = #{supplierId} AND b.status = 'PUBLISHED' " +
+            "ORDER BY b.create_time DESC")
+    @Results({
+        @Result(property = "businessId", column = "business_id"),
+        @Result(property = "businessTitle", column = "business_title"),
+        @Result(property = "status", column = "status"),
+        @Result(property = "createTime", column = "create_time"),
+        @Result(property = "nodeName", column = "node_name"),
+        @Result(property = "businessType", column = "business_type")
+    })
+    List<com.example.procurement.dto.TaskDTO> findPendingBidsBySupplierId(Long supplierId);
 }

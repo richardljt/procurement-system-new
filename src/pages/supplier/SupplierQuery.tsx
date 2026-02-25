@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
-import { Search, Filter, Phone, MapPin, Star, CreditCard, ChevronRight, Edit, History, X, Upload, FileText, Trash2, AlertCircle } from 'lucide-react';
+import { Search, Filter, Phone, MapPin, Star, CreditCard, ChevronRight, Edit, History, X, Upload, FileText, Trash2, AlertCircle, UserPlus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { getSuppliers, Supplier, updateSupplier, getSupplierHistory, SupplierHistory } from '../../api/procurement';
+import { getSuppliers, Supplier, updateSupplier, getSupplierHistory, SupplierHistory, createSupplierUser } from '../../api/procurement';
 
 interface Attachment {
   name: string;
@@ -45,6 +45,12 @@ const SupplierQuery: React.FC = () => {
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
   const [historyList, setHistoryList] = useState<SupplierHistory[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
+
+  // Create User Modal State
+  const [isCreateUserModalOpen, setIsCreateUserModalOpen] = useState(false);
+  const [selectedSupplier, setSelectedSupplier] = useState<Supplier | null>(null);
+  const [newUsername, setNewUsername] = useState('');
+  const [isCreatingUser, setIsCreatingUser] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -197,6 +203,36 @@ const SupplierQuery: React.FC = () => {
     return matchesSearch && matchesRegion;
   });
 
+  const handleCreateUserClick = (e: React.MouseEvent, supplier: Supplier) => {
+    e.stopPropagation();
+    setSelectedSupplier(supplier);
+    setNewUsername('');
+    setIsCreateUserModalOpen(true);
+  };
+
+  const handleCreateUserSubmit = async () => {
+    if (!selectedSupplier || !newUsername.trim()) {
+      alert('请输入用户名');
+      return;
+    }
+    setIsCreatingUser(true);
+    try {
+      if (selectedSupplier.supplierId) {
+        await createSupplierUser(selectedSupplier.supplierId, { 
+          username: newUsername, 
+          realName: selectedSupplier.contactName || ''
+        });
+        alert(`已为 ${selectedSupplier.contactName} 创建用户，登录名为: ${newUsername}`);
+        setIsCreateUserModalOpen(false);
+      }
+    } catch (error) {
+      console.error('Failed to create user', error);
+      alert('创建用户失败');
+    } finally {
+      setIsCreatingUser(false);
+    }
+  };
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
@@ -301,6 +337,13 @@ const SupplierQuery: React.FC = () => {
                       title="编辑供应商"
                     >
                       <Edit className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={(e) => handleCreateUserClick(e, supplier)}
+                      className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-full transition-colors"
+                      title="创建登录账号"
+                    >
+                      <UserPlus className="w-5 h-5" />
                     </button>
                     <ChevronRight className="w-5 h-5 group-hover:text-blue-500 transition-colors" />
                   </div>
@@ -576,6 +619,60 @@ const SupplierQuery: React.FC = () => {
                 className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
               >
                 关闭
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Create User Modal */}
+      {isCreateUserModalOpen && selectedSupplier && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md">
+            <div className="flex justify-between items-center p-5 border-b border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900">为供应商创建登录账号</h3>
+              <button onClick={() => setIsCreateUserModalOpen(false)} className="text-gray-400 hover:text-gray-500">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">供应商</label>
+                <p className="mt-1 text-gray-900 font-semibold">{selectedSupplier.supplierName}</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">联系人 (真实姓名)</label>
+                <p className="mt-1 text-gray-900">{selectedSupplier.contactName}</p>
+              </div>
+              <div>
+                <label htmlFor="username" className="block text-sm font-medium text-gray-700">登录用户名 (必填)</label>
+                <input
+                  type="text"
+                  id="username"
+                  value={newUsername}
+                  onChange={(e) => setNewUsername(e.target.value)}
+                  className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="请输入登录名..."
+                />
+              </div>
+               <div>
+                <label className="block text-sm font-medium text-gray-700">默认密码</label>
+                <p className="mt-1 text-gray-500">123456</p>
+              </div>
+            </div>
+            <div className="flex justify-end space-x-3 p-5 border-t border-gray-200 bg-gray-50">
+              <button
+                onClick={() => setIsCreateUserModalOpen(false)}
+                className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                取消
+              </button>
+              <button
+                onClick={handleCreateUserSubmit}
+                disabled={isCreatingUser}
+                className="px-4 py-2 bg-green-600 border border-transparent rounded-md text-sm font-medium text-white hover:bg-green-700 disabled:opacity-50"
+              >
+                {isCreatingUser ? '创建中...' : '确认创建'}
               </button>
             </div>
           </div>

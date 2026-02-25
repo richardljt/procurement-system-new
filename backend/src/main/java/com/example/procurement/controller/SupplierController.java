@@ -8,7 +8,11 @@ import com.example.procurement.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.procurement.mapper.AuthMapper;
+import com.example.procurement.entity.User;
+
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/supplier")
@@ -17,6 +21,9 @@ public class SupplierController {
 
     @Autowired
     private SupplierService supplierService;
+
+    @Autowired
+    private AuthMapper authMapper;
 
     // Public list for Procurement (only approved)
     @GetMapping("/list")
@@ -62,6 +69,20 @@ public class SupplierController {
         }
         supplierService.updateWithHistory(supplierDto, supplierDto.getChangeReason());
         return ApiResponse.success("success");
+    }
+
+    @PostMapping("/{supplierId}/create-user")
+    public ApiResponse<User> createUser(@PathVariable Long supplierId, @RequestBody User user) {
+        // In a real app, you'd have more validation and logic here
+        user.setUserId("S" + UUID.randomUUID().toString().substring(0, 4)); // Generate a simple unique ID
+        user.setRole("SUPPLIER");
+        user.setSupplierId(supplierId);
+        // Default password for demo purposes
+        if (user.getPassword() == null) {
+            user.setPassword("123456");
+        }
+        authMapper.insertUser(user);
+        return ApiResponse.success(user);
     }
 
     @GetMapping("/{id}/history")

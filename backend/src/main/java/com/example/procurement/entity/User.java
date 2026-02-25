@@ -11,4 +11,5 @@ public class User {
     private String avatar;
     private String role;
     private String department;
+    private Long supplierId; // Link to Supplier
 }

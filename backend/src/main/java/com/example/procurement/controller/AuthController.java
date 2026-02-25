@@ -52,15 +52,16 @@ public class AuthController {
         data.put("realName", user.getRealName());
         data.put("role", user.getRole());
         data.put("department", user.getDepartment());
+        data.put("supplierId", user.getSupplierId());
         
         // Fetch menus
         List<Resource> resources = authMapper.findResourcesByUserId(user.getUserId());
-        data.put("menus", groupResources(resources, user.getUserId()));
+        data.put("menus", groupResources(resources, user));
         
         return data;
     }
     
-    private List<Map<String, Object>> groupResources(List<Resource> resources, String userId) {
+    private List<Map<String, Object>> groupResources(List<Resource> resources, User user) {
         // Group by groupName
         Map<String, List<Resource>> grouped = resources.stream()
             .collect(Collectors.groupingBy(Resource::getGroupName, LinkedHashMap::new, Collectors.toList()));
@@ -85,8 +86,16 @@ public class AuthController {
                     
                     // Add badge/count logic here
                     if ("待我处理".equals(r.getResourceName())) {
-                         List<?> tasks = processMapper.findPendingTasksByApproverId(userId);
-                         if (tasks != null && !tasks.isEmpty()) {
+                         List<com.example.procurement.dto.TaskDTO> tasks = new ArrayList<>();
+                         if ("SUPPLIER".equals(user.getRole())) {
+                            if (user.getSupplierId() != null) {
+                                tasks = processMapper.findPendingBidsBySupplierId(user.getSupplierId());
+                            }
+                         } else {
+                            tasks = processMapper.findPendingTasksByApproverId(user.getUserId());
+                         }
+                         
+                         if (!tasks.isEmpty()) {
                              item.put("badge", String.valueOf(tasks.size()));
                              item.put("badgeColor", "bg-red-500");
                          }

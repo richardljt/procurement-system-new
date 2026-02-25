@@ -305,3 +305,7 @@ export const updateSupplier = async (supplier: Supplier & { changeReason: string
 export const getSupplierHistory = async (id: number) => {
   return request.get<any, SupplierHistory[]>(`/api/supplier/${id}/history`);
 };
+
+export const createSupplierUser = async (supplierId: number, userData: { username: string; realName: string; }) => {
+  return request.post<any, any>(`/api/supplier/${supplierId}/create-user`, userData);
+};

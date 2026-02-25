@@ -1,15 +1,21 @@
 USE procurement_db;
 
-CREATE TABLE IF NOT EXISTS sys_user (
+DROP TABLE IF EXISTS sys_user_resource_rel;
+DROP TABLE IF EXISTS sys_resource;
+DROP TABLE IF EXISTS sys_user;
+
+CREATE TABLE sys_user (
     user_id VARCHAR(50) PRIMARY KEY,
     username VARCHAR(50) NOT NULL UNIQUE,
     password VARCHAR(100) NOT NULL, -- Plain text for demo
     real_name VARCHAR(50),
     avatar VARCHAR(200),
-    role VARCHAR(20) -- HEAD, MANAGER, EMPLOYEE
+    role VARCHAR(20), -- HEAD, MANAGER, EMPLOYEE, SUPPLIER
+    department VARCHAR(50),
+    supplier_id BIGINT
 );
 
-CREATE TABLE IF NOT EXISTS sys_resource (
+CREATE TABLE sys_resource (
     resource_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     resource_name VARCHAR(50) NOT NULL,
     resource_type VARCHAR(20) DEFAULT 'MENU',
@@ -20,16 +26,11 @@ CREATE TABLE IF NOT EXISTS sys_resource (
     group_name VARCHAR(50) -- For grouping in sidebar
 );
 
-CREATE TABLE IF NOT EXISTS sys_user_resource_rel (
+CREATE TABLE sys_user_resource_rel (
     user_id VARCHAR(50) NOT NULL,
     resource_id BIGINT NOT NULL,
     PRIMARY KEY (user_id, resource_id)
 );
-
--- Data Cleanup (idempotent)
-DELETE FROM sys_user_resource_rel;
-DELETE FROM sys_resource;
-DELETE FROM sys_user;
 
 INSERT INTO sys_user (user_id, username, password, real_name, role) VALUES 
 ('U001', 'Zhang Ming', '123456', 'Zhang Ming', 'EMPLOYEE'),
@@ -85,3 +86,7 @@ AND r.group_name != '集采办管理';
 -- Update ownership
 UPDATE procurement_request SET create_user_id = 'U001', create_user_name = 'Zhang Ming' WHERE applicant_name = 'Zhang Ming';
 UPDATE pre_application SET create_user_id = 'U001', create_user_name = 'Zhang Ming' WHERE applicant_name = 'Zhang Ming';
+
+-- Add a sample supplier user (e.g., Zhang San from Supplier with ID 1)
+INSERT INTO sys_user (user_id, username, password, real_name, role, supplier_id) VALUES 
+('S001', 'zhangsan', '123456', '张三', 'SUPPLIER', 1) ON DUPLICATE KEY UPDATE real_name = '张三', role = 'SUPPLIER', supplier_id = 1;
