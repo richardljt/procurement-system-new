@@ -16,36 +16,46 @@
 - 表单用 Form + rules（支持中文校验提示）
 - 支持权限控制（v-if 写法用 &&）
 - 项目结构使用：
-src/
-├── api/                  # axios 实例 + 所有接口定义（推荐按模块分文件夹）
-│   ├── auth.ts
-│   ├── general-ledger.ts
-│   ├── reimbursement.ts
-│   └── index.ts
-├── components/           # 通用组件 + 财务域组件
-│   ├── ui/               # 纯 UI（Button、Modal 二次封装很少）
-│   └── finance/          # 业务组件：BudgetCard、ApprovalFlow、PaymentSelector 等
-├── layouts/              # 布局（侧边栏 + 顶栏 + 内容区）
-│   └── FinanceLayout.tsx
-├── pages/                # 页面（尽量薄，逻辑放 hooks / stores）
-│   ├── dashboard/
-│   ├── budget/
-│   └── reimbursement/
-├── router/               # 路由配置文件（数组方式）
-│   └── routes.tsx
-├── stores/               # zustand store（按模块拆）
-│   ├── authStore.ts
-│   ├── budgetStore.ts
-│   └── globalStore.ts
-├── styles/               # less 全局变量 + reset
-│   ├── variables.less
-│   └── global.less
-├── utils/
-│   └── auth.ts           # token 处理、拦截器等
-└── App.tsx
-    └── main.tsx
+    src/
+    ├── api/                  # axios 实例 + 所有接口定义（推荐按模块分文件夹）
+    │   ├── auth.ts
+    │   ├── general-ledger.ts
+    │   ├── reimbursement.ts
+    │   └── index.ts
+    ├── components/           # 通用组件 + 财务域组件
+    │   ├── ui/               # 纯 UI（Button、Modal 二次封装很少）
+    │   └── finance/          # 业务组件：BudgetCard、ApprovalFlow、PaymentSelector 等
+    ├── layouts/              # 布局（侧边栏 + 顶栏 + 内容区）
+    │   └── FinanceLayout.tsx
+    ├── pages/                # 页面（尽量薄，逻辑放 hooks / stores）
+    │   ├── dashboard/
+    │   ├── budget/
+    │   └── reimbursement/
+    ├── router/               # 路由配置文件（数组方式）
+    │   └── routes.tsx
+    ├── stores/               # zustand store（按模块拆）
+    │   ├── authStore.ts
+    │   ├── budgetStore.ts
+    │   └── globalStore.ts
+    ├── styles/               # less 全局变量 + reset
+    │   ├── variables.less
+    │   └── global.less
+    ├── utils/
+    │   └── auth.ts           # token 处理、拦截器等
+    └── App.tsx
+        └── main.tsx
 - 对于菜单权限处理，首先在登陆的时候就从后端获取用户的菜单权限，并保存在本地，登出的时候删除，重新登陆刷新。每个菜单都要有唯一的资源ID，根据用户菜单权限做显示，没有权限的菜单不显示。
 
+## 前端代码构建验证强制流程
+每次修改任何前端代码后，必须：
+1. 执行 `npm run typecheck` （或 `tsc --noEmit`）
+2. 执行 `npm run build`
+3. 执行 `npm run lint -- --fix`
+如果失败：
+- 读取完整错误输出
+- 分析并修复（优先改类型定义、补充泛型、修正 hook deps、移除未用 import）
+- 循环直到三个命令全部绿色
+- 禁止用 @ts-ignore 绕过
 
 ## 后端技术约束
 - 开发技术栈方面，使用springboot+mybatis+mysql，Java语言使用jdk8版本
@@ -81,3 +91,33 @@ src/
   - 下载：先本地 → S3 并缓存
 - 定时任务：Quartz
 - 日志：SLF4J + Logback
+- 代码分层要求：
+    src/
+    ├── controller/                  # 控制层，仅包含参数校验，不应该包含业务处理逻辑，应该调用服务层
+    │   ├── [module1]         # 模块分包
+    │   ├── [module2]
+    │   └── [...]
+    ├── service/              # 服务层
+    │   ├── [module1]         # 模块分包
+    │   ├── [module2]
+    ├── dao/              # 数据操作层
+    │   ├── [module1]         # 模块分包
+    │   ├── [module2]
+    ├── utils/                # 全局层
+    │   ├── configuration/    # 配置类，注入类似缓存管理的bean、线程池管理bean
+    │   ├── constant/         # 全局常量类
+    │   ├── advice/           # advice定义，比如全局异常处理
+    │   ├── annotation/       # annotation定义，比如controller的鉴权要求注解
+    │   ├── interceptor/       # interceptor定义，比如系统鉴权处理
+    │   ├── util/             # 工具类
+    │   └── advice/           # advice定义，比如全局异常处理
+- 代码分层数据传输都应该定义dto，不能使用map结构
+
+## 后端代码修改后验证流程（强制）
+每次对后端代码进行任何修改（新增、修改、删除文件）后，必须立即执行以下步骤：
+1. 在终端运行构建命令：`./mvnw clean compile -q`（Maven 项目）或 `gradle build --quiet`（Gradle 项目）
+2. 如果构建失败，完整读取终端错误日志（包括行号、类名、依赖问题）
+3. 分析错误原因（常见：import 缺失、类型不匹配、注解错误、Lombok 未处理等）
+4. 自动修复所有编译错误，直到 `./mvnw clean compile` 完全通过（无任何 ERROR/WARNING）
+5. 只有构建 100% 通过后，才认为任务完成，并向我展示最终的构建输出摘要
+6. 永远不要遗留未解决的编译问题
