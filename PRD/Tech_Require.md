@@ -2,10 +2,17 @@
 主要色调，参考已有样式，确保风格统一
 
 ## 前端技术约束
-- 使用React，组件使用Ant Design
 - 部署在nginx上运行
 - 识别代码中的外部域名的图片/css/js文件引入，如果有的话要引入到工程内，我需要在内网部署，不能访问到外网的样式文件。
-- node使用20版本
+- nodejs：v20.3.1
+- 构建：vite+reactjs+typescripts
+- reactjs使用18.2.0版本
+- 状态管理：zustand
+- 路由：用代码配置数组方式编写路由，动态加载子组件
+- css：less开发
+- http通信组件：axios，header中需用到authorization，缓存token
+- UI组件：antd 版本要与nodejs版本兼容
+
 
 ## 后端技术约束
 - 开发技术栈方面，使用springboot+mybatis+mysql，Java语言使用jdk8版本

@@ -44,11 +44,13 @@ src/
 │   └── auth.ts           # token 处理、拦截器等
 └── App.tsx
     └── main.tsx
+- 对于菜单权限处理，首先在登陆的时候就从后端获取用户的菜单权限，并保存在本地，登出的时候删除，重新登陆刷新。每个菜单都要有唯一的资源ID，根据用户菜单权限做显示，没有权限的菜单不显示。
 
 
 ## 后端技术约束
 - 开发技术栈方面，使用springboot+mybatis+mysql，Java语言使用jdk8版本
 - 数据库方面要求，使用mysql（我已经在本地部署了mysql，同时可以连接 jdbc:mysql://127.0.0.1:6446 执行脚本，用户名是fmrober，密码是Lhx123!@#）
+- jdbc连接要增加 useSSL=false&allowPublicKeyRetrieval=true 这两个参数
 - 数据库设计要求，
     - 每张表遵循英文单词和下划线组合命名方式，最长不得超过30个字符
     - 表主键要求：每张表都要有个主键，一般命名为：表名_ID 的形式，并且其他表引用到该表主键时，其他表的字段名称应一致，即使用`关联表名_ID`的形式
@@ -68,3 +70,14 @@ src/
     - 前端通过http接口与后端交互，接口规范采用restful风格
     - 前端请求后端接口时，需要在header中添加Authorization字段，值为Bearer+空格+token，token由后端返回
     - 后端返回给前端的数据，需要符合json格式规范。格式为 {"returnCode": "SUC0000", "errorMsg": "", "body": "json"}，其中returnCode为状态码，errorMsg为错误信息，body为json格式的数据。如果是成功状态码SUC0000，errorMsg为空字符串；如果是失败状态码可以自行定义，errorMsg为错误提示，前端应该表现为屏幕右侧弹框提醒。
+- Java: JDK 8（不可升级）
+- 框架: Spring Boot（版本与 JDK8 兼容，推荐 2.7.x）
+- ORM: MyBatis（禁止 JPA/Hibernate）
+- 数据库: MySQL 8.x，连接串必须包含：useSSL=false&allowPublicKeyRetrieval=true
+- 对象存储: Amazon S3 接口（统一封装 FileStorageService 接口）
+  - 本地缓存路径：/opt/deployments/
+  - key 格式：/{module}/{snowflake_id}.{ext}
+  - 上传：先本地 → 异步 S3（重试 3 次）
+  - 下载：先本地 → S3 并缓存
+- 定时任务：Quartz
+- 日志：SLF4J + Logback
