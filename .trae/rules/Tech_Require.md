@@ -5,11 +5,11 @@
 - 部署在nginx上运行
 - 识别代码中的外部域名的图片/css/js文件引入，如果有的话要引入到工程内，我需要在内网部署，不能访问到外网的样式文件。
 - nodejs：v20.3.1
-- 构建：vite+reactjs+typescripts+less+vite+react-router v6
+- 构建：vite+reactjs+typescripts+tailwindcss+vite+react-router v6
 - reactjs使用18.2.0版本
 - 状态管理：zustand
 - 路由：用代码配置数组方式编写路由，动态加载子组件
-- css：less开发
+- css：使用 tailwindcss 开发
 - http通信组件：axios，header中需用到authorization，缓存token
 - UI组件：antd 版本要与nodejs版本兼容，使用5.x
 - 提取 props（data, onOk, loading 等）
@@ -37,13 +37,12 @@
     │   ├── authStore.ts
     │   ├── budgetStore.ts
     │   └── globalStore.ts
-    ├── styles/               # less 全局变量 + reset
-    │   ├── variables.less
-    │   └── global.less
     ├── utils/
     │   └── auth.ts           # token 处理、拦截器等
-    └── App.tsx
-        └── main.tsx
+    ├──  App.tsx
+    │   └── main.tsx
+    │   └── globals.css       ← Tailwind 唯一 CSS 入口
+    └──tailwind.config.ts        ← 主题扩展、插件、自定义颜色等
 - 对于菜单权限处理，首先在登陆的时候就从后端获取用户的菜单权限，并保存在本地，登出的时候删除，重新登陆刷新。每个菜单都要有唯一的资源ID，根据用户菜单权限做显示，没有权限的菜单不显示。
 
 ## 前端代码构建验证强制流程
@@ -121,3 +120,6 @@
 4. 自动修复所有编译错误，直到 `./mvnw clean compile` 完全通过（无任何 ERROR/WARNING）
 5. 只有构建 100% 通过后，才认为任务完成，并向我展示最终的构建输出摘要
 6. 永远不要遗留未解决的编译问题
+
+## 对于问题修复的记录
+对于发现技术问题，每次对于问题的修复，必须记录问题的原因和规避方式到 /docs/learning.md文件中，并生成未来规避同类问题的prompt
