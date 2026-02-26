@@ -16,33 +16,44 @@
 - 表单用 Form + rules（支持中文校验提示）
 - 支持权限控制（v-if 写法用 &&）
 - 项目结构使用：
-    src/
-    ├── api/                  # axios 实例 + 所有接口定义（推荐按模块分文件夹）
-    │   ├── auth.ts
-    │   ├── general-ledger.ts
-    │   ├── reimbursement.ts
-    │   └── index.ts
-    ├── components/           # 通用组件 + 财务域组件
-    │   ├── ui/               # 纯 UI（Button、Modal 二次封装很少）
-    │   └── finance/          # 业务组件：BudgetCard、ApprovalFlow、PaymentSelector 等
-    ├── layouts/              # 布局（侧边栏 + 顶栏 + 内容区）
-    │   └── FinanceLayout.tsx
-    ├── pages/                # 页面（尽量薄，逻辑放 hooks / stores）
-    │   ├── dashboard/
-    │   ├── budget/
-    │   └── reimbursement/
-    ├── router/               # 路由配置文件（数组方式）
-    │   └── routes.tsx
-    ├── stores/               # zustand store（按模块拆）
-    │   ├── authStore.ts
-    │   ├── budgetStore.ts
-    │   └── globalStore.ts
-    ├── utils/
-    │   └── auth.ts           # token 处理、拦截器等
-    ├──  App.tsx
-    │   └── main.tsx
-    │   └── globals.css       ← Tailwind 唯一 CSS 入口
-    └──tailwind.config.ts        ← 主题扩展、插件、自定义颜色等
+src/
+├── assets/               # 静态资源（图片、图标、fonts 等） → 保留，很好
+│   ├── images/
+│   └── icons/
+├── components/           # 所有 UI 组件（可进一步细分）
+│   ├── ui/               # ← 原子/基础组件（shadcn/ui 风格，必推）
+│   │   ├── button.tsx
+│   │   ├── card.tsx
+│   │   ├── input.tsx
+│   │   └── ...
+│   ├── layout/           # ← 可选，如果 Layout 组件多，独立出来
+│   │   ├── RootLayout.tsx
+│   │   ├── Sidebar.tsx
+│   │   └── AppHeader.tsx
+│   └── ...               # 其他业务组件（可选放这里或移到 features/）
+├── features/             # ← 推荐：按业务/页面/功能模块组织（中大型项目首选）
+│   ├── auth/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   └── ...
+│   └── dashboard/
+│       ├── components/
+│       └── ...
+├── hooks/                # 自定义 hooks → 保留，非常好
+├── lib/ 或 utils/        # 工具函数（cn.ts、formatDate.ts 等） → 两者都常见，选一个即可（shadcn/ui 常用 lib/ 放 cn）
+├── api/                  # API 请求层（axios实例、endpoints） → 很好
+├── types/                # 全局/共享 TypeScript 类型 → 保留
+├── mocks/                # 测试 mock 数据 → 开发/测试时有用，保留
+├── pages/                # 页面级组件（Home.tsx、About.tsx 等） → 如果用 react-router，保留
+│   └── Home.tsx
+├── router/               # 统一管理路由配置
+├── stores/               # zustand 状态管理（全局、模块）
+├── App.tsx
+├── main.tsx
+├── globals.css           # ← Tailwind 入口文件（原来 index.css 改名）
+├── vite-env.d.ts
+└── tailwind.config.ts        ← 主题扩展、插件、自定义颜色等
+
 - 对于菜单权限处理，首先在登陆的时候就从后端获取用户的菜单权限，并保存在本地，登出的时候删除，重新登陆刷新。每个菜单都要有唯一的资源ID，根据用户菜单权限做显示，没有权限的菜单不显示。
 
 ## 前端代码构建验证强制流程
@@ -122,4 +133,4 @@
 6. 永远不要遗留未解决的编译问题
 
 ## 对于问题修复的记录
-对于发现技术问题，每次对于问题的修复，必须记录问题的原因和规避方式到 /docs/learning.md文件中，并生成未来规避同类问题的prompt
+对于发现技术问题，每次对于问题的修复，必须记录问题的原因和规避方式到 /docs/learning_[事件编号].md文件中，并生成未来规避同类问题的prompt

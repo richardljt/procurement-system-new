@@ -18,7 +18,7 @@ interface EvaluationMessage {
   children?: EvaluationMessage[];
 }
 
-const fetcher = (url: string) => request.get(url);
+const fetcher = (url: string) => request.get(url).then(res => res.data);
 
 export const useMessageSystem = (code: string | undefined, supplierId: number | null, viewStage: 'BUSINESS' | 'PRICE') => {
   const messageKey = code && supplierId ? `/api/evaluation/${code}/messages?supplierId=${supplierId}&stage=${viewStage}` : null;
