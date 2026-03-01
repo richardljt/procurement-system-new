@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Typography, Tag, Checkbox, Space, Empty, Spin } from 'antd';
+import { cn } from '../../../../lib/utils';
 import request from '../../../../utils/request';
 
 const { Text, Title } = Typography;
@@ -98,24 +99,19 @@ export const ApplicationSelectionSection: React.FC<ApplicationSelectionSectionPr
     : applications;
 
   return (
-    <div style={{ marginBottom: 24 }}>
-      <div style={{ marginBottom: 16 }}>
-        <Text strong style={{ fontSize: 16 }}>关联采购申请</Text>
+    <div className="mb-6">
+      <div className="mb-4">
+        <Text strong className="text-base">关联采购申请</Text>
         {!readOnly && (
-          <Text type="secondary" style={{ marginLeft: 8, fontSize: 14 }}>
+          <Text type="secondary" className="ml-2 text-sm">
             请选择需要进行评审的采购申请项目
           </Text>
         )}
       </div>
 
-      <div style={{ 
-        background: '#f5f7fa', 
-        padding: 16, 
-        borderRadius: 8,
-        border: '1px solid #eee' 
-      }}>
+      <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
         {loading ? (
-          <div style={{ textAlign: 'center', padding: 24 }}>
+          <div className="text-center p-6">
             <Spin tip="加载中..." />
           </div>
         ) : displayedApplications.length === 0 ? (
@@ -128,41 +124,35 @@ export const ApplicationSelectionSection: React.FC<ApplicationSelectionSectionPr
                 <Col span={24} key={app.procurementRequestId}>
                   <div 
                     onClick={() => handleCardClick(app.procurementRequestId)}
-                    style={{
-                      background: '#fff',
-                      borderRadius: 8,
-                      border: isSelected ? '1px solid #1890ff' : '1px solid #e8e8e8',
-                      padding: 16,
-                      cursor: readOnly ? 'default' : 'pointer',
-                      transition: 'all 0.3s',
-                      display: 'flex',
-                      alignItems: 'center',
-                      boxShadow: isSelected ? '0 2px 8px rgba(24, 144, 255, 0.15)' : 'none'
-                    }}
+                    className={cn(
+                      'bg-white rounded-lg p-4 transition-all flex items-center',
+                      isSelected ? 'border border-blue-500 shadow-md' : 'border border-gray-200',
+                      readOnly ? 'cursor-default' : 'cursor-pointer'
+                    )}
                   >
                     {!readOnly && (
                         <Checkbox 
                         checked={isSelected} 
-                        style={{ marginRight: 16 }}
+                        className="mr-4"
                         onClick={(e) => e.stopPropagation()}
                         onChange={(e) => handleSelect(app.procurementRequestId, e.target.checked)}
                         />
                     )}
                     
-                    <div style={{ flex: 1 }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+                    <div className="flex-1">
+                      <div className="flex justify-between mb-2">
                         <Space>
-                          <Text strong style={{ fontSize: 15 }}>{app.title}</Text>
+                          <Text strong className="text-[15px]">{app.title}</Text>
                           <Tag color="blue">{app.requestCode}</Tag>
                         </Space>
-                        <Text strong style={{ color: '#f5222d' }}>¥ {app.amount?.toLocaleString()}</Text>
+                        <Text strong className="text-red-600">¥ {app.amount?.toLocaleString()}</Text>
                       </div>
                       
-                      <Row gutter={16} style={{ fontSize: 13, color: '#666' }}>
+                      <Row gutter={16} className="text-[13px] text-gray-600">
                         <Col span={6}>申请部门：{app.department}</Col>
                         <Col span={6}>申请人：{app.applicantName}</Col>
                         <Col span={6}>审批通过：{app.updateTime ? app.updateTime.split('T')[0] : '-'}</Col>
-                        <Col span={6} style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        <Col span={6} className="truncate">
                           内容摘要：{app.backgroundDesc || '无'}
                         </Col>
                       </Row>

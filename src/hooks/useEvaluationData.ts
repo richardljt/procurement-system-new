@@ -18,7 +18,7 @@ interface EvaluationDetail {
 }
 
 // The fetcher function for SWR
-const fetcher = (url: string) => request.get(url);
+const fetcher = (url: string): Promise<EvaluationDetail> => request.get(url);
 
 export const useEvaluationData = (code: string | undefined) => {
   const { data, error, isLoading, mutate } = useSWR<EvaluationDetail>(

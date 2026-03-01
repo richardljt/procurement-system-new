@@ -2,38 +2,45 @@ import React from 'react';
 import { DatePicker } from 'antd';
 import type { DatePickerProps } from 'antd';
 import type { RangePickerProps } from 'antd/es/date-picker';
+import { cn } from '../../lib/utils';
+
+const commonTimeConfig = (showTime: boolean | object | undefined) => {
+  if (!showTime) return false;
+  const baseConfig = { minuteStep: 30, format: 'HH:mm' };
+  return typeof showTime === 'object' ? { ...baseConfig, ...showTime } : baseConfig;
+};
+
+const datePickerBaseClasses =
+  'w-full bg-white border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm';
 
 /**
- * Standard DatePicker with unified styling and behavior.
- * Enforces 30-minute steps for time selection.
+ * A standardized DatePicker component that uses Tailwind CSS for styling
+ * and enforces 30-minute steps for time selection.
  */
-export const StandardDatePicker: React.FC<DatePickerProps> = (props) => {
-  // Configure showTime to enforce 30-minute steps if showTime is enabled
-  const showTimeConfig = props.showTime 
-    ? (typeof props.showTime === 'object' 
-        ? { ...props.showTime, minuteStep: 30 } 
-        : { minuteStep: 30, format: 'HH:mm' } as any)
-    : props.showTime;
+export const StandardDatePicker: React.FC<DatePickerProps> = ({ className, ...props }) => {
+  const showTimeConfig = commonTimeConfig(props.showTime);
 
   return (
     <DatePicker
       {...props}
-      showTime={showTimeConfig}
+      showTime={showTimeConfig as any}
+      className={cn(datePickerBaseClasses, className)}
     />
   );
 };
 
-export const StandardRangePicker: React.FC<RangePickerProps> = (props) => {
-    const showTimeConfig = props.showTime 
-    ? (typeof props.showTime === 'object' 
-        ? { ...props.showTime, minuteStep: 30 } 
-        : { minuteStep: 30, format: 'HH:mm' } as any)
-    : props.showTime;
+/**
+ * A standardized RangePicker component that uses Tailwind CSS for styling
+ * and enforces 30-minute steps for time selection.
+ */
+export const StandardRangePicker: React.FC<RangePickerProps> = ({ className, ...props }) => {
+  const showTimeConfig = commonTimeConfig(props.showTime);
 
   return (
     <DatePicker.RangePicker
       {...props}
-      showTime={showTimeConfig}
+      showTime={showTimeConfig as any}
+      className={cn(datePickerBaseClasses, className)}
     />
   );
 };

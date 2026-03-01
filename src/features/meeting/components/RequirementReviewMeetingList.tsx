@@ -270,7 +270,7 @@ const RequirementReviewMeetingList: React.FC = () => {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <Card variant="outlined" className="shadow-sm rounded-lg" styles={{ body: { padding: '16px' } }}>
+          <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-medium text-gray-500 uppercase">已评审通过待发起</span>
               <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center">
@@ -279,9 +279,9 @@ const RequirementReviewMeetingList: React.FC = () => {
             </div>
             <p className="text-2xl font-bold text-orange-600">{stats.pending}</p>
             <p className="text-xs text-gray-500 mt-1">需要安排评审会议</p>
-          </Card>
+          </div>
 
-          <Card variant="outlined" className="shadow-sm rounded-lg" styles={{ body: { padding: '16px' } }}>
+          <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-medium text-gray-500 uppercase">进行中会议</span>
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -290,9 +290,9 @@ const RequirementReviewMeetingList: React.FC = () => {
             </div>
             <p className="text-2xl font-bold text-blue-600">{stats.inProgress}</p>
             <p className="text-xs text-gray-500 mt-1">正在进行的会议</p>
-          </Card>
+          </div>
 
-          <Card variant="outlined" className="shadow-sm rounded-lg" styles={{ body: { padding: '16px' } }}>
+          <div className="bg-white border border-gray-200 rounded-lg shadow-sm p-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs font-medium text-gray-500 uppercase">已完成评审会</span>
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
@@ -301,7 +301,7 @@ const RequirementReviewMeetingList: React.FC = () => {
             </div>
             <p className="text-2xl font-bold text-green-600">{stats.completed}</p>
             <p className="text-xs text-gray-500 mt-1">本月完成 4 场</p>
-          </Card>
+          </div>
         </div>
 
         {/* Filters */}
@@ -351,7 +351,7 @@ const RequirementReviewMeetingList: React.FC = () => {
             </Col>
             <Col span={6}>
               <div className="mb-1.5 text-xs font-medium text-gray-700">搜索</div>
-              <Space.Compact style={{ width: '100%' }}>
+              <Space.Compact className="w-full">
                 <Input 
                   prefix={<Search className="w-4 h-4 text-gray-400" />} 
                   placeholder="会议名称、会议备注..." 
@@ -366,7 +366,7 @@ const RequirementReviewMeetingList: React.FC = () => {
         </Card>
 
         {/* Table */}
-        <Card variant="borderless" className="shadow-sm rounded-lg overflow-hidden" styles={{ body: { padding: 0 } }}>
+        <div className="bg-white border border-gray-200 shadow-sm rounded-lg overflow-hidden">
           <Table
             columns={columns} 
             dataSource={data} 
@@ -381,7 +381,7 @@ const RequirementReviewMeetingList: React.FC = () => {
             }}
             rowClassName={() => "hover:bg-gray-50"}
           />
-        </Card>
+        </div>
       </div>
     </div>
   );

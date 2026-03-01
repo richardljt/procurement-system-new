@@ -27,28 +27,25 @@ const LogSection: React.FC<Props> = ({ meetingId }) => {
   }, [meetingId]);
 
   return (
-    <Card 
-        title={
-            <div className="flex justify-between items-center cursor-pointer" onClick={() => setExpanded(!expanded)}>
-                <span>会议留痕</span>
-                {expanded ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+    <div className="bg-white border border-gray-200 rounded-lg">
+        <div className="p-4 flex justify-between items-center cursor-pointer" onClick={() => setExpanded(!expanded)}>
+            <span className="font-bold">会议留痕</span>
+            {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+        </div>
+        <div className={`transition-all duration-300 overflow-hidden ${expanded ? 'p-6' : 'h-0 p-0'}`}>
+            <div className="overflow-y-auto max-h-[300px]">
+                <Timeline mode="left">
+                    {logs.map(log => (
+                    <Timeline.Item key={log.logId} label={log.createTime ? new Date(log.createTime).toLocaleTimeString() : ''}>
+                        <Typography.Text strong>{log.operatorName}</Typography.Text>
+                        <br />
+                        <Typography.Text type="secondary">{log.detail}</Typography.Text>
+                    </Timeline.Item>
+                    ))}
+                </Timeline>
             </div>
-        } 
-        className={`transition-all duration-300 ${expanded ? 'h-full' : 'h-auto'}`}
-        bodyStyle={{ padding: expanded ? '24px' : '0px', height: expanded ? 'auto' : '0px', overflow: 'hidden' }}
-    >
-      <div className="overflow-y-auto" style={{ maxHeight: '300px' }}>
-        <Timeline mode="left">
-            {logs.map(log => (
-            <Timeline.Item key={log.logId} label={log.createTime ? new Date(log.createTime).toLocaleTimeString() : ''}>
-                <Typography.Text strong>{log.operatorName}</Typography.Text>
-                <br />
-                <Typography.Text type="secondary">{log.detail}</Typography.Text>
-            </Timeline.Item>
-            ))}
-        </Timeline>
-      </div>
-    </Card>
+        </div>
+    </div>
   );
 };
 

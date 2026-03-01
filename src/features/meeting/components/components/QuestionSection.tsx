@@ -117,7 +117,7 @@ const QuestionSection: React.FC<Props> = ({ meetingId, userId, userName, isAdmin
 
   return (
     <Card title="提问答辩区" className="h-full flex flex-col">
-      <div className="flex-1 overflow-y-auto mb-4" style={{ minHeight: '300px', maxHeight: '500px' }}>
+      <div className="flex-1 overflow-y-auto mb-4 min-h-[300px] max-h-[500px]">
         <List
           dataSource={questions}
           renderItem={item => (

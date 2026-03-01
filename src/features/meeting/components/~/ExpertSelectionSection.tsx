@@ -21,21 +21,7 @@ const ExpertCard: React.FC<{
   role: string;
 }> = ({ expert, onRemove, readOnly, role }) => (
   <div
-    style={{
-      position: 'relative',
-      background: '#fff',
-      borderRadius: 8,
-      border: '1px solid #e8e8e8',
-      padding: 16,
-      transition: 'all 0.3s',
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      textAlign: 'center',
-      marginTop: 8,
-      marginRight: 8
-    }}
+    className="relative h-full w-full rounded-lg border border-gray-200 bg-white p-4 text-center transition-all mt-2 mr-2 flex flex-col items-center"
   >
     {!readOnly && (
       <div 
@@ -43,19 +29,9 @@ const ExpertCard: React.FC<{
           e.stopPropagation();
           onRemove();
         }}
-        style={{ 
-          position: 'absolute', 
-          top: -8, 
-          right: -8, 
-          color: '#ff4d4f', 
-          cursor: 'pointer',
-          zIndex: 1,
-          background: '#fff',
-          borderRadius: '50%',
-          lineHeight: 1
-        }}
+        className="absolute -top-2 -right-2 text-red-500 cursor-pointer z-10 bg-white rounded-full leading-none"
       >
-        <CustomIcon type="CloseCircleFilled" style={{ fontSize: 20 }} />
+        <CustomIcon type="CloseCircleFilled" className="text-xl" />
       </div>
     )}
     
@@ -63,24 +39,17 @@ const ExpertCard: React.FC<{
       size={64} 
       src={expert.avatar} 
       icon={<CustomIcon type="UserOutlined" />} 
-      style={{ marginBottom: 12, border: '1px solid #f0f0f0' }}
+      className="mb-3 border border-gray-100"
     />
     
-    <Text strong style={{ fontSize: 16, marginBottom: 4 }}>{expert.name}</Text>
-    <Text type="secondary" style={{ fontSize: 12, marginBottom: 8 }}>{expert.department} - {expert.level}</Text>
+    <Text strong className="text-base mb-1">{expert.name}</Text>
+    <Text type="secondary" className="text-xs mb-2">{expert.department} - {expert.level}</Text>
     
-    <div style={{ marginBottom: 12 }}>
+    <div className="mb-3">
       <Tag color="blue">{role}</Tag>
     </div>
     
-    <div style={{ 
-      background: '#f9f9f9', 
-      width: '100%', 
-      padding: '8px 0', 
-      borderRadius: 4,
-      fontSize: 12,
-      color: '#666'
-    }}>
+    <div className="bg-gray-50 w-full p-2 rounded text-xs text-gray-600">
       {expert.industries}
     </div>
   </div>
@@ -136,12 +105,12 @@ export const ExpertSelectionSection: React.FC<ExpertSelectionSectionProps> = ({
       }));
 
     return (
-      <div style={{ padding: 16, background: '#f5f7fa', borderRadius: 8, border: '1px solid #eee' }}>
+      <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
         {!readOnly && (
-          <div style={{ marginBottom: 16 }}>
+          <div className="mb-4">
             <Select
               showSearch
-              style={{ width: 400 }}
+              className="w-[400px]"
               placeholder={placeholder}
               optionFilterProp="label"
               loading={loading}
@@ -190,14 +159,7 @@ export const ExpertSelectionSection: React.FC<ExpertSelectionSectionProps> = ({
       label: (
         <span>
           正选专家 
-          <span style={{ 
-            background: '#e6f7ff', 
-            color: '#1890ff', 
-            padding: '2px 8px', 
-            borderRadius: 10, 
-            fontSize: 12, 
-            marginLeft: 8 
-          }}>
+          <span className="bg-blue-100 text-blue-600 px-2 py-0.5 rounded-full text-xs ml-2">
             {mainExperts.length}
           </span>
         </span>
@@ -215,14 +177,7 @@ export const ExpertSelectionSection: React.FC<ExpertSelectionSectionProps> = ({
       label: (
         <span>
           备选专家
-          <span style={{ 
-            background: '#f6ffed', 
-            color: '#52c41a', 
-            padding: '2px 8px', 
-            borderRadius: 10, 
-            fontSize: 12, 
-            marginLeft: 8 
-          }}>
+          <span className="bg-green-100 text-green-600 px-2 py-0.5 rounded-full text-xs ml-2">
             {backupExperts.length}
           </span>
         </span>
@@ -238,10 +193,10 @@ export const ExpertSelectionSection: React.FC<ExpertSelectionSectionProps> = ({
   ];
 
   return (
-    <div style={{ marginBottom: 24 }}>
-      <div style={{ marginBottom: 16 }}>
-        <Text strong style={{ fontSize: 16 }}>评审专家</Text>
-        <Text type="secondary" style={{ marginLeft: 8, fontSize: 14 }}>
+    <div className="mb-6">
+      <div className="mb-4">
+        <Text strong className="text-base">评审专家</Text>
+        <Text type="secondary" className="ml-2 text-sm">
           请选择参与评审的专家成员，建议配置备选专家以防正选专家时间冲突
         </Text>
       </div>

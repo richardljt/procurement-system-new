@@ -327,13 +327,13 @@ const ProcurementProcess: React.FC = () => {
                         <Input />
                     </Form.Item>
                     <Form.Item name="supplierId" label="供应商ID" rules={[{ required: true }]}>
-                        <InputNumber style={{ width: '100%' }} />
+                        <InputNumber className="w-full" />
                     </Form.Item>
                     <Form.Item name="amount" label="金额" rules={[{ required: true }]}>
-                        <InputNumber style={{ width: '100%' }} prefix="¥" />
+                        <InputNumber className="w-full" prefix="¥" />
                     </Form.Item>
                     <Form.Item name="signingDate" label="签署日期" rules={[{ required: true }]}>
-                        <DatePicker showTime style={{ width: '100%' }} />
+                        <DatePicker showTime className="w-full" />
                     </Form.Item>
                     <Form.Item name="attachmentUrl" label="附件链接">
                         <Input placeholder="输入附件URL" />

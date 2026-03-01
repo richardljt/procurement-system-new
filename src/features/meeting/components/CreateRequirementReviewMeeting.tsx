@@ -73,33 +73,25 @@ const CreateRequirementReviewMeeting: React.FC = () => {
   };
 
   return (
-    <Layout style={{ minHeight: '100vh', background: '#f0f2f5' }}>
-      <Header style={{ 
-        background: '#fff', 
-        padding: '0 24px', 
-        display: 'flex', 
-        alignItems: 'center',
-        boxShadow: '0 1px 4px rgba(0,21,41,.08)',
-        zIndex: 1,
-        height: 64
-      }}>
+    <Layout className="min-h-screen bg-gray-100">
+      <Header className="bg-white px-6 flex items-center shadow-sm z-10 h-16">
         <Button 
           type="text" 
           icon={<CustomIcon type="ArrowLeftOutlined" />} 
           onClick={() => navigate(-1)}
-          style={{ marginRight: 16 }}
+          className="mr-4"
         />
-        <div style={{ flex: 1 }}>
+        <div className="flex-1">
           <Breadcrumb items={[
             { title: '首页' },
             { title: '评审会管理' },
             { title: '新增评审会' },
           ]} />
-          <div style={{ fontSize: 20, fontWeight: 600, lineHeight: 1.2 }}>新增评审会</div>
+          <div className="text-xl font-semibold leading-tight">新增评审会</div>
         </div>
       </Header>
 
-      <Content style={{ padding: '24px', maxWidth: 1200, margin: '0 auto', width: '100%' }}>
+      <Content className="p-6 max-w-6xl mx-auto w-full">
         <Form
           form={form}
           layout="vertical"
@@ -109,78 +101,66 @@ const CreateRequirementReviewMeeting: React.FC = () => {
           }}
         >
           {/* 1. 基础信息 */}
-          <Card 
-            title="基础信息" 
-            variant="outlined"
-            style={{ marginBottom: 24, boxShadow: '0 1px 2px rgba(0,0,0,0.03)' }}
-            styles={{ header: { fontWeight: 'bold' } }}
-          >
-            <Form.Item 
-              name="title" 
-              label="会议名称" 
-              rules={[{ required: true, message: '请输入会议名称' }]}
-            >
-              <Input placeholder="例如：XX项目采购需求评审会" size="large" />
-            </Form.Item>
-            
-            <Form.Item 
-              name="startTime" 
-              label="会议时间"
-              rules={[{ required: true, message: '请选择会议时间' }]}
-            >
-              <StandardDatePicker showTime format="YYYY-MM-DD HH:mm" style={{ width: 300 }} placeholder="" />
-            </Form.Item>
+          <div className="mb-6 bg-white rounded-lg shadow-sm border border-gray-200">
+            <div className="p-4 border-b border-gray-200">
+              <h3 className="text-base font-bold">基础信息</h3>
+            </div>
+            <div className="p-4">
+              <Form.Item 
+                name="title" 
+                label="会议名称" 
+                rules={[{ required: true, message: '请输入会议名称' }]}
+              >
+                <Input placeholder="例如：XX项目采购需求评审会" size="large" />
+              </Form.Item>
+              
+              <Form.Item 
+                name="startTime" 
+                label="会议时间"
+                rules={[{ required: true, message: '请选择会议时间' }]}
+              >
+                <StandardDatePicker showTime format="YYYY-MM-DD HH:mm" className="w-[300px]" placeholder="" />
+              </Form.Item>
 
-            <Form.Item 
-              name="location" 
-              label="会议地点"
-              rules={[{ required: true, message: '请输入会议地点' }]}
-            >
-              <Input placeholder="请输入会议地点" />
-            </Form.Item>
+              <Form.Item 
+                name="location" 
+                label="会议地点"
+                rules={[{ required: true, message: '请输入会议地点' }]}
+              >
+                <Input placeholder="请输入会议地点" />
+              </Form.Item>
 
-            <Form.Item name="description" label="会议备注">
-              <TextArea rows={3} placeholder="请输入会议相关备注信息" />
-            </Form.Item>
-          </Card>
+              <Form.Item name="description" label="会议备注">
+                <TextArea rows={3} placeholder="请输入会议相关备注信息" />
+              </Form.Item>
+            </div>
+          </div>
 
           {/* 2. 关联申请 */}
-          <Card 
-            variant="outlined"
-            style={{ marginBottom: 24, boxShadow: '0 1px 2px rgba(0,0,0,0.03)' }}
-          >
+          <div className="mb-6 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
             <ApplicationSelectionSection 
               value={selectedApplications} 
               onChange={setSelectedApplications} 
             />
-          </Card>
+          </div>
 
           {/* 3. 评审专家 */}
-          <Card 
-            variant="outlined"
-            style={{ marginBottom: 24, boxShadow: '0 1px 2px rgba(0,0,0,0.03)' }}
-          >
+          <div className="mb-6 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
             <ExpertSelectionSection 
               mainExperts={mainExperts}
               backupExperts={backupExperts}
               onMainChange={setMainExperts}
               onBackupChange={setBackupExperts}
             />
-          </Card>
+          </div>
 
           {/* 4. 通知预览 */}
-          <Card 
-            variant="outlined"
-            style={{ marginBottom: 24, boxShadow: '0 1px 2px rgba(0,0,0,0.03)' }}
-          >
+          <div className="mb-6 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
             <NotificationPreviewSection />
-          </Card>
+          </div>
 
           {/* 底部操作按钮 */}
-          <div style={{
-            marginTop: 24,
-            textAlign: 'right',
-          }}>
+          <div className="mt-6 text-right">
             <Space size="large">
               <Button size="large" icon={<CustomIcon type="SaveOutlined" />}>存草稿</Button>
               <Button 
@@ -197,7 +177,7 @@ const CreateRequirementReviewMeeting: React.FC = () => {
         </Form>
       </Content>
       
-      <Footer style={{ textAlign: 'center' }}>
+      <Footer className="text-center">
         Procurement Management System ©2024 Created by Tech Team
       </Footer>
     </Layout>
