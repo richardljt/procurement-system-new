@@ -1,0 +1,42 @@
+```markdown
+- 中文名称: 评审分数, 英文名称: EvaluationScore, 类型: Entity
+- 中文名称: 用户, 英文名称: User, 类型: Entity
+- 中文名称: 评审消息, 英文名称: EvaluationMessage, 类型: Entity
+- 中文名称: 评审日志, 英文名称: ReviewLog, 类型: Entity
+- 中文名称: 采购文件, 英文名称: ProcurementFile, 类型: Entity
+- 中文名称: 采购请求项, 英文名称: ProcurementRequestItem, 类型: Entity
+- 中文名称: 流程任务, 英文名称: ProcessTask, 类型: Entity
+- 中文名称: 供应商历史, 英文名称: SupplierHistory, 类型: Entity
+- 中文名称: 需求评审会议, 英文名称: RequirementReviewMeeting, 类型: Entity
+- 中文名称: 会议投票, 英文名称: MeetingVote, 类型: Entity
+- 中文名称: 会议专家关系, 英文名称: MeetingExpertRel, 类型: Entity
+- 中文名称: 会议材料, 英文名称: MeetingMaterial, 类型: Entity
+- 中文名称: 流程实例, 英文名称: ProcessInstance, 类型: Entity
+- 中文名称: 评审供应商, 英文名称: EvaluationSupplier, 类型: Entity
+- 中文名称: 会议参与者, 英文名称: MeetingParticipant, 类型: Entity
+- 中文名称: 会议申请关系, 英文名称: MeetingApplicationRel, 类型: Entity
+- 中文名称: 会议问题, 英文名称: MeetingQuestion, 类型: Entity
+- 中文名称: 评审日志, 英文名称: EvaluationLog, 类型: Entity
+- 中文名称: 投标附件, 英文名称: BidAttachment, 类型: Entity
+- 中文名称: 投标供应商, 英文名称: BidSupplier, 类型: Entity
+- 中文名称: 评审项目, 英文名称: EvaluationProject, 类型: Entity
+- 中文名称: 评审专家, 英文名称: EvaluationExpert, 类型: Entity
+- 中文名称: 评审反馈, 英文名称: EvaluationFeedback, 类型: Entity
+- 中文名称: 会议回复, 英文名称: MeetingReply, 类型: Entity
+- 中文名称: 资源, 英文名称: Resource, 类型: Entity
+- 中文名称: 供应商, 英文名称: Supplier, 类型: Entity
+- 中文名称: 采购请求, 英文名称: ProcurementRequest, 类型: Entity
+- 中文名称: 采购预申请, 英文名称: PreApplication, 类型: Entity
+- 中文名称: 汇率, 英文名称: ExchangeRate, 类型: Entity
+- 中文名称: 专家, 英文名称: Expert, 类型: Entity
+- 中文名称: 合同, 英文名称: Contract, 类型: Entity
+- 中文名称: 投标, 英文名称: Bid, 类型: Entity
+- 中文名称: 任务数据传输对象, 英文名称: TaskDTO, 类型: Value Object
+- 中文名称: 提交反馈数据传输对象, 英文名称: SubmitFeedbackDTO, 类型: Value Object
+- 中文名称: 供应商更新数据传输对象, 英文名称: SupplierUpdateDTO, 类型: Value Object
+- 中文名称: 登录请求, 英文名称: LoginRequest, 类型: Value Object
+- 中文名称: 会议数据传输对象, 英文名称: MeetingDTO, 类型: Value Object
+- 中文名称: 流程状态数据传输对象, 英文名称: ProcessStatusDTO, 类型: Value Object
+- 中文名称: 采购统计数据传输对象, 英文名称: ProcurementStatsDTO, 类型: Value Object
+- 中文名称: 评审供应商数据传输对象, 英文名称: EvaluationSupplierDTO, 类型: Value Object
+```
