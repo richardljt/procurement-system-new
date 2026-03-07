@@ -65,14 +65,7 @@ export interface ProcessTask {
   sequence: number;
 }
 
-export interface ProcurementFile {
-  fileId?: number;
-  procurementRequestId?: number;
-  fileName: string;
-  fileSize: number;
-  filePath: string;
-  uploadTime?: string;
-}
+import { FileRecord } from './common';
 
 export interface ProcurementRequest {
   procurementRequestId?: number;
@@ -86,7 +79,8 @@ export interface ProcurementRequest {
   amount: number;
   currency: string;
   items?: ProcurementRequestItem[];
-  files?: ProcurementFile[]; // Added
+  attachments?: FileRecord[];
+  singleSourceAttachments?: FileRecord[];
   backgroundDesc: string;
   supplierSelectionType: string;
   singleSourceReason?: string;
@@ -180,8 +174,12 @@ export const getSuppliers = async () => {
   return request.get<any, Supplier[]>('/api/procurement/suppliers');
 };
 
-export const createProcurementRequest = async (requestBody: ProcurementRequest) => {
-  return request.post<any, string>('/api/procurement/create', requestBody);
+export const createProcurementRequest = async (formData: FormData) => {
+  return request.post<any, string>('/api/procurement/create', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };
 
 export const getProcurementById = async (id: number) => {

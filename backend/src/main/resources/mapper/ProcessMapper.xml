@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.procurement.mapper.ProcessMapper">
+
+    <insert id="insertInstance" useGeneratedKeys="true" keyProperty="instanceId">
+        INSERT INTO process_instance (business_key, business_type, status, initiator_id, initiator_name, start_time)
+        VALUES (#{businessKey}, #{businessType}, #{status}, #{initiatorId}, #{initiatorName}, #{startTime})
+    </insert>
+
+    <insert id="insertTask">
+        INSERT INTO process_task (instance_id, node_name, node_type, approver_id, approver_name, status, sequence, create_time, handle_time)
+        VALUES (#{instanceId}, #{nodeName}, #{nodeType}, #{approverId}, #{approverName}, #{status}, #{sequence}, #{createTime}, #{handleTime})
+    </insert>
+
+</mapper>

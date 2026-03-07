@@ -81,8 +81,10 @@ public class ProcurementController {
     }
 
     @PostMapping("/create")
-    public ApiResponse<String> create(@RequestBody ProcurementRequest request) {
-        procurementService.create(request);
+    public ApiResponse<String> create(@RequestPart("request") ProcurementRequest request, 
+                                      @RequestPart(value = "files", required = false) List<org.springframework.web.multipart.MultipartFile> files,
+                                      @RequestPart(value = "singleSourceFiles", required = false) List<org.springframework.web.multipart.MultipartFile> singleSourceFiles) {
+        procurementService.create(request, files, singleSourceFiles);
         return ApiResponse.success("success");
     }
 

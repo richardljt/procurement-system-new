@@ -3,7 +3,7 @@ import {
   Info, FileText, Lightbulb, Link as LinkIcon, 
   DollarSign, AlertTriangle, Building, Search, Star, 
   MapPin, Phone, CreditCard, User, Check, UserCheck, 
-  ArrowLeft, Route as RouteIcon, Eye, CheckCircle, XCircle, X, Pen
+  ArrowLeft, Route as RouteIcon, Eye, CheckCircle, XCircle, X, Pen, Download
 } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { 
@@ -18,6 +18,7 @@ import {
   ProcessTask
 } from '../../../api/procurement';
 import { useDocumentTitle } from '../../../hooks/useDocumentTitle';
+import AttachmentList from './AttachmentList';
 
 const ProcurementApproval: React.FC = () => {
   useDocumentTitle('采购审批');
@@ -131,6 +132,24 @@ const ProcurementApproval: React.FC = () => {
     }
   };
 
+  const handlePreview = (file: { originalFileName: string, filePath: string }) => {
+    // Check if it's a real URL or a mock path
+    if (file.filePath && (file.filePath.startsWith('http') || file.filePath.startsWith('blob:'))) {
+        window.open(file.filePath, '_blank');
+    } else {
+        window.open(`http://localhost:8082${file.filePath}`.replace(/\\/g, '/'), '_blank');
+    }
+  };
+
+  const handleDownload = (file: { originalFileName: string, filePath: string }) => {
+     const link = document.createElement('a');
+     link.href = `http://localhost:8082${file.filePath}`.replace(/\\/g, '/');
+     link.setAttribute('download', file.originalFileName);
+     document.body.appendChild(link);
+     link.click();
+     document.body.removeChild(link);
+  };
+
   return (
     <div className="p-8">
       <div className="mb-8">
@@ -210,6 +229,12 @@ const ProcurementApproval: React.FC = () => {
               className="w-full h-64 p-4 border border-gray-300 rounded-md bg-gray-50 text-gray-600"
             ></textarea>
           </div>
+          <AttachmentList 
+            files={procurementRequest?.attachments || []} 
+            title="相关附件" 
+            onPreview={handlePreview}
+            onDownload={handleDownload}
+          />
         </div>
 
         {/* Pre-application */}
@@ -385,6 +410,14 @@ const ProcurementApproval: React.FC = () => {
                 value={singleSourceReason}
                 disabled
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-md text-sm bg-gray-50 text-gray-600"></textarea>
+              <AttachmentList 
+                files={procurementRequest?.singleSourceAttachments || []} 
+                title="单一来源证明材料" 
+                onPreview={handlePreview}
+                onDownload={handleDownload}
+              />
+
+
             </div>
           )}
         </div>

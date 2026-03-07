@@ -30,13 +30,8 @@ public interface ExpertMapper {
     @ResultMap("expertMap")
     Expert findById(Long id);
 
-    @Insert("INSERT INTO expert (name, department, entry_date, industries, level, avatar, user_id, create_user_id, create_user_name, create_time, update_time) " +
-            "VALUES (#{name}, #{department}, #{entryDate}, #{industries}, #{level}, #{avatar}, #{userId}, #{createUserId}, #{createUserName}, NOW(), NOW())")
-    @Options(useGeneratedKeys = true, keyProperty = "expertId")
     void insert(Expert expert);
 
-    @Update("UPDATE expert SET name=#{name}, department=#{department}, entry_date=#{entryDate}, industries=#{industries}, " +
-            "level=#{level}, avatar=#{avatar}, user_id=#{userId}, update_time=NOW() WHERE expert_id=#{expertId}")
     void update(Expert expert);
 
     @Delete("DELETE FROM expert WHERE expert_id = #{id}")

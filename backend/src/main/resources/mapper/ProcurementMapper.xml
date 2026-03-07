@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.procurement.mapper.ProcurementMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="procurementRequestId">
+        INSERT INTO procurement_request (
+            request_code, pre_application_id, department, applicant_name, procurement_type,
+            urgency_level, delivery_address, amount, currency, background_desc, status,
+            supplier_selection_type, single_source_reason, create_time, create_user_name, title, supplier_count,
+            attachment_ids, single_source_attachment_ids
+        ) VALUES (
+            #{requestCode}, #{preApplicationId}, #{department}, #{applicantName}, #{procurementType},
+            #{urgencyLevel}, #{deliveryAddress}, #{amount}, #{currency}, #{backgroundDesc}, #{status},
+            #{supplierSelectionType}, #{singleSourceReason}, NOW(), #{createUserName}, #{title}, #{supplierCount},
+            #{attachmentIds}, #{singleSourceAttachmentIds}
+        )
+    </insert>
+
+    <insert id="insertSupplierRelation">
+        INSERT INTO procurement_supplier_rel (procurement_request_id, supplier_id, is_selected, create_time)
+        VALUES (#{requestId}, #{supplierId}, #{isSelected}, NOW())
+    </insert>
+
+    <update id="updateStatus">
+        UPDATE procurement_request
+        SET
+            status = #{status},
+            rejection_reason = #{reason},
+            update_time = NOW()
+        WHERE procurement_request_id = #{id}
+    </update>
+
+    <update id="update">
+        UPDATE procurement_request
+        SET
+            pre_application_id = #{preApplicationId},
+            department = #{department},
+            applicant_name = #{applicantName},
+            procurement_type = #{procurementType},
+            urgency_level = #{urgencyLevel},
+            delivery_address = #{deliveryAddress},
+            amount = #{amount},
+            currency = #{currency},
+            background_desc = #{backgroundDesc},
+            status = #{status},
+            supplier_selection_type = #{supplierSelectionType},
+            single_source_reason = #{singleSourceReason},
+            title = #{title},
+            supplier_count = #{supplierCount},
+            attachment_ids = #{attachmentIds},
+            single_source_attachment_ids = #{singleSourceAttachmentIds},
+            update_time = NOW()
+        WHERE procurement_request_id = #{procurementRequestId}
+    </update>
+
+    <select id="findById" resultType="com.example.procurement.entity.ProcurementRequest">
+        SELECT *
+        FROM procurement_request
+        WHERE procurement_request_id = #{id}
+    </select>
+
+</mapper>

@@ -21,6 +21,8 @@ public class ProcurementRequest {
     private String status;
     private String supplierSelectionType;
     private String singleSourceReason;
+    private String attachmentIds;
+    private String singleSourceAttachmentIds;
     
     private String title;
     private Integer supplierCount;
@@ -36,8 +38,9 @@ public class ProcurementRequest {
     private List<Long> supplierIds; 
     private List<Supplier> supplierList; // Added for detail view
     private List<ProcurementRequestItem> items;
-    private List<ProcurementFile> files; // Added for file attachments
     private List<ProcessTask> processTasks; // Added for process flow display
+    private List<FileRecord> attachments;
+    private List<FileRecord> singleSourceAttachments;
     
     private LocalDateTime createTime;
     private String createUserId;

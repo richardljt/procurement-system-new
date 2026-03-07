@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Delete;
 import java.util.List;
 import java.math.BigDecimal;
 
@@ -32,17 +33,10 @@ public interface ProcurementMapper {
                                    @Param("keyword") String keyword,
                                    @Param("excludeScheduled") Boolean excludeScheduled);
 
-    @Insert("INSERT INTO procurement_request (request_code, pre_application_id, department, applicant_name, procurement_type, " +
-            "urgency_level, delivery_address, amount, currency, background_desc, status, " +
-            "supplier_selection_type, single_source_reason, create_time, create_user_name, title, supplier_count) " +
-            "VALUES (#{requestCode}, #{preApplicationId}, #{department}, #{applicantName}, #{procurementType}, " +
-            "#{urgencyLevel}, #{deliveryAddress}, #{amount}, #{currency}, #{backgroundDesc}, #{status}, " +
-            "#{supplierSelectionType}, #{singleSourceReason}, NOW(), #{createUserName}, #{title}, #{supplierCount})")
-    @Options(useGeneratedKeys = true, keyProperty = "procurementRequestId")
+
     void insert(ProcurementRequest request);
     
-    @Insert("INSERT INTO procurement_supplier_rel (procurement_request_id, supplier_id, is_selected, create_time) " +
-            "VALUES (#{requestId}, #{supplierId}, #{isSelected}, NOW())")
+
     void insertSupplierRelation(@Param("requestId") Long requestId, @Param("supplierId") Long supplierId, @Param("isSelected") Boolean isSelected);
 
     @Select("SELECT COUNT(*) FROM procurement_request")
@@ -70,7 +64,6 @@ public interface ProcurementMapper {
     @Select("SELECT COUNT(*) FROM procurement_request WHERE status = #{status}")
     long countByStatus(String status);
 
-    @Select("SELECT * FROM procurement_request WHERE procurement_request_id = #{id}")
     ProcurementRequest findById(Long id);
     
     @Select("SELECT supplier_id FROM procurement_supplier_rel WHERE procurement_request_id = #{requestId}")
@@ -87,21 +80,13 @@ public interface ProcurementMapper {
     @Select("SELECT * FROM procurement_request WHERE pre_application_id = #{preApplicationId}")
     List<ProcurementRequest> findByPreApplicationId(Long preApplicationId);
 
-    @org.apache.ibatis.annotations.Update("UPDATE procurement_request SET status = #{status}, rejection_reason = #{reason}, update_time = NOW() WHERE procurement_request_id = #{id}")
     void updateStatus(@Param("id") Long id, @Param("status") String status, @Param("reason") String reason);
 
-    @org.apache.ibatis.annotations.Update("UPDATE procurement_request SET " +
-            "pre_application_id = #{preApplicationId}, department = #{department}, applicant_name = #{applicantName}, " +
-            "procurement_type = #{procurementType}, urgency_level = #{urgencyLevel}, delivery_address = #{deliveryAddress}, " +
-            "amount = #{amount}, currency = #{currency}, background_desc = #{backgroundDesc}, status = #{status}, " +
-            "supplier_selection_type = #{supplierSelectionType}, single_source_reason = #{singleSourceReason}, " +
-            "title = #{title}, supplier_count = #{supplierCount}, update_time = NOW() " +
-            "WHERE procurement_request_id = #{procurementRequestId}")
     void update(ProcurementRequest request);
 
-    @org.apache.ibatis.annotations.Delete("DELETE FROM procurement_supplier_rel WHERE procurement_request_id = #{requestId}")
+    @Delete("DELETE FROM procurement_supplier_rel WHERE procurement_request_id = #{requestId}")
     void deleteSupplierRelations(Long requestId);
     
-    @org.apache.ibatis.annotations.Delete("DELETE FROM procurement_request_item WHERE procurement_request_id = #{requestId}")
+    @Delete("DELETE FROM procurement_request_item WHERE procurement_request_id = #{requestId}")
     void deleteItems(Long requestId);
 }

@@ -8,9 +8,6 @@ import java.util.List;
 public interface ReviewMapper {
 
     // --- Materials ---
-    @Insert("INSERT INTO meeting_material (meeting_id, file_name, file_path, file_size, uploader_id, uploader_name, upload_time) " +
-            "VALUES (#{meetingId}, #{fileName}, #{filePath}, #{fileSize}, #{uploaderId}, #{uploaderName}, NOW())")
-    @Options(useGeneratedKeys = true, keyProperty = "materialId")
     void insertMaterial(MeetingMaterial material);
 
     @Select("SELECT * FROM meeting_material WHERE meeting_id = #{meetingId} ORDER BY upload_time DESC")
@@ -20,9 +17,6 @@ public interface ReviewMapper {
     void deleteMaterial(Long materialId);
 
     // --- Questions ---
-    @Insert("INSERT INTO meeting_question (meeting_id, content, asker_id, asker_name, is_anonymous, status, attachment_name, attachment_path, create_time) " +
-            "VALUES (#{meetingId}, #{content}, #{askerId}, #{askerName}, #{isAnonymous}, 'PENDING', #{attachmentName}, #{attachmentPath}, NOW())")
-    @Options(useGeneratedKeys = true, keyProperty = "questionId")
     void insertQuestion(MeetingQuestion question);
 
     @Update("UPDATE meeting_question SET status = #{status} WHERE question_id = #{questionId}")
@@ -45,9 +39,6 @@ public interface ReviewMapper {
     void deleteQuestion(Long questionId);
 
     // --- Replies ---
-    @Insert("INSERT INTO meeting_reply (question_id, content, replier_id, replier_name, attachment_name, attachment_path, create_time) " +
-            "VALUES (#{questionId}, #{content}, #{replierId}, #{replierName}, #{attachmentName}, #{attachmentPath}, NOW())")
-    @Options(useGeneratedKeys = true, keyProperty = "replyId")
     void insertReply(MeetingReply reply);
 
     @Select("SELECT * FROM meeting_reply WHERE question_id = #{questionId} ORDER BY create_time ASC")
@@ -61,9 +52,6 @@ public interface ReviewMapper {
     void deleteReply(Long replyId);
 
     // --- Votes ---
-    @Insert("INSERT INTO meeting_vote (meeting_id, round, voter_id, voter_name, score, comment, create_time) " +
-            "VALUES (#{meetingId}, #{round}, #{voterId}, #{voterName}, #{score}, #{comment}, NOW())")
-    @Options(useGeneratedKeys = true, keyProperty = "voteId")
     void insertVote(MeetingVote vote);
 
     @Select("SELECT * FROM meeting_vote WHERE meeting_id = #{meetingId} AND round = #{round}")
@@ -80,9 +68,6 @@ public interface ReviewMapper {
     void openVoting(Long meetingId);
 
     // --- Logs ---
-    @Insert("INSERT INTO review_log (meeting_id, operator_id, operator_name, action_type, detail, create_time) " +
-            "VALUES (#{meetingId}, #{operatorId}, #{operatorName}, #{actionType}, #{detail}, NOW())")
-    @Options(useGeneratedKeys = true, keyProperty = "logId")
     void insertLog(ReviewLog log);
 
     @Select("SELECT * FROM review_log WHERE meeting_id = #{meetingId} ORDER BY create_time DESC")

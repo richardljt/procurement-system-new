@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.procurement.mapper.SupplierHistoryMapper">
+
+    <insert id="insert">
+        INSERT INTO supplier_history (supplier_id, supplier_name, credit_code, contact_phone, address, rating, tags,
+                                    is_qualified, legal_person, registered_capital, establishment_date, business_scope, operation, operator_id, operator_name, operation_time)
+        VALUES (#{supplierId}, #{supplierName}, #{creditCode}, #{contactPhone}, #{address}, #{rating}, #{tags},
+                #{isQualified}, #{legalPerson}, #{registeredCapital}, #{establishmentDate}, #{businessScope}, #{operation}, #{operatorId}, #{operatorName}, NOW())
+    </insert>
+
+</mapper>

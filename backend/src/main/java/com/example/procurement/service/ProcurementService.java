@@ -41,7 +41,7 @@ public class ProcurementService {
     private ProcurementRequestItemMapper procurementRequestItemMapper;
 
     @Autowired
-    private com.example.procurement.mapper.ProcurementFileMapper procurementFileMapper;
+    private com.example.procurement.mapper.FileRecordMapper fileRecordMapper;
 
     @Autowired
     private ProcessMapper processMapper;
@@ -151,11 +151,14 @@ public class ProcurementService {
         return stats;
     }
 
+    @Autowired
+    private FileStorageService fileStorageService;
+
     @Transactional
-    public void create(ProcurementRequest request) {
+    public void create(ProcurementRequest request, List<org.springframework.web.multipart.MultipartFile> files, List<org.springframework.web.multipart.MultipartFile> singleSourceFiles) {
         // Check if updating existing draft
         if (request.getProcurementRequestId() != null) {
-            updateDraft(request);
+            updateDraft(request, files, singleSourceFiles);
             return;
         }
 
@@ -173,6 +176,33 @@ public class ProcurementService {
         // Set Supplier Count
         request.setSupplierCount(request.getSupplierIds() == null ? 0 : request.getSupplierIds().size());
         
+        // Save Files
+        List<Long> attachmentFileIds = new java.util.ArrayList<>();
+        if (files != null) {
+            for (org.springframework.web.multipart.MultipartFile file : files) {
+                try {
+                    com.example.procurement.entity.FileRecord fileRecord = fileStorageService.storeFile(file, "attachment");
+                    attachmentFileIds.add(fileRecord.getFileId());
+                } catch (java.io.IOException e) {
+                    // Handle exception
+                }
+            }
+        }
+        request.setAttachmentIds(org.springframework.util.StringUtils.collectionToCommaDelimitedString(attachmentFileIds));
+
+        List<Long> singleSourceFileIds = new java.util.ArrayList<>();
+        if (singleSourceFiles != null) {
+            for (org.springframework.web.multipart.MultipartFile file : singleSourceFiles) {
+                try {
+                    com.example.procurement.entity.FileRecord fileRecord = fileStorageService.storeFile(file, "single_source");
+                    singleSourceFileIds.add(fileRecord.getFileId());
+                } catch (java.io.IOException e) {
+                    // Handle exception
+                }
+            }
+        }
+        request.setSingleSourceAttachmentIds(org.springframework.util.StringUtils.collectionToCommaDelimitedString(singleSourceFileIds));
+
         // Save Request
         procurementMapper.insert(request);
         
@@ -191,13 +221,6 @@ public class ProcurementService {
             }
         }
 
-        // Save Files
-        if (request.getFiles() != null) {
-            for (com.example.procurement.entity.ProcurementFile file : request.getFiles()) {
-                file.setProcurementRequestId(request.getProcurementRequestId());
-                procurementFileMapper.insert(file);
-            }
-        }
         
         // Start Process only if not DRAFT
         if (!"DRAFT".equals(request.getStatus())) {
@@ -205,9 +228,36 @@ public class ProcurementService {
         }
     }
     
-    private void updateDraft(ProcurementRequest request) {
+    private void updateDraft(ProcurementRequest request, List<org.springframework.web.multipart.MultipartFile> files, List<org.springframework.web.multipart.MultipartFile> singleSourceFiles) {
         // Set Supplier Count
         request.setSupplierCount(request.getSupplierIds() == null ? 0 : request.getSupplierIds().size());
+
+        // Save Files
+        List<Long> attachmentFileIds = new java.util.ArrayList<>();
+        if (files != null) {
+            for (org.springframework.web.multipart.MultipartFile file : files) {
+                try {
+                    com.example.procurement.entity.FileRecord fileRecord = fileStorageService.storeFile(file, "attachment");
+                    attachmentFileIds.add(fileRecord.getFileId());
+                } catch (java.io.IOException e) {
+                    // Handle exception
+                }
+            }
+        }
+        request.setAttachmentIds(org.springframework.util.StringUtils.collectionToCommaDelimitedString(attachmentFileIds));
+
+        List<Long> singleSourceFileIds = new java.util.ArrayList<>();
+        if (singleSourceFiles != null) {
+            for (org.springframework.web.multipart.MultipartFile file : singleSourceFiles) {
+                try {
+                    com.example.procurement.entity.FileRecord fileRecord = fileStorageService.storeFile(file, "single_source");
+                    singleSourceFileIds.add(fileRecord.getFileId());
+                } catch (java.io.IOException e) {
+                    // Handle exception
+                }
+            }
+        }
+        request.setSingleSourceAttachmentIds(org.springframework.util.StringUtils.collectionToCommaDelimitedString(singleSourceFileIds));
         
         // Update Request
         procurementMapper.update(request);
@@ -215,7 +265,6 @@ public class ProcurementService {
         // Clear and Re-insert relations/items/files
         procurementMapper.deleteSupplierRelations(request.getProcurementRequestId());
         procurementMapper.deleteItems(request.getProcurementRequestId());
-        procurementFileMapper.deleteByRequestId(request.getProcurementRequestId());
         
         // Save Supplier Relations
         if (request.getSupplierIds() != null) {
@@ -231,14 +280,6 @@ public class ProcurementService {
                 procurementRequestItemMapper.insert(item);
             }
         }
-
-        // Save Files
-        if (request.getFiles() != null) {
-            for (com.example.procurement.entity.ProcurementFile file : request.getFiles()) {
-                file.setProcurementRequestId(request.getProcurementRequestId());
-                procurementFileMapper.insert(file);
-            }
-        }
         
         // Start Process if status changed from DRAFT to APPROVING (or other non-draft status)
         if (!"DRAFT".equals(request.getStatus())) {
@@ -246,7 +287,7 @@ public class ProcurementService {
             ProcessInstance existing = processMapper.findInstanceByBusinessKey(request.getRequestCode());
             if (existing == null) {
                 // Fetch request code if not in input object (it might be null in update payload if not passed)
-                // However, for safety we should ensure requestCode is present.
+                // However, for safety we should ensure requestCode is present. 
                 // Assuming frontend passes full object or we fetch it. 
                 // But `request` object here is from Controller @RequestBody.
                 // If requestCode is missing, we need to fetch it.
@@ -326,8 +367,24 @@ public class ProcurementService {
             List<ProcurementRequestItem> items = procurementRequestItemMapper.findByRequestId(id);
             request.setItems(items);
 
-            List<com.example.procurement.entity.ProcurementFile> files = procurementFileMapper.findByRequestId(id);
-            request.setFiles(files);
+            if (request.getAttachmentIds() != null && !request.getAttachmentIds().isEmpty()) {
+                List<Long> fileIds = java.util.Arrays.stream(request.getAttachmentIds().split(","))
+                    .filter(s -> !s.isEmpty())
+                    .map(Long::parseLong)
+                    .collect(java.util.stream.Collectors.toList());
+                if (!fileIds.isEmpty()) {
+                    request.setAttachments(fileRecordMapper.findByIds(fileIds));
+                }
+            }
+            if (request.getSingleSourceAttachmentIds() != null && !request.getSingleSourceAttachmentIds().isEmpty()) {
+                List<Long> fileIds = java.util.Arrays.stream(request.getSingleSourceAttachmentIds().split(","))
+                    .filter(s -> !s.isEmpty())
+                    .map(Long::parseLong)
+                    .collect(java.util.stream.Collectors.toList());
+                if (!fileIds.isEmpty()) {
+                    request.setSingleSourceAttachments(fileRecordMapper.findByIds(fileIds));
+                }
+            }
             
             // Populate Process Tasks
             ProcessInstance instance = processMapper.findInstanceByBusinessKey(request.getRequestCode());

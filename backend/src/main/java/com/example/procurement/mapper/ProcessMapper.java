@@ -7,16 +7,11 @@ import java.util.List;
 
 @Mapper
 public interface ProcessMapper {
-    @Insert("INSERT INTO process_instance (business_key, business_type, status, initiator_id, initiator_name, start_time) " +
-            "VALUES (#{businessKey}, #{businessType}, #{status}, #{initiatorId}, #{initiatorName}, NOW())")
-    @Options(useGeneratedKeys = true, keyProperty = "instanceId")
     void insertInstance(ProcessInstance instance);
     
     @Update("UPDATE process_instance SET status = #{status}, end_time = NOW() WHERE instance_id = #{instanceId}")
     void updateInstanceStatus(@Param("instanceId") Long instanceId, @Param("status") String status);
 
-    @Insert("INSERT INTO process_task (instance_id, node_name, node_type, approver_id, approver_name, status, sequence, create_time, handle_time) " +
-            "VALUES (#{instanceId}, #{nodeName}, #{nodeType}, #{approverId}, #{approverName}, #{status}, #{sequence}, NOW(), #{handleTime})")
     void insertTask(ProcessTask task);
     
     @Update("UPDATE process_task SET status = #{status}, comment = #{comment}, handle_time = NOW() WHERE task_id = #{taskId}")

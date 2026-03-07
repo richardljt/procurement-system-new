@@ -80,9 +80,6 @@ public interface MeetingMapper {
     @Select("SELECT COUNT(*) FROM requirement_review_meeting WHERE status = #{status}")
     int countByStatus(String status);
     
-    @Insert("INSERT INTO requirement_review_meeting (title, project_name, project_no, department, amount, start_time, end_time, location, organizer_name, status, bid_id, bid_title, create_time, create_user_name) " +
-            "VALUES (#{title}, #{projectName}, #{projectNo}, #{department}, #{amount}, #{startTime}, #{endTime}, #{location}, #{organizerName}, #{status}, #{bidId}, #{bidTitle}, NOW(), #{createUserName})")
-    @Options(useGeneratedKeys = true, keyProperty = "meetingId")
     void insert(RequirementReviewMeeting meeting);
     
     @Insert("INSERT INTO meeting_expert_rel (meeting_id, expert_id, expert_name, expert_avatar, type, create_time) VALUES (#{meetingId}, #{expertId}, #{expertName}, #{expertAvatar}, #{type}, NOW())")

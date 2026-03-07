@@ -4,11 +4,13 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ProcurementFile {
+public class FileRecord {
     private Long fileId;
-    private Long procurementRequestId;
-    private String fileName;
-    private Long fileSize;
+    private String module;
+    private String originalFileName;
     private String filePath;
+    private Long fileSize;
     private LocalDateTime uploadTime;
+    private String createUserId;
+    private String createUserName;
 }

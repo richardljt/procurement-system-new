@@ -29,3 +29,4 @@ dist-ssr
 /backend/target
 /backend/.m2
 /backend/uploads
+/backend/upload

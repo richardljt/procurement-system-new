@@ -6,6 +6,7 @@ import {
   ArrowLeft, Paperclip, Plus, Eye, Route as RouteIcon, Trash
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { FileRecord } from '../../../api/common';
 import { 
   createProcurementRequest,
   ExchangeRate,
@@ -14,6 +15,7 @@ import {
   getSuppliers,
   getProcurementById,
   PreApplication,
+  ProcurementRequest,
   Supplier
 } from '../../../api/procurement';
 import { useDocumentTitle } from '../../../hooks/useDocumentTitle';
@@ -29,26 +31,45 @@ const CreateProcurement: React.FC = () => {
   const [editingId, setEditingId] = useState<number | null>(null);
   
   // File Upload State
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [existingFiles, setExistingFiles] = useState<{fileId?: number, fileName: string, fileSize: number, filePath: string, uploadTime?: string}[]>([]);
+  const [attachmentFiles, setAttachmentFiles] = useState<File[]>([]);
+  const [singleSourceFiles, setSingleSourceFiles] = useState<File[]>([]);
+  const [existingAttachmentFiles, setExistingAttachmentFiles] = useState<FileRecord[]>([]);
+  const [existingSingleSourceFiles, setExistingSingleSourceFiles] = useState<FileRecord[]>([]);
+  
   const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const singleSourceFileInputRef = React.useRef<HTMLInputElement>(null);
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>, module: 'attachment' | 'single_source') => {
+    if (event.target.files) {
       const newFiles = Array.from(event.target.files);
-      setSelectedFiles(prev => [...prev, ...newFiles]);
+      if (module === 'attachment') {
+        setAttachmentFiles(prev => [...prev, ...newFiles]);
+      } else {
+        setSingleSourceFiles(prev => [...prev, ...newFiles]);
+      }
     }
-    // Reset input value to allow selecting same file again if needed
     if (event.target.value) event.target.value = '';
   };
 
-  const removeFile = (index: number) => {
-    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+  const removeFile = (fileName: string, module: 'attachment' | 'single_source') => {
+    if (module === 'attachment') {
+      setAttachmentFiles(prev => prev.filter(f => f.name !== fileName));
+    } else {
+      setSingleSourceFiles(prev => prev.filter(f => f.name !== fileName));
+    }
   };
-
-  const removeExistingFile = (fileId: number) => {
-    setExistingFiles(prev => prev.filter(f => f.fileId !== fileId));
-  };
+  
+  const removeExistingFile = (fileId: number, module: 'attachment' | 'single_source') => {
+      // This function would ideally call an API to delete the file.
+      // For now, we'll just remove it from the view.
+      // Note: This is not implemented in the backend yet.
+      if (module === 'attachment') {
+          setExistingAttachmentFiles(prev => prev.filter(f => f.fileId !== fileId));
+      } else {
+          setExistingSingleSourceFiles(prev => prev.filter(f => f.fileId !== fileId));
+      }
+      alert('注意：删除现有文件功能尚未完全实现！');
+  }
   
   // Parse query params to check for edit mode
   useEffect(() => {
@@ -100,8 +121,11 @@ const CreateProcurement: React.FC = () => {
             }
             
             // Handle Files
-            if (data.files) {
-                setExistingFiles(data.files);
+            if (data.attachments) {
+                setExistingAttachmentFiles(data.attachments);
+            }
+            if (data.singleSourceAttachments) {
+                setExistingSingleSourceFiles(data.singleSourceAttachments);
             }
         }
     } catch (error) {
@@ -147,6 +171,7 @@ const CreateProcurement: React.FC = () => {
   const [deliveryAddress, setDeliveryAddress] = useState('');
   const [backgroundDesc, setBackgroundDesc] = useState('');
   const [singleSourceReason, setSingleSourceReason] = useState('');
+
 
   const currencySymbols: Record<string, string> = {
     'CNY': '¥', 'USD': '$', 'EUR': '€', 'JPY': '¥', 'HKD': 'HK$'
@@ -257,30 +282,44 @@ const CreateProcurement: React.FC = () => {
         default: typeCode = 'OTHER';
     }
 
+    const requestPayload = {
+      department,
+      applicantName: '张明',
+      title,
+      procurementType: typeCode,
+      urgencyLevel: urgency,
+      deliveryAddress,
+      amount: parseFloat(amount),
+      currency: 'HKD',
+      items: budgetItems.map(item => ({
+          itemName: item.name,
+          amount: parseFloat(item.amount),
+          currency: item.currency
+      })),
+      backgroundDesc,
+      status: 'APPROVING',
+      supplierSelectionType: supplierType === 'multiple' ? 'MULTIPLE' : 'SINGLE',
+      singleSourceReason: supplierType === 'single' ? singleSourceReason : undefined,
+      preApplicationId: selectedPreApp?.preApplicationId,
+      supplierIds: selectedSupplierIds,
+      procurementRequestId: editingId || undefined,
+      // Note: existing files are already on the request object on the backend
+      // We only need to send the new ones.
+    };
+
+    const formData = new FormData();
+    formData.append('request', new Blob([JSON.stringify(requestPayload)], { type: "application/json" }));
+
+    attachmentFiles.forEach(file => {
+      formData.append('files', file);
+    });
+
+    singleSourceFiles.forEach(file => {
+      formData.append('singleSourceFiles', file);
+    });
+
     try {
-      const payload = {
-        department,
-        applicantName: '张明',
-        title,
-        procurementType: typeCode,
-        urgencyLevel: urgency,
-        deliveryAddress,
-        amount: parseFloat(amount),
-        currency: 'HKD',
-        items: budgetItems.map(item => ({
-            itemName: item.name,
-            amount: parseFloat(item.amount),
-            currency: item.currency
-        })),
-        backgroundDesc,
-        status: 'APPROVING',
-        supplierSelectionType: supplierType === 'multiple' ? 'MULTIPLE' : 'SINGLE',
-        singleSourceReason: supplierType === 'single' ? singleSourceReason : undefined,
-        preApplicationId: selectedPreApp?.preApplicationId,
-        supplierIds: selectedSupplierIds,
-        procurementRequestId: editingId || undefined
-      };
-      await createProcurementRequest(payload);
+      await createProcurementRequest(formData);
       alert('采购申请已提交！');
       setShowApprovalModal(false);
       navigate('/');
@@ -305,39 +344,42 @@ const CreateProcurement: React.FC = () => {
         default: typeCode = 'OTHER';
     }
 
+    const requestPayload = {
+        department,
+        applicantName: '张明',
+        title,
+        procurementType: typeCode,
+        urgencyLevel: urgency,
+        deliveryAddress,
+        amount: parseFloat(amount) || 0,
+        currency: 'HKD',
+        items: budgetItems.map(item => ({
+            itemName: item.name,
+            amount: parseFloat(item.amount) || 0,
+            currency: item.currency
+        })),
+        backgroundDesc: backgroundDesc || '草稿',
+        status: 'DRAFT',
+        supplierSelectionType: supplierType === 'multiple' ? 'MULTIPLE' : 'SINGLE',
+        singleSourceReason: supplierType === 'single' ? singleSourceReason : undefined,
+        preApplicationId: selectedPreApp?.preApplicationId,
+        supplierIds: selectedSupplierIds,
+        procurementRequestId: editingId || undefined,
+    };
+
+    const formData = new FormData();
+    formData.append('request', new Blob([JSON.stringify(requestPayload)], { type: "application/json" }));
+
+    attachmentFiles.forEach(file => {
+      formData.append('files', file);
+    });
+
+    singleSourceFiles.forEach(file => {
+      formData.append('singleSourceFiles', file);
+    });
+
     try {
-        const payload = {
-            department,
-            applicantName: '张明',
-            title,
-            procurementType: typeCode,
-            urgencyLevel: urgency,
-            deliveryAddress,
-            amount: parseFloat(amount) || 0,
-            currency: 'HKD',
-            items: budgetItems.map(item => ({
-                itemName: item.name,
-                amount: parseFloat(item.amount) || 0,
-                currency: item.currency
-            })),
-            backgroundDesc: backgroundDesc || '草稿',
-            status: 'DRAFT',
-            supplierSelectionType: supplierType === 'multiple' ? 'MULTIPLE' : 'SINGLE',
-            singleSourceReason: supplierType === 'single' ? singleSourceReason : undefined,
-            preApplicationId: selectedPreApp?.preApplicationId,
-            supplierIds: selectedSupplierIds,
-            procurementRequestId: editingId || undefined,
-            files: [
-                ...existingFiles,
-                ...selectedFiles.map(f => ({
-                    fileName: f.name,
-                    fileSize: f.size,
-                    filePath: `/uploads/${f.name}`, // Mock path
-                    uploadTime: new Date().toISOString()
-                }))
-            ]
-        };
-        await createProcurementRequest(payload);
+        await createProcurementRequest(formData);
         alert('草稿已保存！');
         navigate('/');
     } catch (error) {
@@ -474,7 +516,7 @@ const CreateProcurement: React.FC = () => {
                <input 
                  type="file" 
                  multiple 
-                 onChange={handleFileSelect}
+                 onChange={(e) => handleFileSelect(e, 'attachment')}
                  className="hidden" 
                  ref={fileInputRef}
                />
@@ -486,9 +528,26 @@ const CreateProcurement: React.FC = () => {
                  <p className="text-xs text-gray-400 mt-1">支持拖拽上传</p>
                </div>
                
-               {selectedFiles.length > 0 && (
+               { (existingAttachmentFiles.length > 0 || attachmentFiles.length > 0) && (
                  <div className="mt-4 space-y-2 border-t border-gray-200 pt-3">
-                   {selectedFiles.map((file, index) => (
+                   {/* Render existing files */}
+                   {existingAttachmentFiles.map((file) => (
+                     <div key={file.fileId} className="flex items-center justify-between bg-white p-2 rounded border border-gray-200">
+                        <div className="flex items-center overflow-hidden">
+                           <FileText className="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" />
+                           <span className="text-sm text-gray-700 truncate">{file.originalFileName}</span>
+                           <span className="text-xs text-gray-400 ml-2 flex-shrink-0">({(file.fileSize / 1024).toFixed(1)} KB)</span>
+                        </div>
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); removeExistingFile(file.fileId, 'attachment'); }}
+                          className="text-gray-400 hover:text-red-500 p-1"
+                        >
+                           <X className="w-4 h-4" />
+                        </button>
+                     </div>
+                   ))}
+                   {/* Render new files */}
+                   {attachmentFiles.map((file, index) => (
                      <div key={index} className="flex items-center justify-between bg-white p-2 rounded border border-gray-200">
                         <div className="flex items-center overflow-hidden">
                            <FileText className="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" />
@@ -496,7 +555,7 @@ const CreateProcurement: React.FC = () => {
                            <span className="text-xs text-gray-400 ml-2 flex-shrink-0">({(file.size / 1024).toFixed(1)} KB)</span>
                         </div>
                         <button 
-                          onClick={(e) => { e.stopPropagation(); removeFile(index); }}
+                          onClick={(e) => { e.stopPropagation(); removeFile(file.name, 'attachment'); }}
                           className="text-gray-400 hover:text-red-500 p-1"
                         >
                            <X className="w-4 h-4" />
@@ -846,6 +905,67 @@ const CreateProcurement: React.FC = () => {
                 <Info className="mr-1 w-3 h-3" />
                 单一来源采购需要提供充分的理由说明，并需要额外的审批流程
               </p>
+
+              <div className="mt-4">
+                <div className="flex items-center mb-2">
+                  <h3 className="text-sm font-medium text-gray-700">附件上传</h3>
+                  <span className="text-xs text-gray-500 ml-2">(支持图片、文档等格式)</span>
+                </div>
+                
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50">
+                  <input 
+                    type="file" 
+                    multiple 
+                    onChange={(e) => handleFileSelect(e, 'single_source')}
+                    className="hidden" 
+                    ref={singleSourceFileInputRef}
+                  />
+                  <div className="flex flex-col items-center justify-center cursor-pointer" onClick={() => singleSourceFileInputRef.current?.click()}>
+                    <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mb-2 hover:bg-blue-200 transition-colors">
+                        <Plus className="w-5 h-5 text-blue-600" />
+                    </div>
+                    <p className="text-sm text-gray-600 font-medium">点击上传文件</p>
+                    <p className="text-xs text-gray-400 mt-1">支持拖拽上传</p>
+                  </div>
+                  
+                  { (existingSingleSourceFiles.length > 0 || singleSourceFiles.length > 0) && (
+                    <div className="mt-4 space-y-2 border-t border-gray-200 pt-3">
+                      {/* Render existing files */}
+                      {existingSingleSourceFiles.map((file) => (
+                        <div key={file.fileId} className="flex items-center justify-between bg-white p-2 rounded border border-gray-200">
+                            <div className="flex items-center overflow-hidden">
+                              <FileText className="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" />
+                              <span className="text-sm text-gray-700 truncate">{file.originalFileName}</span>
+                              <span className="text-xs text-gray-400 ml-2 flex-shrink-0">({(file.fileSize / 1024).toFixed(1)} KB)</span>
+                            </div>
+                            <button 
+                              onClick={(e) => { e.stopPropagation(); removeExistingFile(file.fileId, 'single_source'); }}
+                              className="text-gray-400 hover:text-red-500 p-1"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                        </div>
+                      ))}
+                      {/* Render new files */}
+                      {singleSourceFiles.map((file, index) => (
+                        <div key={index} className="flex items-center justify-between bg-white p-2 rounded border border-gray-200">
+                            <div className="flex items-center overflow-hidden">
+                              <FileText className="w-4 h-4 text-gray-500 mr-2 flex-shrink-0" />
+                              <span className="text-sm text-gray-700 truncate">{file.name}</span>
+                              <span className="text-xs text-gray-400 ml-2 flex-shrink-0">({(file.size / 1024).toFixed(1)} KB)</span>
+                            </div>
+                            <button 
+                              onClick={(e) => { e.stopPropagation(); removeFile(file.name, 'single_source'); }}
+                              className="text-gray-400 hover:text-red-500 p-1"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           )}
 

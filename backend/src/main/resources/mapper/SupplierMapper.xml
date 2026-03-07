@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.procurement.mapper.SupplierMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="supplierId">
+        INSERT INTO supplier (supplier_name, credit_code, contact_phone, address, rating, tags, is_qualified,
+                              legal_person, registered_capital, establishment_date, business_scope, create_time)
+        VALUES (#{supplierName}, #{creditCode}, #{contactPhone}, #{address}, #{rating}, #{tags}, #{isQualified},
+                #{legalPerson}, #{registeredCapital}, #{establishmentDate}, #{businessScope}, NOW())
+    </insert>
+
+    <update id="update">
+        UPDATE supplier SET supplier_name = #{supplierName}, credit_code = #{creditCode},
+                             contact_phone = #{contactPhone}, address = #{address}, rating = #{rating},
+                             tags = #{tags}, is_qualified = #{isQualified}, legal_person = #{legalPerson},
+                             registered_capital = #{registeredCapital}, establishment_date = #{establishmentDate},
+                             business_scope = #{businessScope}, update_time = NOW()
+        WHERE supplier_id = #{supplierId}
+    </update>
+
+</mapper>

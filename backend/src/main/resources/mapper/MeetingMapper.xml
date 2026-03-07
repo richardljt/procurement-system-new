@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.procurement.mapper.MeetingMapper">
+
+    <insert id="insertMeeting" useGeneratedKeys="true" keyProperty="meetingId">
+        INSERT INTO requirement_review_meeting (title, project_name, project_no, department, amount, start_time, end_time, location, organizer_name, status, bid_id, bid_title, create_time, create_user_name)
+        VALUES (#{title}, #{projectName}, #{projectNo}, #{department}, #{amount}, #{startTime}, #{endTime}, #{location}, #{organizerName}, #{status}, #{bidId}, #{bidTitle}, NOW(), #{createUserName})
+    </insert>
+
+</mapper>
