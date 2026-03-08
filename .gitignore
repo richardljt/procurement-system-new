@@ -25,8 +25,17 @@ dist-ssr
 .vscode
 .vercel
 
+# pub
+/.vscode
+
 # backend
 /backend/target
 /backend/.m2
 /backend/uploads
 /backend/upload
+
+# frontend
+/frontend/node_modules
+/frontend/.vite
+/frontend/.vscode
+/frontend/dist

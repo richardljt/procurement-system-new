@@ -1,1 +1,0 @@
-ALTER TABLE sys_user ADD COLUMN supplier_id BIGINT;
