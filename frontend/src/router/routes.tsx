@@ -2,6 +2,7 @@ import { lazy } from 'react';
 import { RouteObject } from 'react-router-dom';
 import MainLayout from '../components/layout/MainLayout';
 import LoginPage from '../features/auth/components/LoginPage';
+import RegisterPage from '../features/auth/components/RegisterPage'; // Import RegisterPage
 import RequireAuth from '../components/layout/RequireAuth';
 import ProcurementList from '../features/procurement/components/ProcurementList';
 
@@ -35,6 +36,10 @@ export const routes: RouteObject[] = [
   {
     path: '/login',
     element: <LoginPage />,
+  },
+  {
+    path: '/register',
+    element: <RegisterPage />,
   },
   {
     path: '/',

@@ -27,6 +27,7 @@ dist-ssr
 
 # pub
 /.vscode
+/.vite
 
 # backend
 /backend/target
