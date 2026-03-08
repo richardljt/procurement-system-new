@@ -3,7 +3,7 @@ import {
   Clock, Eye, Star, FileText, Plus, History, 
   Users, Gavel, FileSignature, FolderOpen, 
   Filter, CalendarX, LineChart, Search,
-  ChevronLeft, ChevronRight, GripVertical
+  ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import classNames from 'classnames';

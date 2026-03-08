@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useEvaluationData } from '../../../hooks/useEvaluationData';
-import { Upload, Button } from 'antd';
+
 import { useMessageSystem } from '../../../hooks/useMessageSystem';
 import { Paperclip } from 'lucide-react';
 import { useScoring } from '../../../hooks/useScoring';
@@ -9,34 +9,9 @@ import LogSection from '../../meeting/components/components/LogSection';
 import request from '../../../utils/request';
 
 // Types
-interface EvaluationDetail {
-  id: number;
-  projectCode: string;
-  title: string;
-  status: string;
-  currentStage: string;
-  organizerName: string;
-  suppliers: Supplier[];
-  experts: Expert[];
-  scores: Score[];
-  logs: Log[];
-  feedbacks: Feedback[];
-}
 
-interface EvaluationMessage {
-  id: number;
-  evaluationId: number;
-  supplierId: number;
-  senderId: number;
-  senderName: string;
-  senderRole: string;
-  content: string;
-  parentId?: number;
-  attachmentName?: string;
-  attachmentPath?: string;
-  createTime: string;
-  children?: EvaluationMessage[]; // Frontend only nesting
-}
+
+
 
 interface Supplier {
   id: number;
@@ -48,42 +23,13 @@ interface Supplier {
   rankPosition: number;
 }
 
-interface Expert {
-  id: number;
-  expertName: string;
-  role: string;
-  avatar: string;
-  isOnline: boolean;
-  hasConfirmed: boolean;
-}
 
-interface Score {
-  id: number;
-  supplierId: number;
-  expertId: number;
-  score: number;
-  details: string; // JSON string for detailed breakdown
-  comment: string;
-  stage?: 'BUSINESS' | 'PRICE';
-}
 
-interface Log {
-  id: number;
-  userName: string;
-  action: string;
-  details: string;
-  timestamp: string;
-}
 
-interface Feedback {
-  id: number;
-  supplierId: number;
-  expertName: string;
-  question: string;
-  reply: string;
-  status: string;
-  createTime: string;
-}
+
+
+
+
 
   // Mock Documents Data Function
   const getMockDocuments = (supplierName: string) => [
@@ -96,7 +42,7 @@ interface Feedback {
 
 const EvaluationMeetingRunning: React.FC = () => {
   const { code } = useParams<{ code: string }>();
-  const { data, isLoading, isError, mutate: mutateEvaluation } = useEvaluationData(code);
+  const { data, mutate: mutateEvaluation } = useEvaluationData(code);
   const [activeTab, setActiveTab] = useState<number | null>(null); // Supplier ID
   
   const currentExpertId = data?.experts && data.experts.length > 0 ? data.experts[0].id : 1;
@@ -115,13 +61,12 @@ const EvaluationMeetingRunning: React.FC = () => {
   } = useScoring(data, currentExpertId);
 
 
-  const [feedbackInput, setFeedbackInput] = useState('');
+  
 
   const [viewStage, setViewStage] = useState<'BUSINESS' | 'PRICE'>('BUSINESS');
 
   const {
     messages,
-    isLoading: messagesLoading,
     activeReplyId,
     setActiveReplyId,
     replyContents,
@@ -286,20 +231,7 @@ const EvaluationMeetingRunning: React.FC = () => {
 
 
 
-  const handleSendFeedback = async () => {
-      if (!feedbackInput.trim()) return;
-      try {
-          await request.post(`/api/evaluation/${code || 'EVAL-2024-001'}/feedback`, {
-              question: feedbackInput,
-              supplierId: activeTab, // Associate with current tab supplier if any
-              expertName: data?.organizerName || 'Expert'
-          });
-          setFeedbackInput('');
-          mutateEvaluation();
-      } catch(err) {
-          console.error(err);
-      }
-  };
+  
 
     // Calculate ranks dynamically based on current scores
     const calculateRanks = (suppliers: Supplier[]) => {

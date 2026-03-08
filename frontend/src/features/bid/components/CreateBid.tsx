@@ -10,7 +10,6 @@ import {
   Trash2,
   Plus,
   FileText,
-  File,
   AlertTriangle,
   X
 } from 'lucide-react';
@@ -22,8 +21,7 @@ import {
   getProcurementDetail,
   getBidDraft,
   saveBidDraft,
-  initiateBid,
-  uploadAttachment
+  initiateBid
 } from '../../../api/bid';
 import { 
   BidForm, 
@@ -77,14 +75,14 @@ const CreateBid: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<ProcurementSearchResult[]>([]);
   const [showSearchResults, setShowSearchResults] = useState(false);
-  const [loading, setLoading] = useState(false);
+  
   const [submitting, setSubmitting] = useState(false);
 
   // Load draft if ID exists
   useEffect(() => {
     if (id) {
       const loadDraft = async () => {
-        setLoading(true);
+        
         try {
           const draft = await getBidDraft(id);
           if (draft) {
@@ -103,9 +101,7 @@ const CreateBid: React.FC = () => {
           }
         } catch (error) {
           console.error("Failed to load draft", error);
-        } finally {
-          setLoading(false);
-        }
+        } 
       };
       loadDraft();
     }
@@ -443,7 +439,7 @@ const CreateBid: React.FC = () => {
                       showTime
                       format="YYYY-MM-DD HH:mm"
                       value={formData.deadline ? dayjs(formData.deadline) : null}
-                      onChange={(date, dateString) => handleInputChange('deadline', date ? (date as any).format('YYYY-MM-DDTHH:mm') : '')}
+                      onChange={(date) => handleInputChange('deadline', date ? (date as any).format('YYYY-MM-DDTHH:mm') : '')}
                       placeholder=""
                     />
                   </div>

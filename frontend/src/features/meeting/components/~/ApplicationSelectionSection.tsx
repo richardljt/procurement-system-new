@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Row, Col, Typography, Tag, Checkbox, Space, Empty, Spin } from 'antd';
+import { Row, Col, Typography, Tag, Checkbox, Space, Empty, Spin } from 'antd';
 import { cn } from '../../../../lib/utils';
 import request from '../../../../utils/request';
 
-const { Text, Title } = Typography;
+const { Text } = Typography;
 
 interface ApplicationSelectionSectionProps {
   value?: number[];

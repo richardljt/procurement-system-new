@@ -141,7 +141,6 @@ src/router/
     │   ├── interceptor/       # interceptor定义，比如系统鉴权处理
     │   ├── util/             # 工具类
     │   └── advice/           # advice定义，比如全局异常处理
-- 代码分层数据传输都应该定义dto，不能使用map结构
 - API兼容性检查 : 在使用任何 Java API（特别是集合、IO、并发相关的类）之前，必须首先确认其与项目配置的 JDK 8 版本兼容。优先使用项目中已有的、经过验证的工具类和库（如 Arrays.asList , Collections.singletonList 等），而不是引入更高版本JDK的API。
 
 ## 后端代码修改后验证流程（强制）

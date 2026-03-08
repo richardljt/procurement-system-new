@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Button, InputNumber, Form, message, Alert, Table, Modal, Divider, Statistic, Input, Select } from 'antd';
+import { Card, Button, InputNumber, Form, message, Alert, Table, Modal, Statistic, Input, Select } from 'antd';
 import { getVotes, submitVote, resetVote, endVote, startVote, endMeeting, getParticipants, getMeetingInfo, MeetingVote } from '../../../../api/review';
 import { RefreshCw, StopCircle, PlayCircle, BarChart2, CheckCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -102,7 +102,11 @@ const VoteSection: React.FC<Props> = ({ meetingId, userId, userName, round, isAd
       setHasVoted(true);
       fetchData();
     } catch (e) {
-      message.error('投票失败，可能是投票已关闭');
+      // 優先顯示後端返回的錯誤訊息
+      const errorMsg = e?.response?.data?.message 
+          || e?.message 
+          || '投票失敗，請稍後再試';
+      message.error(errorMsg);
       fetchData();
     }
   };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDocumentTitle } from '../../../hooks/useDocumentTitle';
-import { Search, Filter, Clock, CheckCircle, XCircle, FileText, ChevronRight, AlertCircle } from 'lucide-react';
+import { Search, Filter, Clock, CheckCircle, XCircle, ChevronRight, AlertCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getSupplierReviews, Supplier, approveSupplier, rejectSupplier } from '../../../api/procurement';
 

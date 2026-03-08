@@ -1,8 +1,8 @@
 import React from 'react';
-import { Card, Typography, Descriptions, Alert } from 'antd';
-import { InfoCircleOutlined } from '@ant-design/icons';
+import { Typography, Descriptions, Alert } from 'antd';
 
-const { Text, Title } = Typography;
+
+const { Text } = Typography;
 
 export const NotificationPreviewSection: React.FC = () => {
   return (

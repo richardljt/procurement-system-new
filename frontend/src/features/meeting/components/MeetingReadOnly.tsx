@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Row, Col, Layout, Alert, Result, Button, Card, Divider } from 'antd';
+import { Row, Col, Layout, Alert, Button } from 'antd';
 import MaterialSection from './components/MaterialSection';
 import QuestionSection from './components/QuestionSection';
 import VoteSection from './components/VoteSection';
 import LogSection from './components/LogSection';
-import MeetingHeader from './components/MeetingHeader';
+
 import { useDocumentTitle } from '../../../hooks/useDocumentTitle';
 import { getMeetingInfo } from '../../../api/review';
 import { ArrowLeft } from 'lucide-react';

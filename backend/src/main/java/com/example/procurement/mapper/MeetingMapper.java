@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper
 public interface MeetingMapper {
     
-    @Select("SELECT * FROM requirement_review_meeting ORDER BY create_time DESC")
+        @Select("SELECT * FROM requirement_review_meeting ORDER BY create_time DESC")
     @Results({
         @Result(property = "meetingId", column = "meeting_id"),
         @Result(property = "projectName", column = "project_name"),

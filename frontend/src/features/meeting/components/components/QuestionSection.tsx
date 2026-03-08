@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Card, List, Button, Input, Form, Avatar, Tag, Space, message, Upload, Modal } from 'antd';
-import { User, MessageCircle, Paperclip, FileText, Trash2 } from 'lucide-react';
-import { getQuestions, askQuestion, replyQuestion, deleteQuestion, deleteReply, MeetingQuestion, MeetingReply } from '../../../../api/review';
+import { Card, List, Button, Input, Form, Avatar, Tag, message, Upload, Modal } from 'antd';
+import { User, MessageCircle, Paperclip, Trash2 } from 'lucide-react';
+import { getQuestions, askQuestion, replyQuestion, deleteQuestion, deleteReply, MeetingQuestion } from '../../../../api/review';
 
 interface Props {
   meetingId: number;
@@ -12,7 +12,7 @@ interface Props {
 
 const QuestionSection: React.FC<Props> = ({ meetingId, userId, userName, isAdmin }) => {
   const [questions, setQuestions] = useState<MeetingQuestion[]>([]);
-  const [loading, setLoading] = useState(false);
+  
   const [replyContent, setReplyContent] = useState<Record<number, string>>({});
   const [replyFile, setReplyFile] = useState<Record<number, any>>({}); // Store file per question reply
   const [activeReplyId, setActiveReplyId] = useState<number | null>(null);
@@ -21,14 +21,12 @@ const QuestionSection: React.FC<Props> = ({ meetingId, userId, userName, isAdmin
 
   const fetchQuestions = async () => {
     try {
-      setLoading(true);
+      
       const res = await getQuestions(meetingId);
       if (res) setQuestions(res);
     } catch (e) {
       console.error(e);
-    } finally {
-      setLoading(false);
-    }
+    } 
   };
 
   useEffect(() => {

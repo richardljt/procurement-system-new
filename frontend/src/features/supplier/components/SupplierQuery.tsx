@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDocumentTitle } from '../../../hooks/useDocumentTitle';
-import { Search, Filter, Phone, MapPin, Star, CreditCard, ChevronRight, Edit, History, X, Upload, FileText, Trash2, AlertCircle, UserPlus } from 'lucide-react';
+import { Search, Phone, MapPin, Star, CreditCard, ChevronRight, Edit, History, X, Upload, FileText, Trash2, UserPlus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { getSuppliers, Supplier, updateSupplier, getSupplierHistory, SupplierHistory, createSupplierUser } from '../../../api/procurement';
 

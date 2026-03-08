@@ -7,6 +7,7 @@ import com.example.procurement.service.MeetingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -24,6 +25,7 @@ public class MeetingController {
     
     @PostMapping("/create")
     public ApiResponse<Long> createMeeting(@RequestBody MeetingDTO meetingDTO) {
+        meetingDTO.setCreateTime(LocalDateTime.now());
         Long meetingId = meetingService.createMeeting(meetingDTO);
         return ApiResponse.success(meetingId);
     }

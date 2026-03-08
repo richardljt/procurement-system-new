@@ -4,29 +4,29 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.procurement.mapper.ReviewMapper">
 
-    <insert id="insertMeetingMaterial">
+    <insert id="insertMaterial" parameterType="com.example.procurement.entity.MeetingMaterial" useGeneratedKeys="true" keyProperty="materialId">
         INSERT INTO meeting_material (meeting_id, file_name, file_path, file_size, uploader_id, uploader_name, upload_time)
-        VALUES (#{meetingId}, #{fileName}, #{filePath}, #{fileSize}, #{uploaderId}, #{uploaderName}, NOW())
+        VALUES (#{meetingId}, #{fileName}, #{filePath}, #{fileSize}, #{uploaderId}, #{uploaderName}, #{uploadTime})
     </insert>
 
-    <insert id="insertMeetingQuestion">
-        INSERT INTO meeting_question (meeting_id, content, asker_id, asker_name, is_anonymous, status, attachment_name, attachment_path, create_time)
-        VALUES (#{meetingId}, #{content}, #{askerId}, #{askerName}, #{isAnonymous}, #{status}, #{attachmentName}, #{attachmentPath}, NOW())
+    <insert id="insertQuestion" parameterType="com.example.procurement.entity.MeetingQuestion" useGeneratedKeys="true" keyProperty="questionId">
+        INSERT INTO meeting_question (meeting_id, content, asker_id, asker_name, is_anonymous, status, create_time, attachment_name, attachment_path)
+        VALUES (#{meetingId}, #{content}, #{askerId}, #{askerName}, #{isAnonymous}, #{status}, #{createTime}, #{attachmentName}, #{attachmentPath})
     </insert>
 
-    <insert id="insertMeetingReply">
-        INSERT INTO meeting_reply (question_id, content, replier_id, replier_name, attachment_name, attachment_path, create_time)
-        VALUES (#{questionId}, #{content}, #{replierId}, #{replierName}, #{attachmentName}, #{attachmentPath}, NOW())
+    <insert id="insertReply" parameterType="com.example.procurement.entity.MeetingReply" useGeneratedKeys="true" keyProperty="replyId">
+        INSERT INTO meeting_reply (question_id, content, replier_id, replier_name, create_time, attachment_name, attachment_path)
+        VALUES (#{questionId}, #{content}, #{replierId}, #{replierName}, #{createTime}, #{attachmentName}, #{attachmentPath})
     </insert>
 
-    <insert id="insertMeetingVote">
+    <insert id="insertVote" parameterType="com.example.procurement.entity.MeetingVote" useGeneratedKeys="true" keyProperty="voteId">
         INSERT INTO meeting_vote (meeting_id, round, voter_id, voter_name, score, comment, create_time)
-        VALUES (#{meetingId}, #{round}, #{voterId}, #{voterName}, #{score}, #{comment}, NOW())
+        VALUES (#{meetingId}, #{round}, #{voterId}, #{voterName}, #{score}, #{comment}, #{createTime})
     </insert>
 
-    <insert id="insertReviewLog">
+    <insert id="insertLog" parameterType="com.example.procurement.entity.ReviewLog" useGeneratedKeys="true" keyProperty="logId">
         INSERT INTO review_log (meeting_id, operator_id, operator_name, action_type, detail, create_time)
-        VALUES (#{meetingId}, #{operatorId}, #{operatorName}, #{actionType}, #{detail}, NOW())
+        VALUES (#{meetingId}, #{operatorId}, #{operatorName}, #{actionType}, #{detail}, #{createTime})
     </insert>
 
 </mapper>

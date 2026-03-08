@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Tag, Button } from 'antd';
-import { Calendar, MapPin, Clock, LogOut } from 'lucide-react';
+import { MapPin, Clock, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';

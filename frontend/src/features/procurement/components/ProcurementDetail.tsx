@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Info, FileText, Lightbulb, Link as LinkIcon, 
-  DollarSign, AlertTriangle, Building, Search, Star, 
-  MapPin, Phone, CreditCard, User, Check, UserCheck, 
-  ArrowLeft, Route as RouteIcon, Eye, X, Upload, File, Download
+  Info, FileText, Link as LinkIcon, 
+  DollarSign, Building, Star, 
+  MapPin, Phone, CreditCard, Check, UserCheck, 
+  ArrowLeft, Route as RouteIcon, X
 } from 'lucide-react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FileRecord } from '../../../api/common';
+
 import { 
   getPreApplications, 
   getSuppliers, 
@@ -28,7 +28,7 @@ const ProcurementDetail: React.FC = () => {
   const [currency, setCurrency] = useState('CNY');
   
   // Data States
-  const [preApplications, setPreApplications] = useState<PreApplication[]>([]);
+  
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
   const [selectedPreApp, setSelectedPreApp] = useState<PreApplication | null>(null);
   const [selectedSupplierIds, setSelectedSupplierIds] = useState<number[]>([]);
@@ -56,7 +56,7 @@ const ProcurementDetail: React.FC = () => {
             getPreApplications(),
             getSuppliers()
         ]);
-        setPreApplications(preApps);
+        
         setSuppliers(supps);
 
         if (id) {
@@ -394,7 +394,7 @@ const ProcurementDetail: React.FC = () => {
               <div className="absolute left-5 top-8 bottom-8 w-0.5 bg-gray-200"></div>
               
               <div className="space-y-8">
-                  {processTasks.length > 0 ? processTasks.map((task, index) => (
+                  {processTasks.length > 0 ? processTasks.map((task) => (
                       <div key={task.taskId} className="flex items-start relative">
                           <div className={`z-10 flex items-center justify-center w-10 h-10 rounded-full border-4 border-white shadow-sm ${
                               task.status === 'APPROVED' ? 'bg-green-100' : 

@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Input, DatePicker, Select, Tag, Avatar, Space, Card, Row, Col, message, Modal } from 'antd';
+import { Table, Button, Input, Select, Tag, Space, Card, Row, Col, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { 
-  Plus, Search, Calendar, MapPin, Clock, 
-  CheckCircle, Download, FileText, Eye, 
-  Users, PlayCircle, Gavel 
+  Plus, Search, Clock, 
+  CheckCircle, Download, 
+  Users, Gavel 
 } from 'lucide-react';
 import dayjs from 'dayjs';
 import { getEvaluationList } from '../../../api/evaluation';
 import { useNavigate } from 'react-router-dom';
 import { StandardRangePicker } from '../../../components/common/StandardDatePicker';
 
-const { RangePicker } = DatePicker;
+
 
 // Define local interface for Evaluation Project list item
 interface EvaluationProjectItem {

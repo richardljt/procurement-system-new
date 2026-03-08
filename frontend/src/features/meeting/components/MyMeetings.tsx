@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Tag, Avatar, Space, Card, message } from 'antd';
+import { Table, Button, Tag, Card, message } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { Calendar, MapPin, Users, FileText, History } from 'lucide-react';
+import { Calendar, MapPin, Users, History } from 'lucide-react';
 import dayjs from 'dayjs';
 import { getMyMeetings } from '../../../api/review';
 import { useNavigate } from 'react-router-dom';

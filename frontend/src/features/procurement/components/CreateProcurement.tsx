@@ -3,7 +3,7 @@ import {
   Save, X, Info, FileText, Lightbulb, Link as LinkIcon, 
   DollarSign, AlertTriangle, Building, Search, Star, 
   MapPin, Phone, CreditCard, User, Check, UserCheck, 
-  ArrowLeft, Paperclip, Plus, Eye, Route as RouteIcon, Trash
+  ArrowLeft, Paperclip, Plus, Route as RouteIcon, Trash
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { FileRecord } from '../../../api/common';
@@ -15,7 +15,6 @@ import {
   getSuppliers,
   getProcurementById,
   PreApplication,
-  ProcurementRequest,
   Supplier
 } from '../../../api/procurement';
 import { useDocumentTitle } from '../../../hooks/useDocumentTitle';

@@ -80,7 +80,7 @@ public interface ReviewMapper {
     @Update("UPDATE requirement_review_meeting SET status = 'COMPLETED', conclusion = #{conclusion}, end_time = NOW() WHERE meeting_id = #{meetingId}")
     void completeMeeting(@Param("meetingId") Long meetingId, @Param("conclusion") String conclusion);
 
-    @Update("UPDATE requirement_review_meeting SET status = 'IN_PROGRESS', start_time = NOW(), end_time = DATE_ADD(NOW(), INTERVAL 3 HOUR) WHERE meeting_id = #{meetingId}")
+    @Update("UPDATE requirement_review_meeting SET status = 'IN_PROGRESS', vote_status = 'OPEN', start_time = NOW(), end_time = DATE_ADD(NOW(), INTERVAL 3 HOUR) WHERE meeting_id = #{meetingId}")
     void startMeeting(Long meetingId);
     
     @Select("<script>" +

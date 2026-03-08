@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Timeline, Typography, Button } from 'antd';
+import { Timeline, Typography } from 'antd';
 import { getLogs, ReviewLog } from '../../../../api/review';
-import { ChevronDown, ChevronUp, Clock } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 
 interface Props {
   meetingId: number;

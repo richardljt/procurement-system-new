@@ -20,7 +20,7 @@ const MeetingDashboard: React.FC = () => {
   const userId = localStorage.getItem('userId') || 'guest';
   const userName = localStorage.getItem('realName') || '访客';
   const role = localStorage.getItem('role') || 'EMPLOYEE';
-  const department = localStorage.getItem('department') || '';
+  
 
   // Determine if admin: Either HEAD role or Department is '集采办' (Mock logic)
   const isAdmin = role === 'HEAD' || userId === 'Henry'; 

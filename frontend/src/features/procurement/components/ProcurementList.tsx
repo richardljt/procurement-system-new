@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { 
   FileText, Clock, Check, X, Search, 
   Hash, Calendar, Building, DollarSign, 
-  Eye, Route as RouteIcon, Pen, Trash, 
-  ListCheck, Clock as ClockIcon, RotateCcw,
+  Eye, Route as RouteIcon, Trash, 
+  ListCheck, RotateCcw,
   ChevronLeft, ChevronRight, Undo, AlertTriangle, CheckCircle, XCircle
 } from 'lucide-react';
 import { getProcurementList, getProcurementStats, ProcurementRequest, ProcurementStats } from '../../../api/procurement';
@@ -52,7 +52,7 @@ const ProcurementList: React.FC = () => {
 
   const handleSearch = () => {
     const activeFilters = Object.fromEntries(
-      Object.entries(filters).filter(([_, v]) => {
+      Object.entries(filters).filter(([, v]) => {
         if (typeof v === 'string') {
           return v.trim() !== '' && v !== '全部状态' && v !== '全部类型' && v !== '全部';
         }

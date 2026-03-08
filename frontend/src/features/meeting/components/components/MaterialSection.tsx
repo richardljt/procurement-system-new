@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Card, List, Button, Upload, message, Typography, Modal } from 'antd';
-import { Upload as UploadIcon, FileText, Download, Trash2, Eye } from 'lucide-react';
+import { Card, List, Button, Upload, message, Modal } from 'antd';
+import { FileText, Download, Trash2, Eye } from 'lucide-react';
 import { getMaterials, uploadMaterial, deleteMaterial, MeetingMaterial } from '../../../../api/review';
 
 interface Props {

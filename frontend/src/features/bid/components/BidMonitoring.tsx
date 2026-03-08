@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useDocumentTitle } from '../../../hooks/useDocumentTitle';
 import { 
-  ArrowLeft, RefreshCw, Download, Bell, AlertTriangle, 
+  RefreshCw, Download, Bell, AlertTriangle, 
   CheckCircle, Clock, FileText, User, Search, Filter,
-  ChevronRight, StopCircle, MoreHorizontal
+  ChevronRight, StopCircle
 } from 'lucide-react';
 import { 
   getBidMonitoring, 

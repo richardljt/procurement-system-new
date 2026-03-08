@@ -1,8 +1,8 @@
 import { LOGIN_PAGE_STRINGS, USER_ROLES } from '../../../constants/strings';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login, getAppConfig } from '../../../api/procurement';
-import { User, Lock, ArrowRight, KeyRound } from 'lucide-react';
+import { login } from '../../../api/procurement';
+import { User, Lock, KeyRound } from 'lucide-react';
 import { useDocumentTitle } from '../../../hooks/useDocumentTitle';
 import { Input, Button, Spin } from 'antd';
 
@@ -12,7 +12,7 @@ const LoginPage: React.FC = () => {
   useDocumentTitle(LOGIN_PAGE_STRINGS.DOCUMENT_TITLE);
   const navigate = useNavigate();
   const [username, setUsername] = useState('Zhang Ming');
-  const [password, setPassword] = useState('');
+  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [loginMode, setLoginMode] = useState<LoginMode>('credentials');

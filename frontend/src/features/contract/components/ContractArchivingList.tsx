@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { 
-  FileText, Search, Calendar, Building, DollarSign, 
-  ChevronLeft, ChevronRight, FileSignature, Upload
+  FileText, Search, Building, DollarSign, 
+  FileSignature, Upload
 } from 'lucide-react';
 import { useDocumentTitle } from '../../../hooks/useDocumentTitle';
 import { 
@@ -24,7 +24,7 @@ const ContractArchivingList: React.FC = () => {
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentContract, setCurrentContract] = useState<Contract | null>(null);
-  const [currentItem, setCurrentItem] = useState<ContractArchivingItem | null>(null);
+  
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
 
@@ -49,7 +49,7 @@ const ContractArchivingList: React.FC = () => {
   };
 
   const handleOpenModal = (item: ContractArchivingItem) => {
-    setCurrentItem(item);
+    
     // Initialize form
     setCurrentContract({
       contractId: item.contractId,
@@ -91,7 +91,7 @@ const ContractArchivingList: React.FC = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setCurrentContract(null);
-    setCurrentItem(null);
+    
   };
 
   const handleSave = async (e: React.FormEvent) => {

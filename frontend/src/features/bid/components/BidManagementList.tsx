@@ -2,18 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useDocumentTitle } from '../../../hooks/useDocumentTitle';
 import { 
   Search, 
-  Filter, 
   Download, 
   Plus, 
   MoreVertical, 
   Clock, 
-  AlertTriangle, 
   CheckCircle, 
   Ban, 
   ChevronLeft, 
   ChevronRight,
   X,
-  Calendar,
   Users
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';

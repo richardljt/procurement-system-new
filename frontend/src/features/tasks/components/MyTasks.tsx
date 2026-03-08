@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDocumentTitle } from '../../../hooks/useDocumentTitle';
 import { getMyTasks, TaskDTO } from '../../../api/task';
-import { CheckCircle, Clock, FileText, ArrowRight, Inbox } from 'lucide-react';
+import { Clock, FileText, ArrowRight, Inbox } from 'lucide-react';
 
 const MyTasks: React.FC = () => {
   useDocumentTitle('待我处理');
@@ -49,7 +49,7 @@ const MyTasks: React.FC = () => {
     }
   };
 
-  const getTaskIcon = (type: string) => {
+  const getTaskIcon = () => {
       return <FileText className="w-5 h-5 text-blue-500" />;
   };
 
@@ -69,7 +69,7 @@ const MyTasks: React.FC = () => {
               <div key={task.taskId} className="p-5 hover:bg-gray-50 transition-colors flex items-center justify-between">
                 <div className="flex items-start space-x-4">
                   <div className="mt-1 p-2 bg-blue-50 rounded-lg">
-                    {getTaskIcon(task.nodeType)}
+                    {getTaskIcon()}
                   </div>
                   <div>
                     <h3 className="text-base font-medium text-gray-900 mb-1">

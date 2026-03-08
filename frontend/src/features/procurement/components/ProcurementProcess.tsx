@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
-    Check, Clock, FileText, MessageSquare, Bell, Eye, Building, Users, Circle, 
-    FileSignature, Download, Printer, ArrowLeft, Plus, Trash2, Edit
+    Check, Circle, 
+    Download, Printer, ArrowLeft, Plus, Trash2, Edit
 } from 'lucide-react';
 import { getProcessStatus, createContract, updateContract, deleteContract } from '../../../api/process';
 import { ProcessStatusDTO, Contract } from '../../../types/process';
-import { Button, message, Modal, Form, Input, DatePicker, InputNumber, Upload } from 'antd';
+import { Button, message, Modal, Form, Input, DatePicker, InputNumber } from 'antd';
 import dayjs from 'dayjs';
 
 const ProcurementProcess: React.FC = () => {
@@ -47,7 +47,7 @@ const ProcurementProcess: React.FC = () => {
         }
     };
 
-    const renderIcon = (statusStr: string, icon: React.ReactNode) => {
+    const renderIcon = (statusStr: string) => {
         const color = getStatusColor(statusStr);
         const bgClass = color === 'green' ? 'bg-green-500 border-green-500' : 
                         color === 'blue' ? 'bg-blue-500 border-blue-500' : 'bg-gray-300 border-gray-300';
@@ -139,7 +139,7 @@ const ProcurementProcess: React.FC = () => {
                         <div className="relative space-y-6">
                             {/* Stage 1: Application */}
                             <div className="flex items-start">
-                                {renderIcon(status.stage1.status, null)}
+                                {renderIcon(status.stage1.status)}
                                 <div className={`ml-6 flex-1 border rounded-lg p-4 ${renderCardStyle(status.stage1.status)}`}>
                                     <div className="flex items-center justify-between mb-2">
                                         <h3 className="text-base font-semibold text-gray-800">集采申请提交</h3>
@@ -183,7 +183,7 @@ const ProcurementProcess: React.FC = () => {
 
                             {/* Stage 2: Review Meeting */}
                             <div className="flex items-start">
-                                {renderIcon(status.stage2.status, null)}
+                                {renderIcon(status.stage2.status)}
                                 <div className={`ml-6 flex-1 border rounded-lg p-4 ${renderCardStyle(status.stage2.status)}`}>
                                     <div className="flex items-center justify-between mb-2">
                                         <h3 className="text-base font-semibold text-gray-800">需求评审会</h3>
@@ -204,7 +204,7 @@ const ProcurementProcess: React.FC = () => {
 
                             {/* Stage 3: Bidding */}
                             <div className="flex items-start">
-                                {renderIcon(status.stage3.status, null)}
+                                {renderIcon(status.stage3.status)}
                                 <div className={`ml-6 flex-1 border rounded-lg p-4 ${renderCardStyle(status.stage3.status)}`}>
                                     <div className="flex items-center justify-between mb-2">
                                         <h3 className="text-base font-semibold text-gray-800">供应商投标</h3>
@@ -225,7 +225,7 @@ const ProcurementProcess: React.FC = () => {
 
                             {/* Stage 4: Evaluation Meeting */}
                             <div className="flex items-start">
-                                {renderIcon(status.stage4.status, null)}
+                                {renderIcon(status.stage4.status)}
                                 <div className={`ml-6 flex-1 border rounded-lg p-4 ${renderCardStyle(status.stage4.status)}`}>
                                     <div className="flex items-center justify-between mb-2">
                                         <h3 className="text-base font-semibold text-gray-800">开评标会</h3>
@@ -246,7 +246,7 @@ const ProcurementProcess: React.FC = () => {
 
                             {/* Stage 5: Contract */}
                             <div className="flex items-start">
-                                {renderIcon(status.stage5.status, null)}
+                                {renderIcon(status.stage5.status)}
                                 <div className={`ml-6 flex-1 border rounded-lg p-4 ${renderCardStyle(status.stage5.status)}`}>
                                     <div className="flex items-center justify-between mb-2">
                                         <h3 className="text-base font-semibold text-gray-800">合同签署</h3>

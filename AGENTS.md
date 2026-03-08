@@ -25,6 +25,11 @@
      - fields that allow duplicates in the same scope (e.g., department name, supplier name without code)
    - **STRICTLY** reject or rewrite any code/logic that attempts to delete/update by name or similar ambiguous fields
 
+4. **DTO Enforcement Rule (No Map Structures Allowed)**  
+   - **NEVER** use any form of map or dictionary structure (e.g., `Map`, `HashMap`, `Dictionary`, etc.) to transfer data between layers.
+   - All data must be mapped to plain old Java objects (POJOs) or records.
+   - This includes request payloads, response bodies, and any intermediate data structures used in service layers.
+
 ## UNIFORM CODING STANDARDS (Mandatory)
 
 - **Monetary / Quantity / Rate Fields**  
