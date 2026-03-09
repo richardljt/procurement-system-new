@@ -123,20 +123,32 @@ src/router/
 - 日志：SLF4J + Logback
 - 代码分层要求：
     src/
-    ├── controller/                  # 控制层，仅包含参数校验，不应该包含业务处理逻辑，应该调用服务层
-    │   ├── [module1]         # 模块分包
+    ├── controller/                 # 控制层，仅包含参数校验，不应该包含业务处理逻辑，应该调用服务层
+    │   ├── [module1]               # 模块分包
+    │   │   ├── xxxController.java  # 各类模块的Controller
+    │   │   ├── xxxJob.java         # 各类模块的定时任务
     │   ├── [module2]
     │   └── [...]
     ├── service/              # 服务层
     │   ├── [module1]         # 模块分包
+    │   │   ├── assembler/    # 对象组装逻辑，比如PO与DTO互转
+    │   │   ├── dto/          # 各类数据传输对象
+    │   │   │   ├── xxxRequestDTO.java  # 请求体结构  
+    │   │   │   ├── xxxResponseDTO.java  # 返回体结构
+    │   │   │   ├── xxxDTO.java  # 各类传输对象定义
+    │   │   ├── xxxService.java  # 各类服务Service实现
     │   ├── [module2]
     ├── dao/              # 数据操作层
     │   ├── [module1]         # 模块分包
+    │   │   ├── mapper/    # 持久化mapper层，使用mybatis
+    │   │   │   ├── xxxMapper.java  # 请求体结构
+    │   │   ├── po/    # 持久化po层，使用mybatis
+    │   │   │   ├── xxxPO.java  # 各类数据库PO对象，单表查询结果，默认同表结构一致
+    │   │   │   ├── xxxDTO.java  # 各类持久层返回DTO对象，关联查询类型同表结构非一一映射
     │   ├── [module2]
     ├── utils/                # 全局层
     │   ├── configuration/    # 配置类，注入类似缓存管理的bean、线程池管理bean
     │   ├── constant/         # 全局常量类
-    │   ├── advice/           # advice定义，比如全局异常处理
     │   ├── annotation/       # annotation定义，比如controller的鉴权要求注解
     │   ├── interceptor/       # interceptor定义，比如系统鉴权处理
     │   ├── util/             # 工具类
