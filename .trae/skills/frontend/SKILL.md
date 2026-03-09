@@ -36,20 +36,42 @@ description: "提供前端开发规范和指南。在进行任何前端开发、
 
 ```
 src/
-├── api/                  # API 请求层 (axios 实例、endpoints)
-├── assets/               # 静态资源 (图片、图标等)
-├── components/           # UI 组件
-│   ├── ui/               # 原子/基础组件
-│   └── layout/           # 布局组件
-├── features/             # 业务/功能模块
-├── hooks/                # 自定义 hooks
-├── lib/ 或 utils/        # 工具函数
-├── router/               # 路由配置
-├── stores/               # Zustand 状态管理
-├── types/                # 全局 TypeScript 类型
+├── assets/               # 静态资源（图片、图标、fonts 等） → 保留，很好
+│   ├── images/
+│   └── icons/
+├── components/           # 所有 UI 组件（可进一步细分）
+│   ├── ui/               # ← 原子/基础组件（shadcn/ui 风格，必推）
+│   │   ├── button.tsx
+│   │   ├── card.tsx
+│   │   ├── input.tsx
+│   │   └── ...
+│   ├── layout/           # ← 可选，如果 Layout 组件多，独立出来
+│   │   ├── RootLayout.tsx
+│   │   ├── Sidebar.tsx
+│   │   └── AppHeader.tsx
+│   └── ...               # 其他业务组件（可选放这里或移到 features/）
+├── features/             # ← 推荐：按业务/页面/功能模块组织（中大型项目首选）
+│   ├── auth/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   └── ...
+│   └── dashboard/
+│       ├── components/
+│       └── ...
+├── hooks/                # 自定义 hooks → 保留，非常好
+├── lib/ 或 utils/        # 工具函数（cn.ts、formatDate.ts 等） → 两者都常见，选一个即可（shadcn/ui 常用 lib/ 放 cn）
+├── api/                  # API 请求层（axios实例、endpoints） → 很好
+├── types/                # 全局/共享 TypeScript 类型 → 保留
+├── mocks/                # 测试 mock 数据 → 开发/测试时有用，保留
+├── pages/                # 页面级组件（Home.tsx、About.tsx 等） → 如果用 react-router，保留
+│   └── Home.tsx
+├── router/               # 统一管理路由配置
+├── stores/               # zustand 状态管理（全局、模块）
 ├── App.tsx
 ├── main.tsx
-└── ...
+├── globals.css           # ← Tailwind 入口文件（原来 index.css 改名）
+├── vite-env.d.ts
+└── tailwind.config.ts        ← 主题扩展、插件、自定义颜色等
 ```
 
 ### 2. 路由 (Routing)

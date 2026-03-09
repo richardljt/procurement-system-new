@@ -1,58 +1,78 @@
 ---
 name: backend
-description: 提供后端开发规范和指南。在进行任何后端开发、代码审查或数据库设计时，必须调用此技能以确保符合项目标准。
+description: Provide backend development standards and guidelines. This skill must be invoked when conducting any backend development, code review, or database design to ensure compliance with project standards.
 ---
 
-# 后端开发技能 (Backend Development Skill)
+# Backend Development Skill
 
-本技能旨在统一后端开发流程、技术选型和代码风格，确保系统的健壮性和一致性。**在开始任何后端任务之前，请务必遵循以下规范。**
+This skill aims to standardize backend development processes, technology choices, and coding style to ensure system robustness and consistency. **Before starting any backend task, please be sure to follow these guidelines.**
 
-## 核心技术栈
+## Core technology stack
 
-- **语言**: Java 8 (不可升级)
-- **框架**: Spring Boot (推荐 2.7.x)
-- **ORM**: MyBatis (禁止使用 JPA/Hibernate)
-- **数据库**: MySQL 8.x
-- **定时任务**: Quartz
-- **日志**: SLF4J + Logback
-
-## 强制验证流程
-
-每次修改任何后端代码后，**必须** 立即执行以下命令，并确保完全通过（无任何 ERROR 或 WARNING）：
-
-- **构建与编译**: `./mvnw clean compile -q`
-
-只有构建 100% 通过后，才认为任务完成。
+- **Language**: Java 8 (non-upgradeable)
+- **Framework**: Spring Boot (2.7.x recommended)
+- **ORM**: MyBatis (JPA/Hibernate prohibited)
+- **Database**: MySQL 8.x
+- **Scheduled Tasks**: Quartz
+- **JSON Processing**: Gson
+- **Logs**: SLF4J
 
 ## 代码规范与最佳实践
 
 ### 1. 代码分层
-
-严格遵循 `controller` -> `service` -> `dao` 的分层架构。
+严格遵循 `controller` -> `service` -> `Infrastructure` 的分层架构。
 
 ```
-src/
-├── controller/   # 控制层：仅做参数校验，调用服务层
-├── service/      # 服务层：处理核心业务逻辑
-z
-├── dao/          # 数据访问层：与数据库交互
-├── utils/        # 全局工具、配置、常量、拦截器等
-└── ...
+src/main/java
+└── com.wlb.[product name]
+    ├── controller        # 对外暴露层
+    │   ├── [moduleA]                # 按业务模块分包（强烈推荐）
+    │   │   ├── controller           # 该模块的 REST 接口
+    │   │   │   ├── OrderController.java
+    │   │   │   └── RefundController.java
+    │   │   ├── job                  # 该模块的定时任务
+    │   │   │   └── OrderTimeoutJob.java
+    │   │   └── vo                   # 该模块专属视图对象（可选，按需）
+    │   │       ├── OrderDetailVO.java
+    │   │       └── OrderPageVO.java
+    │   └── [moduleB] ...
+    │
+    ├── service                # 业务逻辑层
+    │   ├── [moduleA]          # 按业务模块分包（强烈推荐）
+    │   │   ├── service        # 接口 + impl（或只写接口 + 默认impl）
+    │   │   ├── assembler      # PO ↔ DTO 转换器
+    │   │   └── dto            # 入参/出参/内部传输对象
+    │   │       ├── req        # *Request（入参）
+    │   │       └── resp       # *Response（出参）
+    │   └── [moduleB] ...
+    │
+    ├── Infrastructure         # ← 基础设施层（数据、外部调用等）
+    │   ├── persistence   # 持久化相关
+    │   │   ├── [moduleA]
+    │   │   │   ├── mapper     # MyBatis Mapper 接口
+    │   │   │   └── po         # Persistent Object（数据库表映射）
+    │   │   └── [moduleB]...
+    │   └── client             # 外部调用（RPC、HTTP、MQ、FTP等）
+    │       ├── dto            # MyBatis Mapper 接口
+    │       │   └── xxxDTO     # Persistent Object（数据库表映射）
+    │       └── xxxClient.java
+    │
+    └── common            # 全局通用
+        ├── config        # 配置类、Bean 定义
+        ├── constant      # 常量
+        ├── enum          # 枚举
+        ├── exception     # 业务异常
+        ├── util          # 工具类
+        ├── annotation    # 自定义注解
+        ├── interceptor   # 拦截器
+        └── advice        # 全局异常处理、响应包装等
 ```
 
 ### 2. 数据传输 (DTO)
 
-- **强制使用 DTO**: 所有层之间的数据传输**必须**使用 DTO (Data Transfer Object)。
+- **强制使用 DTO**: controller层接受参数超过4个必须使用DTO封装，所有层之间的数据传输**必须**使用 DTO (Data Transfer Object)
 - **严禁使用 Map**: **绝对禁止**使用 `Map`, `HashMap` 或任何字典结构来传输数据。
 
-### 3. 数据库 (Database)
-
-- **连接参数**: JDBC 连接字符串**必须**包含 `useSSL=false&allowPublicKeyRetrieval=true`。
-- **命名规范**:
-    - 表名: `english_words_with_underscore`。
-    - 主键: `table_name_id`。外键字段名应与引用的主键名保持一致。
-- **审计字段**: 定义表时，必须包含 `create_time`, `create_user_id`, `create_user_name`, `update_time`, `update_user_id`, `update_user_name`。
-- **脚本管理**: 数据库变更脚本（DDL, DML）必须放在 `/backend/db/` 目录下，并以时间戳作为文件名前缀。
 
 ### 4. 数据与操作规范
 
@@ -76,3 +96,11 @@ z
 
 ### 7. Mapper层
 - 使用xml文件来定义sql，禁止使用select * 语句，需要指定所有字段
+
+## 强制验证流程
+
+每次修改任何后端代码后，**必须** 立即执行以下命令，并确保完全通过（无任何 ERROR 或 WARNING）：
+
+- **构建与编译**: `./mvn clean package`
+
+只有构建 100% 通过后，才认为任务完成。
