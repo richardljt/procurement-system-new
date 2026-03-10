@@ -49,7 +49,6 @@ src/router/
 - 禁止用 @ts-ignore 绕过
 
 ## 后端技术约束
-- 开发技术栈方面，使用springboot+mybatis+mysql，Java语言使用jdk8版本
 - 数据库方面要求，使用mysql（我已经在本地部署了mysql，同时可以连接 jdbc:mysql://127.0.0.1:6446 执行脚本，用户名是fmrober，密码是Lhx123!@#）
 - jdbc连接要增加 useSSL=false&allowPublicKeyRetrieval=true 这两个参数
 - 数据库设计要求，
@@ -57,9 +56,6 @@ src/router/
     - 表主键要求：每张表都要有个主键，一般命名为：表名_ID 的形式，并且其他表引用到该表主键时，其他表的字段名称应一致，即使用`关联表名_ID`的形式
     - 如果是定义表，需要增加create_time create_user_id create_user_name update_time update_user_id update_user_name这6个字段
     - 每张表的字段相同意义需要统一，不要出现两张表不一致的情况，比如产品ID，一般命名为product_id，所有表要统一
-- 对象存储使用要求，使用amazon+S3连接对象存储，统一封装interface用来处理对象存储实现，你可以先做一个实现类，我后续也可以增加实现类
-    - 如果涉及文件上传，使用对象存储上传到服务器，并且使用本地文件系统做缓存。用户上传时优先保存到本地，然后异步上传至对象存储，用来改善用户体验，如果对象存储有错需要重试3次，再出错需要通知给管理员；如果读取对象，则优先在本地读取，如果读取不到则访问对象存储，并同时缓存一份到本地路径。本地应用可以有权修改的路径是/opt/deployments/，这个是云上docker的约束注意。对于用户上传的文件名要保留在对应实体的表内，同时保留对象存储的key值，key值要按不同模块设置不同子目录，同时使用雪花算法生成id，并保留文件扩展名。比如：用户在售前模块上传文件，文件名为“产品信息.pdf"，首先售前这个名字要有全局名称presale，然后保留在数据库里两个字段名称为 产品信息.pdf，雪花算法生成一个唯一ID为123456789012345678，则文件key则为“/presale/123456789012345678.pdf"，同时按这个key保留文件到对象存储。
-- 对于文件上传功能要求，提供统一的文件上传接口，将文件具体信息保留在一张表内并且区分模块。用户上传完后返回文件key值，这个key值保留在页面对应实体的表内，不需要单独建表。如果可以上传多个文件，可以使用逗号分隔保留文件id
 - 对于文件下载功能，提供统一的文件下载接口，提供文件key即可，用于通用实现文件下载功能
 - 对于不同区域的文件上传下载，需要在对应页面所在实体做区分。比如：采购申请总体的附件、单一来源采购的附件是不同区域的，应分属不同字段。
 - 定时任务要求，使用quartz
@@ -70,31 +66,9 @@ src/router/
     - 提供邮件发送的接口，邮件发送内容需要使用模板
     - 提供IM发送的接口
     - 提供任务中心发送的接口
-- 前后端交互要求
-    - 前端通过http接口与后端交互，接口规范采用restful风格
-    - 前端请求后端接口时，需要在header中添加Authorization字段，值为Bearer+空格+token，token由后端返回
-    - 后端返回给前端的数据，需要符合json格式规范。格式为 {"returnCode": "SUC0000", "errorMsg": "", "body": "json"}，其中returnCode为状态码，errorMsg为错误信息，body为json格式的数据。如果是成功状态码SUC0000，errorMsg为空字符串；如果是失败状态码可以自行定义，errorMsg为错误提示，前端应该表现为屏幕右侧弹框提醒。
-- Java: JDK 8（不可升级）
-- 框架: Spring Boot（版本与 JDK8 兼容，推荐 2.7.x）
-- ORM: MyBatis（禁止 JPA/Hibernate）
-- 数据库: MySQL 8.x，连接串必须包含：useSSL=false&allowPublicKeyRetrieval=true
-- 对象存储: Amazon S3 接口（统一封装 FileStorageService 接口）
-  - 本地缓存路径：/opt/deployments/
-  - key 格式：/{module}/{snowflake_id}.{ext}
-  - 上传：先本地 → 异步 S3（重试 3 次）
-  - 下载：先本地 → S3 并缓存
-- 定时任务：Quartz
-- 日志：SLF4J + Logback
 - API兼容性检查 : 在使用任何 Java API（特别是集合、IO、并发相关的类）之前，必须首先确认其与项目配置的 JDK 8 版本兼容。优先使用项目中已有的、经过验证的工具类和库（如 Arrays.asList , Collections.singletonList 等），而不是引入更高版本JDK的API。
 
-## 后端代码修改后验证流程（强制）
-每次对后端代码进行任何修改（新增、修改、删除文件）后，必须立即执行以下步骤：
-1. 在终端运行构建命令：`./mvnw clean compile -q`（Maven 项目）或 `gradle build --quiet`（Gradle 项目）
-2. 如果构建失败，完整读取终端错误日志（包括行号、类名、依赖问题）
-3. 分析错误原因（常见：import 缺失、类型不匹配、注解错误、Lombok 未处理等）
-4. 自动修复所有编译错误，直到 `./mvnw clean compile` 完全通过（无任何 ERROR/WARNING）
-5. 只有构建 100% 通过后，才认为任务完成，并向我展示最终的构建输出摘要
-6. 永远不要遗留未解决的编译问题
+
 
 ## 对于问题修复的记录
 对于发现技术问题，每次对于问题的修复，必须记录问题的原因和规避方式到 /docs/learning_[事件编号].md文件中，并生成未来规避同类问题的prompt

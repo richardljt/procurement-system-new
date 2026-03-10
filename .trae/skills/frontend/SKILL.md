@@ -98,8 +98,7 @@ src/
 - **枚举 (Enums)**: **必须** 使用**字符串字面量联合类型** (e.g., `'PENDING' | 'APPROVED'`)。
 
 ### 5. API 通信
-
-- 在 `header` 中添加 `Authorization` 字段 (`Bearer` + `token`)。
+- 认证方式严格遵循 OAuth 2.0 规范（RFC 6749 + RFC 6750），请求头必须是：Authorization: Bearer <token>，其中<token>使用JWT生成，是从特定接口获取的。
 - 对 `axios` 进行封装，统一处理请求和响应。
 
 ### 6. 文件修改
