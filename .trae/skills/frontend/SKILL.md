@@ -105,3 +105,10 @@ src/
 
 - **精确修改**: 优先使用 `SearchReplace` 工具进行原子化修改。`old_str` 必须包含足够上下文以确保唯一性。
 - **避免覆盖**: **严禁**直接使用 `Write` 工具覆盖整个现有文件，除非是创建新文件。
+
+### 7. Development learning from task
+When refactoring by moving files, you follow these steps:
+1.  **Automate First**: Use tools like AI agents (`search`) to perform the bulk of the repetitive path updates.
+2.  **Verify with `tsc`**: Immediately run `npx tsc --noEmit`. This is the quickest way to find any paths the automation missed.
+3.  **Manually Correct**: Systematically fix the remaining errors reported by the TypeScript compiler.
+4.  **Full Validation**: Proceed with `npm run build` and `npm run lint` only after the type check is clean.

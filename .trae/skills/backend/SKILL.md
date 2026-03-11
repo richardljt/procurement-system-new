@@ -82,12 +82,13 @@ src/main/java
 - **Enums**: **Must** use Java's `enum` class.
 - **Update/Delete Operations**: **Must** use a **unique identifier** for the record (e.g., primary key `id`). **Using non-unique fields such as `name` as conditions is strictly prohibited.
 
-### 接口规范
+### Interface Specifications
 
-- 接口规范采用restful风格
-- 所有接口仅使用POST和GET方法，其中POST请求入参必须是JSON格式，GET请求入参必须是Query参数。
-- 所有接口都必须返回JSON格式的出参，出参格式为 {"returnCode": "SUC0000", "errorMsg": "", "body": "json"}，其中returnCode为状态码，errorMsg为错误信息，body为json格式的数据。如果是成功状态码SUC0000，errorMsg为空字符串；如果是失败状态码可以自行定义，errorMsg为错误提示，前端应该表现为屏幕右侧弹框提醒。
-- 
+- The interface specifications adopt a RESTful style.
+
+- All interfaces use only POST and GET methods. POST request parameters must be in JSON format, and GET request parameters must be Query parameters.
+
+- All interfaces must return JSON formatted parameters, with the format {"returnCode": "SUC0000", "errorMsg": "", "body": "json"}. Here, returnCode is the status code, errorMsg is the error message, and body is the JSON data. For a success status code SUC0000, errorMsg is an empty string; for a failure status code, you can define your own, and errorMsg is the error message, which should be displayed as a pop-up notification for user to understand.
 
 ### 认证处理
 - 认证方式严格遵循 OAuth 2.0 规范（RFC 6749 + RFC 6750），请求头必须是：Authorization: Bearer <token>，其中<token>使用JWT生成，是从特定接口获取的。
@@ -99,11 +100,12 @@ src/main/java
 ### 外部系统对接
 
 - **用户管理**: 对接第三方用户系统，系统内使用内部 `userId`，同时关联外部 `YST_ID`。
-- **通知管理**: 先提供 `interface`，由其他开发人员实现。Mock 一个可用的实现供开发时使用。
+- **通知管理**: 先设计提供 `notifyService`，针对不同的通知渠道有不同的函数实现，后续可以根据需要实现该接口。
+- **任务管理**：先设计提供 `taskCenterService`，后续可以根据需要实现该接口，用来对接企业内部任务中心
 
 ### Mapper层
 
-- 使用xml文件来定义sql，禁止使用select * 语句，需要指定所有字段
+- 使用xml文件来定义sql，禁止使用select * 语句，必须指定读取字段
 
 ## Verification process after backend code modification (mandatory)
 
