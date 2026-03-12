@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Typography, Avatar, Tag, Empty, Tabs, Select } from 'antd';
+import { Row, Col, Typography, Avatar, Tag, Empty, Tabs, Select, Button } from 'antd';
 import CustomIcon from '../../../../components/common/CustomIcon';
 import { Expert } from '../../../../types/expert';
 import { getExperts } from '../../../../api/expert';
@@ -11,7 +11,10 @@ interface ExpertSelectionSectionProps {
   backupExperts?: number[];
   onMainChange?: (ids: number[]) => void;
   onBackupChange?: (ids: number[]) => void;
+  onSelectionModeChange?: (mode: 'MANUAL' | 'RANDOM') => void;
   readOnly?: boolean;
+  numMainExperts: number;
+  numBackupExperts: number;
 }
 
 const ExpertCard: React.FC<{
@@ -60,7 +63,10 @@ export const ExpertSelectionSection: React.FC<ExpertSelectionSectionProps> = ({
   backupExperts = [],
   onMainChange,
   onBackupChange,
-  readOnly = false
+  onSelectionModeChange,
+  readOnly = false,
+  numMainExperts,
+  numBackupExperts,
 }) => {
   const [allExperts, setAllExperts] = useState<Expert[]>([]);
   const [loading, setLoading] = useState(false);
@@ -120,6 +126,7 @@ export const ExpertSelectionSection: React.FC<ExpertSelectionSectionProps> = ({
               onChange={(value) => {
                 if (onChange) {
                   onChange([...selectedIds, value]);
+                  if (onSelectionModeChange) onSelectionModeChange('MANUAL');
                 }
               }}
               options={options}
@@ -142,6 +149,7 @@ export const ExpertSelectionSection: React.FC<ExpertSelectionSectionProps> = ({
                   onRemove={() => {
                     if (onChange && !readOnly) {
                       onChange(selectedIds.filter(id => id !== expert.expertId));
+                      if (onSelectionModeChange) onSelectionModeChange('MANUAL');
                     }
                   }}
                 />
@@ -152,6 +160,18 @@ export const ExpertSelectionSection: React.FC<ExpertSelectionSectionProps> = ({
       </div>
     );
   };
+
+    const handleRandomSelect = () => {
+        const availableExperts = allExperts.filter(e => !mainExperts.includes(e.expertId) && !backupExperts.includes(e.expertId));
+        const shuffled = [...availableExperts].sort(() => 0.5 - Math.random());
+
+        const newMainExperts = shuffled.slice(0, numMainExperts);
+        const newBackupExperts = shuffled.slice(numMainExperts, numMainExperts + numBackupExperts);
+
+        if (onMainChange) onMainChange(newMainExperts.map(e => e.expertId));
+        if (onBackupChange) onBackupChange(newBackupExperts.map(e => e.expertId));
+        if (onSelectionModeChange) onSelectionModeChange('RANDOM');
+    };
 
   const items = [
     {
@@ -199,6 +219,7 @@ export const ExpertSelectionSection: React.FC<ExpertSelectionSectionProps> = ({
         <Text type="secondary" className="ml-2 text-sm">
           请选择参与评审的专家成员，建议配置备选专家以防正选专家时间冲突
         </Text>
+        <Button onClick={handleRandomSelect} className="ml-4">随机选择</Button>
       </div>
 
       <Tabs defaultActiveKey="main" items={items} type="card" />

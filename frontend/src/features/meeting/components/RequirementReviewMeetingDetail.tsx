@@ -8,7 +8,8 @@ import {
   DatePicker,
   Button,
   message,
-  Spin
+  Spin,
+  Tag
 } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import CustomIcon from '../../../components/common/CustomIcon';
@@ -31,6 +32,7 @@ const RequirementReviewMeetingDetail: React.FC = () => {
   const [selectedApplications, setSelectedApplications] = useState<number[]>([]);
   const [mainExperts, setMainExperts] = useState<number[]>([]);
   const [backupExperts, setBackupExperts] = useState<number[]>([]);
+  const [expertSelectionMode, setExpertSelectionMode] = useState('MANUAL');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -62,6 +64,10 @@ const RequirementReviewMeetingDetail: React.FC = () => {
         
         if (data.backupExpertIds) {
           setBackupExperts(data.backupExpertIds);
+        }
+
+        if (data.expertSelectionMode) {
+          setExpertSelectionMode(data.expertSelectionMode);
         }
         
       } catch (error) {
@@ -148,6 +154,12 @@ const RequirementReviewMeetingDetail: React.FC = () => {
 
             {/* 3. 评审专家 */}
             <div className="mb-6 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+              <div className="flex items-center mb-4">
+                <h3 className="text-base font-bold">评审专家</h3>
+                <Tag color={expertSelectionMode === 'RANDOM' ? 'blue' : 'green'} className="ml-4">
+                  {expertSelectionMode === 'RANDOM' ? '随机选择' : '人工选择'}
+                </Tag>
+              </div>
               <ExpertSelectionSection 
                 mainExperts={mainExperts}
                 backupExperts={backupExperts}

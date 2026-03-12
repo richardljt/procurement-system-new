@@ -8,8 +8,8 @@ import java.util.List;
 
 @Mapper
 public interface MeetingMapper {
-    
-        @Select("SELECT * FROM requirement_review_meeting ORDER BY create_time DESC")
+
+    @Select("SELECT * FROM requirement_review_meeting ORDER BY create_time DESC")
     @Results({
         @Result(property = "meetingId", column = "meeting_id"),
         @Result(property = "projectName", column = "project_name"),
@@ -24,10 +24,13 @@ public interface MeetingMapper {
         @Result(property = "createUserName", column = "create_user_name"),
         @Result(property = "updateTime", column = "update_time"),
         @Result(property = "updateUserId", column = "update_user_id"),
-        @Result(property = "updateUserName", column = "update_user_name")
+        @Result(property = "updateUserName", column = "update_user_name"),
+        @Result(property = "numMainExperts", column = "num_main_experts"),
+        @Result(property = "numBackupExperts", column = "num_backup_experts"),
+        @Result(property = "expertSelectionMode", column = "expert_selection_mode")
     })
     List<RequirementReviewMeeting> findAll();
-    
+
     @Select("<script>" +
             "SELECT * FROM requirement_review_meeting " +
             "WHERE 1=1 " +
@@ -55,14 +58,17 @@ public interface MeetingMapper {
         @Result(property = "createUserName", column = "create_user_name"),
         @Result(property = "updateTime", column = "update_time"),
         @Result(property = "updateUserId", column = "update_user_id"),
-        @Result(property = "updateUserName", column = "update_user_name")
+        @Result(property = "updateUserName", column = "update_user_name"),
+        @Result(property = "numMainExperts", column = "num_main_experts"),
+        @Result(property = "numBackupExperts", column = "num_backup_experts"),
+        @Result(property = "expertSelectionMode", column = "expert_selection_mode")
     })
-    List<RequirementReviewMeeting> findByFilters(@Param("status") String status, 
+    List<RequirementReviewMeeting> findByFilters(@Param("status") String status,
                                                  @Param("department") String department,
                                                  @Param("startDate") String startDate,
                                                  @Param("endDate") String endDate,
                                                  @Param("keyword") String keyword);
-    
+
     @Select("SELECT * FROM meeting_expert_rel WHERE meeting_id = #{meetingId}")
     @Results({
         @Result(property = "relationId", column = "relation_id"),
@@ -76,21 +82,21 @@ public interface MeetingMapper {
         @Result(property = "createUserName", column = "create_user_name")
     })
     List<MeetingExpertRel> findExpertsByMeetingId(Long meetingId);
-    
+
     @Select("SELECT COUNT(*) FROM requirement_review_meeting WHERE status = #{status}")
     int countByStatus(String status);
-    
+
     void insert(RequirementReviewMeeting meeting);
-    
+
     @Insert("INSERT INTO meeting_expert_rel (meeting_id, expert_id, expert_name, expert_avatar, type, create_time) VALUES (#{meetingId}, #{expertId}, #{expertName}, #{expertAvatar}, #{type}, NOW())")
     void insertExpertRelation(MeetingExpertRel relation);
-    
+
     @Insert("INSERT INTO meeting_application_rel (meeting_id, procurement_request_id, create_time) VALUES (#{meetingId}, #{procurementRequestId}, NOW())")
     void insertApplicationRelation(@Param("meetingId") Long meetingId, @Param("procurementRequestId") Long procurementRequestId);
 
     @Select("SELECT procurement_request_id FROM meeting_application_rel WHERE meeting_id = #{meetingId}")
     List<Long> findApplicationIdsByMeetingId(Long meetingId);
-    
+
     @Select("SELECT * FROM requirement_review_meeting WHERE meeting_id = #{id}")
     @Results({
         @Result(property = "meetingId", column = "meeting_id"),
@@ -106,7 +112,10 @@ public interface MeetingMapper {
         @Result(property = "createUserName", column = "create_user_name"),
         @Result(property = "updateTime", column = "update_time"),
         @Result(property = "updateUserId", column = "update_user_id"),
-        @Result(property = "updateUserName", column = "update_user_name")
+        @Result(property = "updateUserName", column = "update_user_name"),
+        @Result(property = "numMainExperts", column = "num_main_experts"),
+        @Result(property = "numBackupExperts", column = "num_backup_experts"),
+        @Result(property = "expertSelectionMode", column = "expert_selection_mode")
     })
     RequirementReviewMeeting findById(Long id);
 
@@ -127,7 +136,10 @@ public interface MeetingMapper {
         @Result(property = "createUserName", column = "create_user_name"),
         @Result(property = "updateTime", column = "update_time"),
         @Result(property = "updateUserId", column = "update_user_id"),
-        @Result(property = "updateUserName", column = "update_user_name")
+        @Result(property = "updateUserName", column = "update_user_name"),
+        @Result(property = "numMainExperts", column = "num_main_experts"),
+        @Result(property = "numBackupExperts", column = "num_backup_experts"),
+        @Result(property = "expertSelectionMode", column = "expert_selection_mode")
     })
     List<RequirementReviewMeeting> findByProcurementRequestId(Long procurementRequestId);
 }
