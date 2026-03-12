@@ -5,8 +5,8 @@
 <mapper namespace="com.example.procurement.mapper.MeetingMapper">
 
     <insert id="insert" parameterType="com.example.procurement.entity.RequirementReviewMeeting" useGeneratedKeys="true" keyProperty="meetingId">
-        INSERT INTO requirement_review_meeting (title, project_name, project_no, department, amount, start_time, end_time, location, organizer_name, status, conclusion, current_round, vote_status, bid_id, bid_title, create_time, create_user_id, create_user_name, update_time, update_user_id, update_user_name)
-        VALUES (#{title}, #{projectName}, #{projectNo}, #{department}, #{amount}, #{startTime}, #{endTime}, #{location}, #{organizerName}, #{status}, #{conclusion}, #{currentRound}, #{voteStatus}, #{bidId}, #{bidTitle}, #{createTime}, #{createUserId}, #{createUserName}, #{updateTime}, #{updateUserId}, #{updateUserName})
+        INSERT INTO requirement_review_meeting (title, project_name, project_no, department, amount, start_time, end_time, location, organizer_name, status, conclusion, current_round, vote_status, bid_id, bid_title, create_time, create_user_id, create_user_name, update_time, update_user_id, update_user_name, num_main_experts, num_backup_experts, expert_selection_mode)
+        VALUES (#{title}, #{projectName}, #{projectNo}, #{department}, #{amount}, #{startTime}, #{endTime}, #{location}, #{organizerName}, #{status}, #{conclusion}, #{currentRound}, #{voteStatus}, #{bidId}, #{bidTitle}, #{createTime}, #{createUserId}, #{createUserName}, #{updateTime}, #{updateUserId}, #{updateUserName}, #{numMainExperts}, #{numBackupExperts}, #{expertSelectionMode})
     </insert>
 
 </mapper>

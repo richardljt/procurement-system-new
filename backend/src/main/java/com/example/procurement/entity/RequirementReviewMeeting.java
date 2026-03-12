@@ -28,6 +28,10 @@ public class RequirementReviewMeeting {
     private Long bidId;
     private String bidTitle;
 
+    private Integer numMainExperts;
+    private Integer numBackupExperts;
+    private String expertSelectionMode;
+
     // Audit fields
     private LocalDateTime createTime;
     private String createUserId;

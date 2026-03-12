@@ -12,6 +12,9 @@ public class MeetingDTO extends RequirementReviewMeeting {
     private List<Long> mainExpertIds;
     private List<Long> backupExpertIds;
     private List<Long> applicationIds;
+    private Integer numMainExperts;
+    private Integer numBackupExperts;
+    private String expertSelectionMode;
     
     // Legacy support for frontend transition (optional, but good for backward compatibility if needed)
     private List<String> experts; 

@@ -35,6 +35,13 @@ public class MeetingService {
     
     @Transactional
     public Long createMeeting(MeetingDTO meetingDTO) {
+        if (meetingDTO.getNumMainExperts() != null && meetingDTO.getMainExpertIds().size() != meetingDTO.getNumMainExperts()) {
+            throw new IllegalArgumentException("正选专家数量与配置不符");
+        }
+        if (meetingDTO.getNumBackupExperts() != null && meetingDTO.getBackupExpertIds().size() != meetingDTO.getNumBackupExperts()) {
+            throw new IllegalArgumentException("备选专家数量与配置不符");
+        }
+
         RequirementReviewMeeting meeting = new RequirementReviewMeeting();
         BeanUtils.copyProperties(meetingDTO, meeting);
         

@@ -6,7 +6,11 @@ import {
   message, 
   Layout, 
   Space,
-  Breadcrumb
+  Breadcrumb,
+  InputNumber,
+  Row,
+  Col,
+  Tag
 } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
@@ -28,6 +32,9 @@ const CreateRequirementReviewMeeting: React.FC = () => {
   const [selectedApplications, setSelectedApplications] = useState<number[]>([]);
   const [mainExperts, setMainExperts] = useState<number[]>([]);
   const [backupExperts, setBackupExperts] = useState<number[]>([]);
+  const [numMainExperts, setNumMainExperts] = useState(3);
+  const [numBackupExperts, setNumBackupExperts] = useState(2);
+  const [expertSelectionMode, setExpertSelectionMode] = useState('MANUAL');
   const [loading, setLoading] = useState(false);
 
   const onFinish = async (values: any) => {
@@ -39,6 +46,16 @@ const CreateRequirementReviewMeeting: React.FC = () => {
       // Combine experts
       const allExperts = [...mainExperts, ...backupExperts].map(String);
 
+      if (mainExperts.length !== numMainExperts) {
+        message.error(`请选择 ${numMainExperts} 名正选专家`);
+        return;
+      }
+
+      if (backupExperts.length !== numBackupExperts) {
+        message.error(`请选择 ${numBackupExperts} 名备选专家`);
+        return;
+      }
+
       const payload = {
         title: values.title,
         location: values.location,
@@ -49,7 +66,10 @@ const CreateRequirementReviewMeeting: React.FC = () => {
         // Custom fields
         applicationIds: selectedApplications,
         mainExpertIds: mainExperts,
-        backupExpertIds: backupExperts
+        backupExpertIds: backupExperts,
+        numMainExperts,
+        numBackupExperts,
+        expertSelectionMode,
       };
 
       console.log('Submitting payload:', payload);
@@ -143,11 +163,32 @@ const CreateRequirementReviewMeeting: React.FC = () => {
 
           {/* 3. 评审专家 */}
           <div className="mb-6 bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <div className="flex items-center mb-4">
+              <h3 className="text-base font-bold">评审专家</h3>
+              <Tag color={expertSelectionMode === 'RANDOM' ? 'blue' : 'green'} className="ml-4">
+                {expertSelectionMode === 'RANDOM' ? '随机选择' : '人工选择'}
+              </Tag>
+            </div>
+            <Row gutter={16} className="mb-4">
+              <Col>
+                <Form.Item label="正选专家数量">
+                  <InputNumber min={1} value={numMainExperts} onChange={(value) => setNumMainExperts(value || 0)} />
+                </Form.Item>
+              </Col>
+              <Col>
+                <Form.Item label="备选专家数量">
+                  <InputNumber min={0} value={numBackupExperts} onChange={(value) => setNumBackupExperts(value || 0)} />
+                </Form.Item>
+              </Col>
+            </Row>
             <ExpertSelectionSection 
               mainExperts={mainExperts}
               backupExperts={backupExperts}
               onMainChange={setMainExperts}
               onBackupChange={setBackupExperts}
+              onSelectionModeChange={setExpertSelectionMode}
+              numMainExperts={numMainExperts}
+              numBackupExperts={numBackupExperts}
             />
           </div>
 
