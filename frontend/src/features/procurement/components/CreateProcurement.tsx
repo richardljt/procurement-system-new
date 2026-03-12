@@ -864,6 +864,10 @@ const CreateProcurement: React.FC = () => {
                               <span>联系电话：{supplier.contactPhone}</span>
                             </div>
                             <div className="flex items-center">
+                              <LinkIcon className="w-4 h-4 text-gray-400 mr-1" />
+                              <span>邮箱：{supplier.email || '-'}</span>
+                            </div>
+                            <div className="flex items-center">
                               <MapPin className="w-4 h-4 text-gray-400 mr-1" />
                               <span>{supplier.address}</span>
                             </div>
@@ -1169,6 +1173,10 @@ const CreateProcurement: React.FC = () => {
                             <div className="flex items-center">
                               <Phone className="w-3.5 h-3.5 text-gray-400 mr-1.5" />
                               <span>{supplier.contactPhone}</span>
+                            </div>
+                            <div className="flex items-center">
+                              <LinkIcon className="w-3.5 h-3.5 text-gray-400 mr-1.5" />
+                              <span className="truncate">{supplier.email || '-'}</span>
                             </div>
                             <div className="flex items-center col-span-2">
                               <MapPin className="w-3.5 h-3.5 text-gray-400 mr-1.5" />

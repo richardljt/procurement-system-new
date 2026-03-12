@@ -342,6 +342,10 @@ const ProcurementDetail: React.FC = () => {
                               <span>联系电话：{supplier.contactPhone}</span>
                             </div>
                             <div className="flex items-center">
+                              <LinkIcon className="w-4 h-4 text-gray-400 mr-1" />
+                              <span>邮箱：{supplier.email || '-'}</span>
+                            </div>
+                            <div className="flex items-center">
                               <MapPin className="w-4 h-4 text-gray-400 mr-1" />
                               <span>{supplier.address}</span>
                             </div>
